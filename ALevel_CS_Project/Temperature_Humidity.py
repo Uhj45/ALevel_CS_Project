@@ -11,6 +11,7 @@ class TempHumidity:
         sensor = adafruit_dht.DHT22(board.MOSI)
         self.temperature = sensor.temperature
         self.humidity = sensor.humidity
+        sensor.exit()  # This gets rid of the lost access to message queue error as it says that the sensor is exiting
         return self.temperature, self.humidity
 
 
