@@ -14,10 +14,8 @@ class TempHumidity:
         return self.temperature, self.humidity
 
 
-# for i in range(0, 5):
-#     print(f"Temperature: {temperature} °C", f"Humidity: {humidity} %")
-#     time.sleep(1)
-
-readings = TempHumidity()
-readings.get_temperature_humidity()
-print(f"Temperature: {readings.temperature} °C", f"Humidity: {readings.humidity} %")
+readings = TempHumidity()  # Using the class TempHumidity, this creates the object for that class
+readings.get_temperature_humidity()  # Calls method in the class
+for i in range(0, 5):
+    print(f"Temperature: {readings.temperature} °C", f"Humidity: {readings.humidity} %")
+    time.sleep(1)
