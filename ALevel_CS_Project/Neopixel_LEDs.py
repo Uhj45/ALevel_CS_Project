@@ -7,6 +7,7 @@ class Neopixel:
     def __init__(self, brightness, g, r, b):
         """
         These parameters are local to the class are can only be used inside the class
+        Allow me to change the brightness and
         :param brightness:
         :param g:
         :param r:
@@ -36,9 +37,5 @@ class Neopixel:
         self.GRBLED2.show()
 
 
-# led = Neopixel(1.0, 255, 56, 79)
-# led.change_colour()
 
-led2 = Neopixel(0.8, 0, 100, 200)
-led2.on_off()
 
