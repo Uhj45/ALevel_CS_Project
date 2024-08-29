@@ -31,15 +31,4 @@ class Oled:
         self.oled.show()
 
 
-display = Oled()   # This creates an object in the class to display simple text to the screen
-text = "This is my text"
-display.display_text(text)
 
-display2 = Oled(x=20, y=20)   # This creates an object with two parameters that determine the position of the text
-text2 = "Hello World"
-display2.display_text(text2)
-
-display3 = Oled(size=2, x=10, y=10)  # This creates an object with another parameter that will change the size of the text
-display3.display_text(text2)
-display4 = Oled(2, 10, 10)  # This uses positional arguments instead of keyword arguments
-display4.display_text(text2)
