@@ -40,10 +40,3 @@ class DistanceSensor:
         return Distance
 
 
-distance_readings = DistanceSensor()
-
-for i in range(0,4):
-    dist = distance_readings.get_distance()
-    print(f"Distance: {dist:.1f} cm ")
-
-GPIO.cleanup()
