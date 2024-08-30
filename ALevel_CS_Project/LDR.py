@@ -7,11 +7,19 @@ import time
 
 class Ldr:
     def __init__(self, lightlevel=None):
+        """
+        Initialises GPIO pins for LDR
+        :param lightlevel:
+        """
         self.lightlevel = lightlevel
 
-    def get_light_level(self):
         i2c = busio.I2C(board.SCL, board.SDA)
         ads = ADS.ADS1115(i2c)
-        ldr = AnalogIn(ads, ADS.P0)
-        self.lightlevel = ldr.value
+        self.ldr = AnalogIn(ads, ADS.P0)
+    def get_light_level(self):
+        """
+        gets light readings from ldr and returns them
+        :return:
+        """
+        self.lightlevel = self.ldr.value
         return self.lightlevel
