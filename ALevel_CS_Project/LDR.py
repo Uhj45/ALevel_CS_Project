@@ -9,19 +9,9 @@ class Ldr:
     def __init__(self, lightlevel=None):
         self.lightlevel = lightlevel
 
-
     def get_light_level(self):
         i2c = busio.I2C(board.SCL, board.SDA)
         ads = ADS.ADS1115(i2c)
         ldr = AnalogIn(ads, ADS.P0)
         self.lightlevel = ldr.value
         return self.lightlevel
-
-
-ldr_sensor = Ldr()
-ldr_sensor.get_light_level()
-
-for i in range(0, 3):
-    print(f"LDR value: {ldr_sensor.lightlevel}")
-    time.sleep(1)
-
