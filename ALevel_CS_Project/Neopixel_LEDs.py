@@ -23,6 +23,14 @@ class Neopixel:
         order = neopixel.GRB
         self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
 
+    def get_colour(self):
+        return self.g, self.r, self.b
+
+    def set_colour(self, g, r, b):
+        self.g = g
+        self.r = r
+        self.b = b
+
     def turn_led_on(self):
         """
         Turns the LED on
@@ -47,40 +55,39 @@ class Neopixel:
         self.GRBLED.fill((self.g, self.r, self.b))
         self.GRBLED.show()
 
-
-def flash_led(self):
-    """
-    This will flash the LED for any colour
-    :return:
-    """
-    for i in range(0, 6):
-        self.GRBLED.fill((self.g, self.r, self.b))
-        self.GRBLED.show()
-        time.sleep(1)
-        self.GRBLED.fill((0, 0, 0))
-        self.GRBLED.show()
-        time.sleep(1)
-
-
-def pulse_led(self):
-    """
-    Increases and decreases the intensity of the LEDs to show pulsing
-
-    :return:
-    """
-    while True:
-        for i in range(255):
-            self.GRBLED.fill((i, self.r, self.b))
+    def flash_led(self):
+        """
+        This will flash the LED for any colour
+        :return:
+        """
+        for i in range(0, 6):
+            self.GRBLED.fill((self.g, self.r, self.b))
             self.GRBLED.show()
-            time.sleep(0.001)
-
-        self.GRBLED.fill((0, 0, 0))
-        self.GRBLED.show()
-
-        for i in reversed(range(255)):
-            self.GRBLED.fill((i, self.r, self.b))
+            time.sleep(1)
+            self.GRBLED.fill((0, 0, 0))
             self.GRBLED.show()
-            time.sleep(0.001)
+            time.sleep(1)
+
+    def pulse_led(self):
+        """
+        Increases and decreases the intensity of the LEDs to show pulsing
+        Each colour will increase/decrease by the same factor/ratio so that the required colour is kept the same
+        User can pulse colour that has already been set
+        :return:
+        """
+        while True:
+            for i in range(255):
+                self.GRBLED.fill((i, self.r, self.b))
+                self.GRBLED.show()
+                time.sleep(0.001)
+
+            self.GRBLED.fill((0, 0, 0))
+            self.GRBLED.show()
+
+            for i in reversed(range(255)):
+                self.GRBLED.fill((i, self.r, self.b))
+                self.GRBLED.show()
+                time.sleep(0.001)
 
 # TODO: add function to flash leds
 # TODO: pulse leds,
