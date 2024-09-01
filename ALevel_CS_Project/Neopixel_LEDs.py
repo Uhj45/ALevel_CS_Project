@@ -96,8 +96,7 @@ class Neopixel:
             g2 = g*i  # Calculates the new value from the ratio for each colour value and increases after each increment
             r2 = r*i
             b2 = b*i
-            print(f"{i}, {int(g2)}, {int(r2)}, {int(b2)}, Max value: {max(int(g2), int(r2), int(b2))} ")#, end="\r")
-            # print(int(g2), ", ", int(r2), ", ", int(b2), "Max value: ", max(int(g2),int(r2),int(b2)))
+            # print(f"{i}, {int(g2)}, {int(r2)}, {int(b2)}, Max value: {max(int(g2), int(r2), int(b2))} ")#, end="\r")
             time.sleep(0.01)
 
         print('')
@@ -111,27 +110,10 @@ class Neopixel:
             r3 = r*i
             b3 = b*i
 
-            print(f"{i} ,{int(g3)}, {int(r3)}, {int(b3)}, Min value: {min(int(g3), int(r3), int(b3))} ", end="\r")
+            # print(f"{i} ,{int(g3)}, {int(r3)}, {int(b3)}, Min value: {min(int(g3), int(r3), int(b3))} ", end="\r")
             self.GRBLED.fill((int(g3), int(r3), int(b3)))  # Sets the calculated value
             self.GRBLED.show()
             time.sleep(0.01)
-        # ratio_g = int(255 / self.g)
-        # ratio_r = int(255 / self.r)
-        # ratio_b = int(255 / self.b)
-        #
-        # while True:
-        #     if self.g or self.r or self.b == 255:
-        #
-        #     else:
-        #         for i in range(255):
-        #             self.GRBLED.fill((self.g * ratio_g, self.r * ratio_r, self.b * ratio_b))
-        #             self.GRBLED.show()
-        #             time.sleep(0.001)
-        #
-        #         for i in reversed(range(255)):
-        #             self.GRBLED.fill((self.g * ratio_g, self.r * ratio_r, self.b * ratio_b))
-        #             self.GRBLED.show()
-        #             time.sleep(0.001)
 
 # TODO: add function to flash leds
 # TODO: pulse leds,
