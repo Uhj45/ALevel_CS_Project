@@ -81,30 +81,38 @@ class Neopixel:
         r = 59
         b = 31
 
-        g = g / 255  # fraction of the sum of the
-        r = (r / 255)
-        b = (b / 255)
+        g = g / 255  # fraction of 255
+        r = r / 255
+        b = b / 255
         print("Ratio: ", g, ", ", r, ", ", b, "\n")
 
         i = 0
         g2 = r2 = b2 = 0
         while max(g2, r2, b2) < 255:
-            i += 1
+            i += 10
             g2 = g*i
             r2 = r*i
             b2 = b*i
-            # for i in range(0, 255):
-                #print(g*i, ", ", r*i, ", ", b*i)
-
-            print(f"{int(g2)}, {int(r2)}, {int(b2)}, Max value: {max(int(g2), int(r2), int(b2))} ", end="\r")
-
+            print(f"{i}, {int(g2)}, {int(r2)}, {int(b2)}, Max value: {max(int(g2), int(r2), int(b2))} ")#, end="\r")
             # print(int(g2), ", ", int(r2), ", ", int(b2), "Max value: ", max(int(g2),int(r2),int(b2)))
-
             self.GRBLED.fill((int(g2), int(r2), int(b2)))
             self.GRBLED.show()
             time.sleep(0.01)
+        print('')
+        # g_down = r_down = b_down = 0
+        g3 = g2
+        r3 = r2
+        b3 = b2
+        while min(g3, r3, b3) > 0:
+            i -= 10
+            g3 = g*i
+            r3 = r*i
+            b3 = b*i
 
-
+            print(f"{i} ,{int(g3)}, {int(r3)}, {int(b3)}, Min value: {min(int(g3), int(r3), int(b3))} ", end="\r")
+            self.GRBLED.fill((int(g3), int(r3), int(b3)))
+            self.GRBLED.show()
+            time.sleep(0.01)
         # ratio_g = int(255 / self.g)
         # ratio_r = int(255 / self.r)
         # ratio_b = int(255 / self.b)
