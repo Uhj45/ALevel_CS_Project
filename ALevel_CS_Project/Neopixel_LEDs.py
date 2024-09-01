@@ -5,14 +5,14 @@ import time
 
 
 class Neopixel:
-    def __init__(self, brightness, g, r, b):
+    def __init__(self, brightness=0, g=0, r=0, b=0):
         """
-        These instance variables are local to the class are can only be used inside the class
+        Initialise the GPIO pins and Neopixel LED
         Allow user to change the brightness and the colour of the leds
-        :param brightness:
-        :param g:
-        :param r:
-        :param b:
+        :param brightness: float value between 0.0 and 1.0 where 1.0 is full brightness
+        :param g: int values between 0 and 255
+        :param r: int values between 0 and 255
+        :param b: int values between 0 and 255
         """
         self.brightness = brightness
         self.g = g
@@ -21,23 +21,30 @@ class Neopixel:
 
         GPIO.setmode(GPIO.BCM)
         order = neopixel.GRB
-        self.GRBLED2 = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
+        self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
 
     def turn_led_on(self):
-        self.GRBLED2.fill((self.g, self.r, self.b))
-        self.GRBLED2.show()
+        """
+        Turns the LED on
+        :return:
+        """
+        self.GRBLED.fill((255, 0, 0))
+        self.GRBLED.show()
 
     def turn_led_off(self):
-        self.GRBLED2.fill((0, 0, 0))
-        self.GRBLED2.show()
+        """
+        Turns the LED off
+        :return:
+        """
+        self.GRBLED.fill((0, 0, 0))
+        self.GRBLED.show()
 
     def change_colour(self):
-        self.GRBLED2.fill((self.g, self.r, self.b))
-        self.GRBLED2.show()
-        time.sleep(1)
-        self.GRBLED2.fill((0, 0, 0))
-        self.GRBLED2.show()
-
-
+        """
+        Allows the user to change the colour of the LED
+        :return:
+        """
+        self.GRBLED.fill((self.g, self.r, self.b))
+        self.GRBLED.show()
 
 
