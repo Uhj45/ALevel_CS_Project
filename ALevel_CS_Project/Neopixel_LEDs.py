@@ -62,7 +62,25 @@ def flash_led(self):
         time.sleep(1)
 
 
+def pulse_led(self):
+    """
+    Increases and decreases the intensity of the LEDs to show pulsing
 
+    :return:
+    """
+    while True:
+        for i in range(255):
+            self.GRBLED.fill((i, self.r, self.b))
+            self.GRBLED.show()
+            time.sleep(0.001)
+
+        self.GRBLED.fill((0, 0, 0))
+        self.GRBLED.show()
+
+        for i in reversed(range(255)):
+            self.GRBLED.fill((i, self.r, self.b))
+            self.GRBLED.show()
+            time.sleep(0.001)
 
 # TODO: add function to flash leds
 # TODO: pulse leds,
