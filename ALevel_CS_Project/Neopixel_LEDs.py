@@ -48,3 +48,23 @@ class Neopixel:
         self.GRBLED.show()
 
 
+def flash_led(self):
+    """
+    This will flash the LED for any colour
+    :return:
+    """
+    for i in range(0, 6):
+        self.GRBLED.fill((self.g, self.r, self.b))
+        self.GRBLED.show()
+        time.sleep(1)
+        self.GRBLED.fill((0, 0, 0))
+        self.GRBLED.show()
+        time.sleep(1)
+
+
+
+
+# TODO: add function to flash leds
+# TODO: pulse leds,
+# TODO: add docstrings for functions
+# TODO: change colour function should just change the colour
