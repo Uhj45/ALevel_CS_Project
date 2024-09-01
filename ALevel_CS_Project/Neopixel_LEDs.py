@@ -73,21 +73,55 @@ class Neopixel:
         Increases and decreases the intensity of the LEDs to show pulsing
         Each colour will increase/decrease by the same factor/ratio so that the required colour is kept the same
         User can pulse colour that has already been set
+        To pulse from 0 up to 255, calculate the ratio of the three values and multiply it by the initial value
+        To pulse down from 255 to 0,
         :return:
         """
-        while True:
-            for i in range(255):
-                self.GRBLED.fill((i, self.r, self.b))
-                self.GRBLED.show()
-                time.sleep(0.001)
+        g = 22
+        r = 59
+        b = 31
 
-            self.GRBLED.fill((0, 0, 0))
+        g = g / 255  # fraction of the sum of the
+        r = (r / 255)
+        b = (b / 255)
+        print("Ratio: ", g, ", ", r, ", ", b, "\n")
+
+        i = 0
+        g2 = r2 = b2 = 0
+        while max(g2, r2, b2) < 255:
+            i += 1
+            g2 = g*i
+            r2 = r*i
+            b2 = b*i
+            # for i in range(0, 255):
+                #print(g*i, ", ", r*i, ", ", b*i)
+
+            print(f"{int(g2)}, {int(r2)}, {int(b2)}, Max value: {max(int(g2), int(r2), int(b2))} ", end="\r")
+
+            # print(int(g2), ", ", int(r2), ", ", int(b2), "Max value: ", max(int(g2),int(r2),int(b2)))
+
+            self.GRBLED.fill((int(g2), int(r2), int(b2)))
             self.GRBLED.show()
+            time.sleep(0.01)
 
-            for i in reversed(range(255)):
-                self.GRBLED.fill((i, self.r, self.b))
-                self.GRBLED.show()
-                time.sleep(0.001)
+
+        # ratio_g = int(255 / self.g)
+        # ratio_r = int(255 / self.r)
+        # ratio_b = int(255 / self.b)
+        #
+        # while True:
+        #     if self.g or self.r or self.b == 255:
+        #
+        #     else:
+        #         for i in range(255):
+        #             self.GRBLED.fill((self.g * ratio_g, self.r * ratio_r, self.b * ratio_b))
+        #             self.GRBLED.show()
+        #             time.sleep(0.001)
+        #
+        #         for i in reversed(range(255)):
+        #             self.GRBLED.fill((self.g * ratio_g, self.r * ratio_r, self.b * ratio_b))
+        #             self.GRBLED.show()
+        #             time.sleep(0.001)
 
 # TODO: add function to flash leds
 # TODO: pulse leds,
