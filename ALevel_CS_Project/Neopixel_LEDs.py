@@ -86,31 +86,33 @@ class Neopixel:
         b = b / 255
         print("Ratio: ", g, ", ", r, ", ", b, "\n")
 
-        i = 0
+        i = 0  # Increment
         g2 = r2 = b2 = 0
-        while max(g2, r2, b2) < 255:
-            i += 10
-            g2 = g*i
+        while max(g2, r2, b2) < 255:  # Checks value is less than 255 if not it will stop the loop
+            self.GRBLED.fill((int(g2), int(r2), int(b2)))   # sets values before calculating the next value
+            self.GRBLED.show()
+            i += 5
+            print(g2, r2, b2)
+            g2 = g*i  # Calculates the new value from the ratio for each colour value and increases after each increment
             r2 = r*i
             b2 = b*i
             print(f"{i}, {int(g2)}, {int(r2)}, {int(b2)}, Max value: {max(int(g2), int(r2), int(b2))} ")#, end="\r")
             # print(int(g2), ", ", int(r2), ", ", int(b2), "Max value: ", max(int(g2),int(r2),int(b2)))
-            self.GRBLED.fill((int(g2), int(r2), int(b2)))
-            self.GRBLED.show()
             time.sleep(0.01)
+
         print('')
-        # g_down = r_down = b_down = 0
+
         g3 = g2
         r3 = r2
         b3 = b2
-        while min(g3, r3, b3) > 0:
-            i -= 10
-            g3 = g*i
+        while min(g3, r3, b3) > 0:  # Checks if value is greater than 0 if not it will stop the loop
+            i -= 5
+            g3 = g*i  # Calculates the new value from the ratio for each colour value and decreases after each decrement
             r3 = r*i
             b3 = b*i
 
             print(f"{i} ,{int(g3)}, {int(r3)}, {int(b3)}, Min value: {min(int(g3), int(r3), int(b3))} ", end="\r")
-            self.GRBLED.fill((int(g3), int(r3), int(b3)))
+            self.GRBLED.fill((int(g3), int(r3), int(b3)))  # Sets the calculated value
             self.GRBLED.show()
             time.sleep(0.01)
         # ratio_g = int(255 / self.g)
