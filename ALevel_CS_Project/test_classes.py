@@ -1,17 +1,17 @@
-from Temperature_Humidity import TempHumidity
-from OLED_Display import Oled
+# from Temperature_Humidity import TempHumidity
+# from OLED_Display import Oled
 from Neopixel_LEDs import Neopixel
-from LDR import Ldr
+# from LDR import Ldr
 from Distance_Sensor import DistanceSensor
 import time
 import RPi.GPIO as GPIO
 
 # Objects from the TempHumidity class
-readings = TempHumidity()  # Using the class TempHumidity, this creates the object for that class
-for i in range(0, 5):
-    readings.get_temperature_humidity()  # Calls method in the class
-    print(f"Temperature: {readings.temperature} °C", f"Humidity: {readings.humidity} %")
-    time.sleep(1)
+# readings = TempHumidity()  # Using the class TempHumidity, this creates the object for that class
+# for i in range(0, 5):
+#     readings.get_temperature_humidity()  # Calls method in the class
+#     print(f"Temperature: {readings.temperature} °C", f"Humidity: {readings.humidity} %")
+#     time.sleep(1)
 
 # Objects from the Oled class
 # display = Oled()   # This creates an object in the class to display simple text to the screen
@@ -28,15 +28,23 @@ for i in range(0, 5):
 # display4.display_text(text2)
 #
 # # Objects for the LED class
-# led = Neopixel(1.0, 255, 255, 255)
-# led.change_colour()
-#
-# led2 = Neopixel(0.8, 111, 11, 1)
-# led2.turn_led_on()
-#
-# led3 = Neopixel(0.0, 0, 0, 0)
-# led3.turn_led_off()
-#
+
+
+# led = Neopixel(0.8)
+# led.turn_led_on()
+# time.sleep(2)
+# led2 = Neopixel()
+# led2.turn_led_off()
+# time.sleep(2)
+# led3 = Neopixel(1.0, 255, 205, 140)
+# led3.change_colour()
+# time.sleep(2)
+led4 = Neopixel(1.0, 134, 145, 167)
+led4.flash_led(4)
+time.sleep(2)
+led5 = Neopixel(1.0)
+led5.pulse_led(3)
+
 # # Object for the LDR class
 # ldr_sensor = Ldr()
 # ldr_sensor.get_light_level()
