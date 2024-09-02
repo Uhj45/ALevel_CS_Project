@@ -23,6 +23,8 @@ class Neopixel:
         order = neopixel.GRB
         self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
 
+
+
     def get_colour(self):
         return self.g, self.r, self.b
 
@@ -55,12 +57,12 @@ class Neopixel:
         self.GRBLED.fill((self.g, self.r, self.b))
         self.GRBLED.show()
 
-    def flash_led(self):
+    def flash_led(self, upper):
         """
         This will flash the LED for any colour
         :return:
         """
-        for i in range(0, 6):
+        for i in range(0, upper):
             self.GRBLED.fill((self.g, self.r, self.b))
             self.GRBLED.show()
             time.sleep(1)
@@ -68,7 +70,7 @@ class Neopixel:
             self.GRBLED.show()
             time.sleep(1)
 
-    def pulse_led(self):
+    def pulse_led(self, upper):
         """
         Increases and decreases the intensity of the LEDs to show pulsing
         Each colour will increase/decrease by the same factor/ratio so that the required colour is kept the same
@@ -81,41 +83,45 @@ class Neopixel:
         r = 59
         b = 31
 
-        g = g / 255  # fraction of 255
-        r = r / 255
-        b = b / 255
-        print("Ratio: ", g, ", ", r, ", ", b, "\n")
+        ratio_g = g / 255  # fraction of 255
+        ratio_r = r / 255
+        ratio_b = b / 255
+        # print("Ratio: ", g, ", ", r, ", ", b, "\n")
 
-        i = 0  # Increment
-        g2 = r2 = b2 = 0
-        while max(g2, r2, b2) < 255:  # Checks value is less than 255 if not it will stop the loop
-            self.GRBLED.fill((int(g2), int(r2), int(b2)))   # sets values before calculating the next value
-            self.GRBLED.show()
-            i += 5
-            print(g2, r2, b2)
-            g2 = g*i  # Calculates the new value from the ratio for each colour value and increases after each increment
-            r2 = r*i
-            b2 = b*i
-            # print(f"{i}, {int(g2)}, {int(r2)}, {int(b2)}, Max value: {max(int(g2), int(r2), int(b2))} ")#, end="\r")
-            time.sleep(0.01)
+        for j in range(0, upper):
+            i = 0  # Increment
+            pulse_up_g = pulse_up_r = pulse_up_b = 0
+            print("\nLED Fade in")
+            while max(pulse_up_g, pulse_up_r, pulse_up_b) < 255:  # Checks value is less than 255 if not it will stop the loop
+                self.GRBLED.fill((int(pulse_up_g), int(pulse_up_r), int(pulse_up_b)))   # sets values before calculating the next value
+                self.GRBLED.show()
+                i += 5
+                pulse_up_g = ratio_g*i  # Calculates the new value from the ratio for each colour value and increases after each increment
+                pulse_up_r = ratio_r*i
+                pulse_up_b = ratio_b*i
+                print(f"{i}, {int(pulse_up_g)}, {int(pulse_up_r)}, {int(pulse_up_b)}, Max value: {max(int(pulse_up_g), int(pulse_up_r), int(pulse_up_b))} ", end="\r")
+                time.sleep(0.01)
 
-        print('')
+            pulse_down_g = pulse_up_g
+            pulse_down_r = pulse_up_r
+            pulse_down_b = pulse_up_b
+            print("\nLED fade out")
+            while min(pulse_down_g, pulse_down_r, pulse_down_b) > 0:  # Checks if value is greater than 0 if not it will stop the loop
+                self.GRBLED.fill((int(pulse_down_g), int(pulse_down_r), int(pulse_down_b)))  # Sets the calculated value
+                self.GRBLED.show()
+                i -= 5
+                pulse_down_g = ratio_g*i  # Calculates the new value from the ratio for each colour value and decreases after each decrement
+                pulse_down_r = ratio_r*i
+                pulse_down_b = ratio_b*i
+                print(f"{i} ,{int(pulse_down_g)}, {int(pulse_down_r)}, {int(pulse_down_b)}, Min value: {min(int(pulse_down_g), int(pulse_down_r), int(pulse_down_b))} ", end="\r")
+                time.sleep(0.01)
 
-        g3 = g2
-        r3 = r2
-        b3 = b2
-        while min(g3, r3, b3) > 0:  # Checks if value is greater than 0 if not it will stop the loop
-            i -= 5
-            g3 = g*i  # Calculates the new value from the ratio for each colour value and decreases after each decrement
-            r3 = r*i
-            b3 = b*i
 
-            # print(f"{i} ,{int(g3)}, {int(r3)}, {int(b3)}, Min value: {min(int(g3), int(r3), int(b3))} ", end="\r")
-            self.GRBLED.fill((int(g3), int(r3), int(b3)))  # Sets the calculated value
-            self.GRBLED.show()
-            time.sleep(0.01)
 
 # TODO: add function to flash leds
 # TODO: pulse leds,
 # TODO: add docstrings for functions
 # TODO: change colour function should just change the colour
+# TODO: Update variable names to be meaningful
+# TODO: Add for loop with a parameter that allows the user to choose how many times they want to pulse the LED
+# TODO: Do same for flash_led function
