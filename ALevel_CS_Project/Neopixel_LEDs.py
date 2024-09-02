@@ -50,17 +50,18 @@ class Neopixel:
     def change_colour(self):
         """
         Allows the user to change the colour of the LED
+        :param: flash_iteration asks the user how many times they want to flash the LED
         :return:
         """
         self.GRBLED.fill((self.g, self.r, self.b))
         self.GRBLED.show()
 
-    def flash_led(self, upper):
+    def flash_led(self, flash_iteration):
         """
         This will flash the LED for any colour
         :return:
         """
-        for i in range(0, upper):
+        for i in range(0, flash_iteration):
             self.GRBLED.fill((self.g, self.r, self.b))
             self.GRBLED.show()
             time.sleep(1)
