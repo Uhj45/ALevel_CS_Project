@@ -23,8 +23,6 @@ class Neopixel:
         order = neopixel.GRB
         self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
 
-
-
     def get_colour(self):
         return self.g, self.r, self.b
 
@@ -70,13 +68,14 @@ class Neopixel:
             self.GRBLED.show()
             time.sleep(1)
 
-    def pulse_led(self, upper):
+    def pulse_led(self, pulse_iteration):
         """
         Increases and decreases the intensity of the LEDs to show pulsing
         Each colour will increase/decrease by the same factor/ratio so that the required colour is kept the same
         User can pulse colour that has already been set
         To pulse from 0 up to 255, calculate the ratio of the three values and multiply it by the initial value
-        To pulse down from 255 to 0,
+        To pulse down from 255 to 0, does the opposite to the comment above
+        :param: pulse_iteration allows the user to input a value to pulse the LED a certain number of times
         :return:
         """
         g = 22
@@ -88,7 +87,7 @@ class Neopixel:
         ratio_b = b / 255
         # print("Ratio: ", g, ", ", r, ", ", b, "\n")
 
-        for j in range(0, upper):
+        for j in range(0, pulse_iteration):
             i = 0  # Increment
             pulse_up_g = pulse_up_r = pulse_up_b = 0
             print("\nLED Fade in")
