@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width initial-scale=1.0">
+<!--<meta http-equiv="refresh" content="2">-->
+<link rel= "stylesheet" type= "text/css" href= "static/style.css">
+
+<title>Remote Pi Hub</title>
+</head>
+<body>
+  <header>
+    <h1>Remote Pi Hub</h1>
+  </header>
+  <div class="sidenav">
+    <a href="#">LEDControl</a>
+    <a href="#">PID Controller</a>
+    <a href="#">OLED Display</a>
+  </div>
+  <div class="content">
+    <div class="tiles-container">
+      <div class="tile">Temperature is {{ temp }}</div>
+      <div class="tile">Humidity</div>
+      <div class="tile">LDR value is {{ LDR }}</div>
+    </div>
+  </div>
+
+</body>
+
+</html>

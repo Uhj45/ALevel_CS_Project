@@ -13,18 +13,21 @@ class TempHumidity:
         """
         self.temperature = None
         self.humidity = None
-        self.sensor = adafruit_dht.DHT22(board.MOSI)
+        self.sensor = None
 
     def get_temperature(self):
-        """
-        Gets the temperature and humidity from the sensor and returns them
-        :return: returns temperature and humidity
-        """
 
-        self.temperature = self.sensor.temperature
-# self.sensor.exit()  # This gets rid of the lost access to message queue error as it says that the sensor is exiting
+        # self.temperature = self.sensor.temperature
+        # self.sensor.exit()  # This gets rid of the lost access to message queue error as it says that the sensor is exiting
         return self.temperature
 
     def get_humidity(self):
-        self.humidity = self.sensor.humidity
+        # self.humidity = self.sensor.humidity
         return self.humidity
+
+    def read_sensors(self):
+        self.sensor = adafruit_dht.DHT22(board.MOSI)
+        self.sensor.measure()
+        self.temperature = self.sensor.temperature
+        self.humidity = self.sensor.humidity
+        self.sensor.exit()
