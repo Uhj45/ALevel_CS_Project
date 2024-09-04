@@ -18,7 +18,7 @@ class TempHumidity:
     def get_temperature(self):
 
         # self.temperature = self.sensor.temperature
-        # self.sensor.exit()  # This gets rid of the lost access to message queue error as it says that the sensor is exiting
+        # self.sensor.exit()  # This gets rid of the "lost access to message queue" error as it says that the sensor is exiting
         return self.temperature
 
     def get_humidity(self):
@@ -26,7 +26,10 @@ class TempHumidity:
         return self.humidity
 
     def read_sensors(self):
-        self.sensor = adafruit_dht.DHT22(board.MOSI)
+        self.sensor = adafruit_dht.DHT22(board.MOSI)  # The pin needs to be initialised here every time to get a reading,
+                                                      # can't be in the init function as it will only initialise once and
+                                                      # won't be able to call the get functions to get a new reading
+                                                      # and will keep using the same value
         self.sensor.measure()
         self.temperature = self.sensor.temperature
         self.humidity = self.sensor.humidity
