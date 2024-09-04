@@ -12,7 +12,7 @@ app = Flask(__name__)
 def index():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
-    temp_humidity = TempHumidity
+    temp_humidity = TempHumidity()
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
