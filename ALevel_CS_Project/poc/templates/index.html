@@ -17,61 +17,40 @@
     <a href="#">PID Controller</a>
     <a href="#">OLED Display</a>
   </div>
-<main>
-    <section class="tiles-container">
-      <a >
-        <div class="tile">
-          <h2>LDR</h2>
-          <p>LDR value is {{ LDR }}</p>
-        </div>
-      </a>
-      <a>
-      <div class="tile">
-        <h2>Temperature</h2>
-        <p>
-          Temperature: {{ temp }}</p>
-      </div>
-      </a>
-      <a>
-      <div class="tile">
-        <h2>Humidity</h2>
-        <p>
-          Humidity: {{ humidity }}
-        </p>
-      </div>
-      </a>
-      <a>
-        <div class="tile">
-          <h2>Distance</h2>
-          <p>Distance: </p>
-        </div>
-      </a>
-      <a>
-      <div class="tile">
-        <h2>LED Control</h2>
-        <p>LED is on</p>
-      </div>
-      </a>
-      <a>
-        <div class="tile">
-          <h2>OLED Display</h2>
-          <p>Message: </p>
-        </div>
-      </a>
-      <a>
-        <div class="tile">
-          <h2>PWM Fan</h2>
-          <p>Fan speed: </p>
-        </div>
-      </a>
-      <a>
-      <div class="tile">
-          <h2>PID</h2>
-          <p>Target Distance: </p>
-        </div>
-      </a>
-    </section>
-  </main>
+  <div class="tiles-container">
+    <div class="tile">
+      <h2>LDR</h2>
+      <p>LDR value is {{ LDR }}</p>
+    </div>
+    <div class="tile">
+      <h2>Temperature</h2>
+      <p>Temperature: {{ temp_val }}</p>
+    </div>
+    <div class="tile">
+      <h2>Humidity</h2>
+      <p>Humidity: {{ humid_val }}
+    </div>
+    <div class="tile">
+      <h2>Distance</h2>
+      <p>Distance: </p>
+    </div>
+    <div class="tile">
+      <h2>LED Control</h2>
+      <p>LED is on</p>
+    </div>
+    <div class="tile">
+      <h2>OLED Display</h2>
+      <p>Message: </p>
+    </div>
+    <div class="tile">
+      <h2>PWM Fan</h2>
+      <p>Fan speed: </p>
+    </div>
+    <div class="tile">
+      <h2>PID</h2>
+      <p>Target Distance: </p>
+    </div>
+  </div>
 
 </body>
 
