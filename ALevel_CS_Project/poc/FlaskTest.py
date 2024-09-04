@@ -12,7 +12,11 @@ app = Flask(__name__)
 def index():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
-    return render_template("index.html", LDR=LDR_value)
+    temp_humidity = TempHumidity
+    temp_humidity.read_sensors()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
+    return render_template("index.html", LDR=LDR_value, temp_val=temp_val, humid_val=humid_val)
 
 
 # @app.route('/ldr')
@@ -22,12 +26,12 @@ def index():
 #     return f"LDR value is: {LDR_value}"
 
 
-@app.route('/temp_humidity')
-def temp_humidity_test():
-    temp_humidity = TempHumidity()
-    temp_humidity.get_temperature()
-    #temp_humidity.get_humidity()
-    return f"Temperature: {temp_humidity.temperature} C" #Humidity: {temp_humidity.humidity} %"
+# @app.route('/temp_humidity')
+# def temp_humidity_test():
+#     temp_humidity = TempHumidity()
+#     temp_humidity.get_temperature()
+#     #temp_humidity.get_humidity()
+#     return f"Temperature: {temp_humidity.temperature} C" #Humidity: {temp_humidity.humidity} %"
 
 
 # @app.route('/distance')
@@ -43,12 +47,12 @@ def temp_humidity_test():
 #
 #
 
-@app.route('/oled')
-def oled_test():
-    display = Oled()
-    text = "Hello World"
-    oled = display.display_text(text)
-    return f"Message: {text}", oled
+# @app.route('/oled')
+# def oled_test():
+#     display = Oled()
+#     text = "Hello World"
+#     oled = display.display_text(text)
+#     return f"Message: {text}", oled
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.1.71")
