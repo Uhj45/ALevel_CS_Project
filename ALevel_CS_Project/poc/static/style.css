@@ -39,9 +39,10 @@ header {
   padding: 20px;
 }
 
-tiles-container {
-  padding-left: 210px;
-  padding-right: 30px;
+.tiles-container {
+  margin-left: 230px;
+  padding-left: 230;
+  padding-right: 50;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -49,12 +50,11 @@ tiles-container {
   justify-content: center; /* Center tiles horizontally */
 }
 .tile {
-  flex: 1 0 300px; /* Adjust width as needed */
-  background-color: #fff;
+  background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 10px;
+  text-align: center;
   border-radius: 10px;
-  transition: transform 0.3s ease-in-out;
   text-decoration: none; /* Remove default link underline */
   display: block; /* Make the tile block-level for better styling */
 }
