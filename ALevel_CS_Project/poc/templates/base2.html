@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <!--<meta http-equiv="refresh" content="2">-->
+    <link rel= "stylesheet" type= "text/css" href= "static/style.css">
+
+    <title>{% block title %}Remote Pi Hub{% endblock  %}</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <p>Sidebar</p>
+
+    </div>
+
+    <div class="content1">
+        <div class="header">
+            <p>This is my title!</p>
+        </div>
+        <div class="content3">
+            <div class="container">
+                <div class="tile">one</div>
+                <div class="tile">two</div>
+                <div class="tile">three</div>
+                <div class="tile">four</div>
+            </div>
+            <div class="container">
+                <div class="tile">one</div>
+                <div class="tile">two</div>
+                <div class="tile">three</div>
+                <div class="tile">four</div>
+            </div>
+        </div>
+        <div class="content4">
+            <p>This is my sensor control.</p>
+        </div>
+    </div>
+</div>
+
+
+{% block content %}{% endblock %}
+</body>
+</html>

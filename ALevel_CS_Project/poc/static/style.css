@@ -5,14 +5,14 @@ body {
   background-color: whitesmoke;
 }
 
-header {
+.header {
   background-color: #333;
   color: #fff;
   text-align: center;
   padding: 20px;
 }
 
-.sidenav {
+.sidebar {
   height: 100%;
   width: 200px;
   position: fixed;
@@ -34,9 +34,41 @@ header {
   color: black;
 }
 
-.content {
-  margin-left: 200px; /* Adjust for side panel width */
+div {
+  border: thin solid white;
+  padding: 10px;
+}
+
+.container {
+  display: flex;
+  gap: 10px;
+}
+
+.content1 {
+  margin-left: 200px;
+  flex-grow: 1;
+}
+
+.content2 {
+  flex-grow: 1;
+  text-align: center;
+  margin-left: 25px;
+}
+
+.content3 {
+  flex-grow: 1;
+  margin-left: 25px;
+}
+
+.content4 {
+  flex-grow: 1;
+  width: 98%;
+  height: 200px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  text-align: center;
+  border-radius: 10px;
 }
 
 .tiles-container {
@@ -57,6 +89,8 @@ header {
   border-radius: 10px;
   text-decoration: none; /* Remove default link underline */
   display: block; /* Make the tile block-level for better styling */
+  width: 200px;
+  height: 100px;
 }
 
 .tile-main-box {
@@ -68,3 +102,4 @@ header {
   text-decoration: none; /* Remove default link underline */
   display: block; /* Make the tile block-level for better styling */
 }
+
