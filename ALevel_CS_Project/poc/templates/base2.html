@@ -13,12 +13,12 @@
 <div class="container">
     <div class="sidebar">
         <p>Sidebar</p>
-
+        <a href="/oleddisplay">OLED Display</a>
     </div>
 
     <div class="content1">
         <div class="header">
-            <p>This is my title!</p>
+            <p>{% block p %}This is my title!{% endblock %}</p>
         </div>
         <div class="content3">
             <div class="container">
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="content4">
-            <p>This is my sensor control.</p>
+            <p>{% block p1 %}This is my sensor control.{% endblock %}</p>
         </div>
     </div>
 </div>
