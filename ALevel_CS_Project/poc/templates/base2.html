@@ -14,6 +14,7 @@
     <div class="sidebar">
         <a href="/">Home</a>
         <a href="/oleddisplay">OLED Display</a>
+        <a href="/pid">PID Controller</a>
     </div>
 
     <div class="content1">
@@ -22,9 +23,9 @@
         </div>
         <div class="content3">
             <div class="container">
-                <div class="tile">one</div>
-                <div class="tile">two</div>
-                <div class="tile">three</div>
+                <div class="tile">LDR value is {{ LDR }}</div>
+                <div class="tile">Temperature: {{ temp }}</div>
+                <div class="tile">Humidity: {{ humidity }}</div>
                 <div class="tile">four</div>
             </div>
             <div class="container">
