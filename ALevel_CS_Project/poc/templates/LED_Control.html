@@ -1,38 +1,40 @@
 
 {% extends "base.html" %}
 {% block title %}LED Control{% endblock %}
+{% block p %}LED Control{% endblock %}
+{% block p1 %}This will control the LEDs{% endblock %}
 {% block content %}
-<p id="demo">LED ON</p>
-<button id="switch" type="button" onclick="TurnONOFF()">Switch LED off</button>
-<br>
-<br>
-<p>Change LED colour</p>
-<br>
-<label for="colorInput">Change LED Colour</label>
-<input type="text" id = "colorInput" />
-<br>
-<button id="submitButton" type="button" onclick="submitGRB()">Submit</button>
-<p id="grbOutput"></p>
-<script>
-    function TurnONOFF() {
-        if (document.getElementById("demo").innerHTML === "LED ON") {
-            document.getElementById("demo").innerHTML = "LED OFF"
-        }
-        else {
-            document.getElementById("demo").innerHTML = "LED ON"
-        }
-        if (document.getElementById("switch").innerHTML === "Switch LED off") {
-            document.getElementById("switch").innerHTML = "Switch LED on"
-        }
-        else {
-            document.getElementById("switch").innerHTML = "Switch LED off"
-        }
-    }
-    function submitGRB() {
-        const green = parseInt(document.getElementById("greenInput").value);
-        const red = parseInt(document.getElementById("redInput").value);
-        const blue = parseInt(document.getElementById("blueInput").value)
-        document.getElementById("grbOutput").innerHTML = "GRB values: " + green + ", " + red + ", " + blue;
-    }
-</script>
+{#<p id="demo">LED ON</p>#}
+{#<button id="switch" type="button" onclick="TurnONOFF()">Switch LED off</button>#}
+{#<br>#}
+{#<br>#}
+{#<p>Change LED colour</p>#}
+{#<br>#}
+{#<label for="colorInput">Change LED Colour</label>#}
+{#<input type="text" id = "colorInput" />#}
+{#<br>#}
+{#<button id="submitButton" type="button" onclick="submitGRB()">Submit</button>#}
+{#<p id="grbOutput"></p>#}
+{#<script>#}
+{#    function TurnONOFF() {#}
+{#        if (document.getElementById("demo").innerHTML === "LED ON") {#}
+{#            document.getElementById("demo").innerHTML = "LED OFF"#}
+{#        }#}
+{#        else {#}
+{#            document.getElementById("demo").innerHTML = "LED ON"#}
+{#        }#}
+{#        if (document.getElementById("switch").innerHTML === "Switch LED off") {#}
+{#            document.getElementById("switch").innerHTML = "Switch LED on"#}
+{#        }#}
+{#        else {#}
+{#            document.getElementById("switch").innerHTML = "Switch LED off"#}
+{#        }#}
+{#    }#}
+{#    function submitGRB() {#}
+{#        const green = parseInt(document.getElementById("greenInput").value);#}
+{#        const red = parseInt(document.getElementById("redInput").value);#}
+{#        const blue = parseInt(document.getElementById("blueInput").value)#}
+{#        document.getElementById("grbOutput").innerHTML = "GRB values: " + green + ", " + red + ", " + blue;#}
+{#    }#}
+{#</script>#}
 {% endblock %}
