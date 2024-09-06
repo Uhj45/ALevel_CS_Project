@@ -31,6 +31,7 @@ body {
 .sidebar a:hover {
   background-color: #ddd;
   color: black;
+}
 .sidenav a {
   color: white;
   padding: 16px;
@@ -75,7 +76,7 @@ div {
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  text-align: center;
+  text-align: left;
   border-radius: 10px;
 }
 
