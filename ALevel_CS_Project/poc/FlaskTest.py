@@ -27,7 +27,7 @@ def ledcontrol():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/oleddisplay')
@@ -52,7 +52,6 @@ def pid():
 
 @app.route('/index')
 def index():
-
     return render_template("index.html")
 
 
