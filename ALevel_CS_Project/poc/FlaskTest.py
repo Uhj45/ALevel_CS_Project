@@ -18,10 +18,11 @@ def base():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    dist = 20
+    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
 
 
-@app.route('/ledcontrol')
+@app.route('/ledcontrol', methods=["GET", "POST"])
 def ledcontrol():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
@@ -29,7 +30,11 @@ def ledcontrol():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    if request.method == "GET":
+        return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    elif request.method == "POST":
+        message = "Control LED"
+        return render_template("LED_Control.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/oleddisplay', methods=["GET", "POST"])
