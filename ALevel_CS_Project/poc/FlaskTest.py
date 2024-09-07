@@ -1,9 +1,11 @@
+from crypt import methods
 from LDR import Ldr
 from Temperature_Humidity import TempHumidity
-# from OLED_Display import Oled
+from OLED_Display import Oled
+from Neopixel_LEDs import Neopixel
 # from Distance_Sensor import DistanceSensor
 # from PWM_Fan import Fan
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -27,10 +29,10 @@ def ledcontrol():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
-@app.route('/oleddisplay')
+@app.route('/oleddisplay', methods=["POST"])
 def oled_display():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
@@ -38,7 +40,11 @@ def oled_display():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    return render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    text_to_display = request.form["text_to_display"]
+    oled = Oled
+    oled.display_text(text_to_display)
+    return redirect(url_for("base")), render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val)
+
 
 @app.route('/pid')
 def pid():
