@@ -1,40 +1,55 @@
 
-{% extends "base.html" %}
+{% extends "base2.html" %}
 {% block title %}LED Control{% endblock %}
 {% block p %}LED Control{% endblock %}
-{% block p1 %}This will control the LEDs{% endblock %}
-{% block content %}
-{#<p id="demo">LED ON</p>#}
-{#<button id="switch" type="button" onclick="TurnONOFF()">Switch LED off</button>#}
-{#<br>#}
-{#<br>#}
-{#<p>Change LED colour</p>#}
-{#<br>#}
-{#<label for="colorInput">Change LED Colour</label>#}
-{#<input type="text" id = "colorInput" />#}
-{#<br>#}
-{#<button id="submitButton" type="button" onclick="submitGRB()">Submit</button>#}
-{#<p id="grbOutput"></p>#}
-{#<script>#}
-{#    function TurnONOFF() {#}
-{#        if (document.getElementById("demo").innerHTML === "LED ON") {#}
-{#            document.getElementById("demo").innerHTML = "LED OFF"#}
-{#        }#}
-{#        else {#}
-{#            document.getElementById("demo").innerHTML = "LED ON"#}
-{#        }#}
-{#        if (document.getElementById("switch").innerHTML === "Switch LED off") {#}
-{#            document.getElementById("switch").innerHTML = "Switch LED on"#}
-{#        }#}
-{#        else {#}
-{#            document.getElementById("switch").innerHTML = "Switch LED off"#}
-{#        }#}
-{#    }#}
-{#    function submitGRB() {#}
-{#        const green = parseInt(document.getElementById("greenInput").value);#}
-{#        const red = parseInt(document.getElementById("redInput").value);#}
-{#        const blue = parseInt(document.getElementById("blueInput").value)#}
-{#        document.getElementById("grbOutput").innerHTML = "GRB values: " + green + ", " + red + ", " + blue;#}
-{#    }#}
-{#</script>#}
+{% block p1 %}
+    <p id="demo">LED ON</p>
+    <button id="switch" type="button" onclick="TurnONOFF()">Switch LED off</button>
+    <br>
+    <p>Change LED Colour</p>
+    <br>
+    <label for="greenInput"></label>
+    <input type="number" id="greenInput" placeholder="Green"/>
+    <label for="redInput"></label>
+    <input type="number" id="redInput" placeholder="Red"/>
+    <label for="blueInput"></label>
+    <input type="number" id="blueInput" placeholder="Blue"/>
+    <br>
+    <button id="submitButton" type="button" onclick="submitGRB()">Submit</button>
+    <p id="grbOutput"></p>
+    <script>
+        function TurnONOFF() {
+            if (document.getElementById("demo").innerHTML === "LED ON") {
+                document.getElementById("demo").innerHTML = "LED OFF"
+            }
+            else {
+                document.getElementById("demo").innerHTML = "LED ON"
+            }
+            if (document.getElementById("switch").innerHTML === "Switch LED off") {
+                document.getElementById("switch").innerHTML = "Switch LED on"
+            }
+            else {
+                document.getElementById("switch").innerHTML = "Switch LED off"
+            }
+        }
+        function submitGRB() {
+            const green = parseInt(document.getElementById("greenInput").value);
+            const red = parseInt(document.getElementById("redInput").value);
+            const blue = parseInt(document.getElementById("blueInput").value)
+
+            if (green < 0 || green > 255 || isNaN(green)) {
+                alert("Green value must be between 0 and 255.");
+                return;
+            }
+            if (red < 0 || red > 255 || isNaN(red)) {
+                alert("Red value must be between 0 and 255.");
+                return;
+            }
+            if (blue < 0 || blue > 255 || isNaN(blue)) {
+                alert("Blue value must be between 0 and 255.");
+                return;
+            }
+            document.getElementById("grbOutput").innerHTML = "GRB values: " + green + ", " + red + ", " + blue;
+        }
+    </script>
 {% endblock %}
