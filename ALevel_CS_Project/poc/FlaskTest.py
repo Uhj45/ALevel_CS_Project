@@ -34,22 +34,23 @@ def ledcontrol():
 
 @app.route('/oleddisplay', methods=["GET", "POST"])
 def oled_display():
+    ldr = Ldr()
+    LDR_value = ldr.get_light_level()
+    temp_humidity = TempHumidity()
+    temp_humidity.read_sensor()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
     if request.method == "GET":
-        ldr = Ldr()
-        LDR_value = ldr.get_light_level()
-        temp_humidity = TempHumidity()
-        temp_humidity.read_sensor()
-        temp_val = temp_humidity.get_temperature()
-        humid_val = temp_humidity.get_humidity()
         return render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
         text_to_display = request.form["text_to_display"]
         oled = Oled()
         oled.display_text(text_to_display)
         message = "Message Updated"
-        return render_template("OLED_Display.html", message=message)
+        return render_template("OLED_Display.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
     else:
         return "Unknown error"
+
 
 @app.route('/pid')
 def pid():
