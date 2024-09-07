@@ -3,12 +3,14 @@
 {% block title %}OLED Display{% endblock %}
 {% block p %}OLED Display{% endblock %}
 {% block p1 %}
-<form action="/oleddisplay" method="POST" >
-    <label for="textInput">Enter a message to display</label>
-    <input type="text" name="text_to_display"/>
+<form action="{{ url_for("oled_display") }}" method="POST" >
+    <p>Enter a message to display</p>
+    <label>
+        <input type="text" name="text_to_display" placeholder="Enter a message"/>
+    </label>
     <br>
-    <button type="button" >Submit</button>
+    <input type="submit" value="Submit" />
     <p id="textOutput"></p>
 </form>
-
+<p>{{ message }}</p>
 {% endblock %}

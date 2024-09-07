@@ -32,19 +32,24 @@ def ledcontrol():
     return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
-@app.route('/oleddisplay', methods=["POST"])
+@app.route('/oleddisplay', methods=["GET", "POST"])
 def oled_display():
-    ldr = Ldr()
-    LDR_value = ldr.get_light_level()
-    temp_humidity = TempHumidity()
-    temp_humidity.read_sensor()
-    temp_val = temp_humidity.get_temperature()
-    humid_val = temp_humidity.get_humidity()
-    text_to_display = request.form["text_to_display"]
-    oled = Oled
-    oled.display_text(text_to_display)
-    return redirect(url_for("base")), render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val)
-
+    if request.method == "GET":
+        ldr = Ldr()
+        LDR_value = ldr.get_light_level()
+        temp_humidity = TempHumidity()
+        temp_humidity.read_sensor()
+        temp_val = temp_humidity.get_temperature()
+        humid_val = temp_humidity.get_humidity()
+        return render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    elif request.method == "POST":
+        text_to_display = request.form["text_to_display"]
+        oled = Oled()
+        oled.display_text(text_to_display)
+        message = "Message Updated"
+        return render_template("OLED_Display.html", message=message)
+    else:
+        return "Unknown error"
 
 @app.route('/pid')
 def pid():
