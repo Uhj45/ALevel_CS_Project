@@ -3,16 +3,12 @@
 {% block title %}OLED Display{% endblock %}
 {% block p %}OLED Display{% endblock %}
 {% block p1 %}
-<label for="textInput">Enter a message to display</label>
-<input type="text" id = "textInput"/>
-<br>
-<button id="submitButton" type="button" onclick="submitText()">Submit</button>
-<p id="textOutput"></p>
-<script>
-    function submitText() {
-        const text = document.getElementById("textInput").value
-        document.getElementById("textOutput").innerHTML = "Message: " + text
-    }
-</script>
+<form action="/oleddisplay" method="POST" >
+    <label for="textInput">Enter a message to display</label>
+    <input type="text" name="text_to_display"/>
+    <br>
+    <button type="button" >Submit</button>
+    <p id="textOutput"></p>
+</form>
 
 {% endblock %}
