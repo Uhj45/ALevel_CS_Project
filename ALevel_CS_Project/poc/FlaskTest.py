@@ -33,7 +33,12 @@ def ledcontrol():
     if request.method == "GET":
         return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
+        led_control = request.form["ledcontrol"]
         message = "Control LED"
+        led1 = Neopixel()
+        led1.set_colour(255, 0, 0)
+        led1.turn_led_on()
+        led1.turn_led_off()
         return render_template("LED_Control.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
