@@ -37,8 +37,11 @@ def ledcontrol():
         message = "Control LED"
         led1 = Neopixel()
         led1.set_colour(255, 0, 0)
-        led1.turn_led_on()
-        led1.turn_led_off()
+        if led_control == "On":
+            led1.turn_led_on()
+        else:
+            led1.turn_led_off()
+        print("LED Value: ", led_control)
         return render_template("LED_Control.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
