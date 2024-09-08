@@ -30,6 +30,10 @@ def ledcontrol():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
+    led = Neopixel()
+    print(led)
+    led.set_colour(255, 0, 0)
+    led.turn_led_on()
     if request.method == "GET":
         return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
@@ -43,7 +47,6 @@ def ledcontrol():
         else:
             print(led_control)
             led1.turn_led_off()
-        print("LED Value: ", led_control)
         return render_template("LED_Control.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
