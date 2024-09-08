@@ -4,9 +4,9 @@
 {% block p %}LED Control{% endblock %}
 {% block p1 %}
     <form action="{{ url_for("ledcontrol") }}" method="POST">
-        <input type="submit" value="Submit">
+{#        <input type="submit" value="Submit">#}
         <p id="demo">LED ON</p>
-        <button id="switch" type="button" onclick="TurnONOFF()">Switch LED off</button>
+        <input id="switch" type="submit" name="ledcontrol" onclick="TurnONOFF()" value="Switch LED off"/>
         <br>
         <p>Change LED Colour</p>
         <br>
@@ -27,12 +27,12 @@
                 else {
                     document.getElementById("demo").innerHTML = "LED ON"
                 }
-                if (document.getElementById("switch").innerHTML === "Switch LED off") {
-                    document.getElementById("switch").innerHTML = "Switch LED on"
+                if (document.getElementById("switch").value === "Switch LED off") {
+                    document.getElementById("switch").value = "Switch LED on"
 
                 }
                 else {
-                    document.getElementById("switch").innerHTML = "Switch LED off"
+                    document.getElementById("switch").value = "Switch LED off"
                 }
             }
             function submitGRB() {
