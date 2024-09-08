@@ -38,8 +38,10 @@ def ledcontrol():
         led1 = Neopixel()
         led1.set_colour(255, 0, 0)
         if led_control == "On":
+            print(led_control)
             led1.turn_led_on()
         else:
+            print(led_control)
             led1.turn_led_off()
         print("LED Value: ", led_control)
         return render_template("LED_Control.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
@@ -108,12 +110,6 @@ def index():
 #
 #
 
-# @app.route('/oled')
-# def oled_test():
-#     display = Oled()
-#     text = "Hello World"
-#     oled = display.display_text(text)
-#     return f"Message: {text}", oled
 
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.1.71")
