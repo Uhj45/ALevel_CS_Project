@@ -3,8 +3,9 @@ from LDR import Ldr
 from Temperature_Humidity import TempHumidity
 from OLED_Display import Oled
 from Neopixel_LEDs import Neopixel
-# from Distance_Sensor import DistanceSensor
-# from PWM_Fan import Fan
+from Distance_Sensor import DistanceSensor
+from PWM_Fan import Fan
+import time
 from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
@@ -18,7 +19,8 @@ def base():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    dist = 20
+    distance = DistanceSensor()
+    dist = distance.get_distance()
     return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
 
 
@@ -30,7 +32,7 @@ def ledcontrol():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    led = Neopixel()
+    led = Neopixel(brightness=1)
     print(led)
     led.set_colour(255, 0, 0)
     led.turn_led_on()
@@ -39,7 +41,7 @@ def ledcontrol():
     elif request.method == "POST":
         led_control = request.form["ledcontrol"]
         message = "Control LED"
-        led1 = Neopixel()
+        led1 = Neopixel(brightness=1)
         led1.set_colour(255, 0, 0)
         if led_control == "On":
             print(led_control)
@@ -78,12 +80,30 @@ def pid():
     temp_humidity.read_sensor()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    return render_template("PID_Controller.html",LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
-@app.route('/index')
-def index():
-    return render_template("index.html")
 
+@app.route('/fancontrol', methods=["GET", "POST"])
+def fan_control():
+    ldr = Ldr()
+    LDR_value = ldr.get_light_level()
+    temp_humidity = TempHumidity()
+    temp_humidity.read_sensor()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
+    print("Creating fan object")
+    # fan1 = Fan()
+    # print("Fan on")
+    # fan1.set_speed(50)
+    # time.sleep(5)
+    if request.method == "GET":
+        return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    elif request.method == "POST":
+        fan_speed = request.form["fanspeed"]
+        fan = Fan()
+        fan.set_speed(fan_speed)
+        time.sleep(5)
+        return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
 
 # @app.route('/ldr')
 # def ldr_test():
