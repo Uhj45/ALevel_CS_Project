@@ -1,12 +1,13 @@
 
 {% extends "base2.html" %}
 {% block title %}LED Control{% endblock %}
-{% block p %}LED Control{% endblock %}
-{% block p1 %}
+{% block p1 %}LED Control{% endblock %}
+{% block p2 %}
     <form action="{{ url_for("ledcontrol") }}" method="POST">
 {#        <input type="submit" value="Submit">#}
-        <p id="demo">LED ON</p>
-        <input id="switch" type="submit" name="ledcontrol" onclick="TurnONOFF()" value="Switch LED off"/>
+        <p>LED is on</p>
+        <input type="submit" name="ledcontrol" value="On"/>
+        <input type="submit" name="ledcontrol" value="Off"/>
         <br>
         <p>Change LED Colour</p>
         <br>
@@ -20,21 +21,6 @@
         <button id="submitButton" type="button" onclick="submitGRB()">Submit</button>
         <p id="grbOutput"></p>
         <script>
-            function TurnONOFF() {
-                if (document.getElementById("demo").innerHTML === "LED ON") {
-                    document.getElementById("demo").innerHTML = "LED OFF"
-                }
-                else {
-                    document.getElementById("demo").innerHTML = "LED ON"
-                }
-                if (document.getElementById("switch").value === "Switch LED off") {
-                    document.getElementById("switch").value = "Switch LED on"
-
-                }
-                else {
-                    document.getElementById("switch").value = "Switch LED off"
-                }
-            }
             function submitGRB() {
                 const green = parseInt(document.getElementById("greenInput").value);
                 const red = parseInt(document.getElementById("redInput").value);
@@ -57,5 +43,5 @@
         </script>
 
     </form>
-    <p>{{ message }}</p>
+
 {% endblock %}
