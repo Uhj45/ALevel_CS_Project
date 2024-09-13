@@ -19,10 +19,6 @@ class Neopixel:
         self.r = r
         self.b = b
 
-        GPIO.setmode(GPIO.BCM)
-        order = neopixel.GRB
-        self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
-
     def get_colour(self):
         return self.g, self.r, self.b
 
@@ -147,10 +143,19 @@ class Neopixel:
                 print(f"{i} ,{int(pulse_down_g)}, {int(pulse_down_r)}, {int(pulse_down_b)}, Min value: {min(int(pulse_down_g), int(pulse_down_r), int(pulse_down_b))} ", end="\r")
                 time.sleep(0.01)
 
-# TODO: add function to flash leds
-# TODO: pulse leds,
-# TODO: add docstrings for functions
-# TODO: change colour function should just change the colour
-# TODO: Update variable names to be meaningful
-# TODO: Add for loop with a parameter that allows the user to choose how many times they want to pulse the LED
-# TODO: Do same for flash_led function
+
+class Neopixel2(Neopixel):
+    def __init__(self,brightness=0, g=0, b=0, r=0, phyiscal_led="LED1"):
+        super().__init__(brightness=0, g=0, b=0, r=0)
+        self.brightness = brightness
+        self.g = g
+        self.r = r
+        self.b = b
+        led_pin = phyiscal_led
+        GPIO.setmode(GPIO.BCM)
+        order = neopixel.GRB
+
+        if led_pin == "LED1":
+            self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
+        elif led_pin == "LED2":
+            self.GRBLED = neopixel.NeoPixel(pin=board.D21, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
