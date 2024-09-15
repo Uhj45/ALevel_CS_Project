@@ -2,7 +2,7 @@ from crypt import methods
 from LDR import Ldr
 from Temperature_Humidity import TempHumidity
 from OLED_Display import Oled
-from Neopixel_LEDs import Neopixel
+from Neopixel_LEDs import Neopixel, Neopixel2
 from Distance_Sensor import DistanceSensor
 from PWM_Fan import Fan
 import time
@@ -16,7 +16,7 @@ def base():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
-    temp_humidity.read_sensor()
+    temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     distance = DistanceSensor()
@@ -29,27 +29,47 @@ def ledcontrol():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
-    temp_humidity.read_sensor()
+    temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    led = Neopixel(brightness=1)
-    print(led)
-    led.set_colour(255, 0, 0)
-    led.turn_led_on()
     if request.method == "GET":
         return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
-        led_control = request.form["ledcontrol"]
-        message = "Control LED"
-        led1 = Neopixel(brightness=1)
-        led1.set_colour(255, 0, 0)
-        if led_control == "On":
-            print(led_control)
-            led1.turn_led_on()
+        led_control = request.form["Submit"]
+        led1 = Neopixel2(brightness=1, phyiscal_led="LED1")
+        led2 = Neopixel2(brightness=1, phyiscal_led="LED2")
+        ledstatus1 = "Unknown"
+        ledstatus2 = "Unknown"
+        green = int(request.form["green"])
+        red = int(request.form["red"])
+        blue = int(request.form["blue"])
+        print(f"{green}, {red}, {blue}")
+        led1.set_colour(green, red, blue)
+        led2.set_colour(green, red, blue)
+        if led_control == "Submit":
+            LED = request.form["LED"]
+            control = request.form["Control"]
+            if LED == "LED1":
+                if control == "On":
+                    ledstatus1 = "LED on"
+                    print("LED 1 status: ", control)
+                    led1.turn_led_on()
+                elif control == "Off":
+                    ledstatus1 = "LED off"
+                    print("LED 1 status: ", control)
+                    led1.turn_led_off()
+            elif LED == "LED2":
+                if control == "On":
+                    ledstatus2 = "LED on"
+                    print("LED 2 status: ", control)
+                    led2.turn_led_on()
+                elif control == "Off":
+                    ledstatus2 = "LED off"
+                    print("LED 2 status: ", control)
+                    led2.turn_led_off()
         else:
-            print(led_control)
-            led1.turn_led_off()
-        return render_template("LED_Control.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+            print("Not in use")
+        return render_template("LED_Control.html", ledstatus1=ledstatus1, ledstatus2=ledstatus2, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/oleddisplay', methods=["GET", "POST"])
@@ -57,7 +77,7 @@ def oled_display():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
-    temp_humidity.read_sensor()
+    temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     if request.method == "GET":
@@ -77,7 +97,7 @@ def pid():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
-    temp_humidity.read_sensor()
+    temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
@@ -88,7 +108,7 @@ def fan_control():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
-    temp_humidity.read_sensor()
+    temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     print("Creating fan object")
