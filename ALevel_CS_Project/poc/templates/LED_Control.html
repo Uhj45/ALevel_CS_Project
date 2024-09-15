@@ -3,59 +3,30 @@
 {% block title %}LED Control{% endblock %}
 {% block p1 %}LED Control{% endblock %}
 {% block p2 %}
-    <br>
-    <label for="LED1">LED1</label>
-    <br>
-    <input type="radio" id="LED1" name="LED" value="LED_Control.html" onclick="redirectToPage()">
-    <label for="LED2">LED2</label>
-    <br>
-    <input type="radio" id="LED2" name="LED" value="LED2_Control.html" onclick="redirectToPage()">
-    <script>
-        function redirectToPage() {
-            var radios = document.getElementsByName("LED")
-            for (var i = 0; i < radios.length; i++) {
-                if (radios[i].checked){}
-                window.location.href = radios[i].value
-            }
-        }
-    </script>
+
     <form action="{{ url_for("ledcontrol") }}" method="POST">
-        <p>LED1</p>
-        <input type="submit" name="ledcontrol1" value="LED 1 On"/>
-        <input type="submit" name="ledcontrol1" value="LED 1 Off"/>
+        <label for="LED">LED1</label>
+        <input type="radio" id="LED" name="LED" value="LED1">
+        <label for="LED">LED2</label>
+        <input type="radio" id="LED" name="LED" value="LED2">
+        <br>
+        <br>
+        <label for="On">On</label>
+        <input type="radio" id="On" name="Control" value="On">
+        <label for="Off">Off</label>
+        <input type="radio" id="Off" name="Control" value="Off">
+
         <p>Change LED Colour</p>
+        <label for="greenInput">Green</label>
+        <input type="number" id="greenInput" name="green" placeholder="Green" value="128"/>
         <br>
-        <label for="greenInput"></label>
-        <input type="number" id="greenInput" placeholder="Green" value="128"/>
-        <label for="redInput"></label>
-        <input type="number" id="redInput" placeholder="Red" value="128"/>
-        <label for="blueInput"></label>
-        <input type="number" id="blueInput" placeholder="Blue" value="128"/>
+        <label for="redInput">Red</label>
+        <input type="number" id="redInput" name="red" placeholder="Red" value="128"/>
         <br>
-        <button id="submitButton" type="button" onclick="submitGRB()">Submit</button>
-        <p id="grbOutput"></p>
-        <script>
-            function submitGRB() {
-                const green = parseInt(document.getElementById("greenInput").value);
-                const red = parseInt(document.getElementById("redInput").value);
-                const blue = parseInt(document.getElementById("blueInput").value)
-
-                if (green < 0 || green > 255 || isNaN(green)) {
-                    alert("Green value must be between 0 and 255.");
-                    return;
-                }
-                if (red < 0 || red > 255 || isNaN(red)) {
-                    alert("Red value must be between 0 and 255.");
-                    return;
-                }
-                if (blue < 0 || blue > 255 || isNaN(blue)) {
-                    alert("Blue value must be between 0 and 255.");
-                    return;
-                }
-                document.getElementById("grbOutput").innerHTML = "GRB values: " + green + ", " + red + ", " + blue;
-            }
-        </script>
-
+        <label for="blueInput">Blue</label>
+        <input type="number" id="blueInput" name="blue" placeholder="Blue" value="128"/>
+        <br><br>
+        <input type="submit" name="Submit">
     </form>
 
 {% endblock %}
