@@ -72,7 +72,7 @@ div {
 .content4 {
   flex-grow: 1;
   width: 98%;
-  height: 250px;
+  height: 500px;
   background-color: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   padding: 20px;
@@ -80,6 +80,31 @@ div {
   border-radius: 10px;
 }
 
+.container2 {
+  display: flex;
+  gap: 10px;
+}
+.tile_pid {
+  background-color: grey;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none; /* Remove default link underline */
+  display: block; /* Make the tile block-level for better styling */
+  width: 25%;
+  height: 400px;
+}
+
+.tile_graph {
+  background-color: blue;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none; /* Remove default link underline */
+  display: block; /* Make the tile block-level for better styling */
+  width: 50%;
+  height: 400px;
+}
 .tiles-container {
   margin-left: 230px;
   padding-left: 230;
