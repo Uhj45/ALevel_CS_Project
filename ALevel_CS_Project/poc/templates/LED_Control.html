@@ -3,12 +3,26 @@
 {% block title %}LED Control{% endblock %}
 {% block p1 %}LED Control{% endblock %}
 {% block p2 %}
+    <br>
+    <label for="LED1">LED1</label>
+    <br>
+    <input type="radio" id="LED1" name="LED" value="LED_Control.html" onclick="redirectToPage()">
+    <label for="LED2">LED2</label>
+    <br>
+    <input type="radio" id="LED2" name="LED" value="LED2_Control.html" onclick="redirectToPage()">
+    <script>
+        function redirectToPage() {
+            var radios = document.getElementsByName("LED")
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked){}
+                window.location.href = radios[i].value
+            }
+        }
+    </script>
     <form action="{{ url_for("ledcontrol") }}" method="POST">
-{#        <input type="submit" value="Submit">#}
-        <p>LED is on</p>
-        <input type="submit" name="ledcontrol" value="On"/>
-        <input type="submit" name="ledcontrol" value="Off"/>
-        <br>
+        <p>LED1</p>
+        <input type="submit" name="ledcontrol1" value="LED 1 On"/>
+        <input type="submit" name="ledcontrol1" value="LED 1 Off"/>
         <p>Change LED Colour</p>
         <br>
         <label for="greenInput"></label>
