@@ -2,7 +2,37 @@
 {% extends "base2.html" %}
 {% block title %}PID Controller{% endblock %}
 {% block p1 %}PID Controller{% endblock %}
-{% block p2 %}This is the PID Controller{% endblock %}
-{% block content %}
-{#This will include the javascript and other html code to lift the object#}
+{% block p2 %}This is the PID Controller
+    <div class="container2">
+        <div class="tile_pid"> </div>
+        <div class="tile_graph">
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+            <canvas id="lineChart" width="400" height="400"></canvas>
+            <script>
+                var ctx = document.getElementById("lineChart").getContext("2d")
+                var lineChart = new Chart(ctx, {
+                    type:"line",
+                    data: {
+                        labels: {{ labels | safe }},
+                        datasets: [
+                            {
+                                label: "Data points",
+                                data: {{ values | safe }},
+                                fill: false,
+                                borderColor: "rgb(75, 192, 255",
+                                lineTension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: false
+                    }
+                })
+            </script>
+    </div>
+    </div>
+
+
+
+
 {% endblock %}
