@@ -100,7 +100,19 @@ def pid():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+
+    data = [
+        ("01-01-2020", 1597),
+        ("02-01-2020", 1456),
+        ("03-01-2020", 1908),
+        ("04-01-2020", 896),
+        ("05-01-2020", 755),
+        ("06-01-2020", 110),
+        ("07-01-2020", 980),
+     ]
+    labels = [row[0] for row in data]
+    values = [row[1] for row in data]
+    return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/fancontrol', methods=["GET", "POST"])
