@@ -92,7 +92,7 @@ def oled_display():
         return "Unknown error"
 
 
-@app.route('/pid')
+@app.route('/pid', methods=["GET", "POST"])
 def pid():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
@@ -112,7 +112,13 @@ def pid():
      ]
     labels = [row[0] for row in data]
     values = [row[1] for row in data]
-    return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+
+    if request.method == "GET":
+        return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    elif request.method == "POST":
+        target_height = request.form["height"]
+        print(target_height)
+        return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/fancontrol', methods=["GET", "POST"])
