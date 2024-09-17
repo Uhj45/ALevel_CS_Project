@@ -116,8 +116,12 @@ def pid():
     if request.method == "GET":
         return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
-        target_height = request.form["height"]
-        print(target_height)
+        target_height = int(request.form["height"])
+        threshold = int(request.form["threshold"])
+        upper_threshold = target_height + threshold
+        lower_threshold = target_height - threshold
+        print(f"{upper_threshold}, {lower_threshold}")
+        print(f"{target_height}")
         return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
