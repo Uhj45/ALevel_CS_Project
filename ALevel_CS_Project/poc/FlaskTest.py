@@ -116,12 +116,43 @@ def pid():
     if request.method == "GET":
         return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
+        print(request.form)
+        print(type(request.form))
+        parameter_list = request.form
+        for key in parameter_list:
+            print(parameter_list.get(key))
+            if key == "I":
+                i = request.form["I"]
+                print(f"I is in the list: {'I' in key}")
+                print(f"{i}")
+            if key == "P":
+                p = request.form["P"]
+                print(f"P is in the list: {'P' in key}")
+                print(f"{p}")
+            if key == "D":
+                d = request.form["D"]
+                print(f"D is in the list: {'D' in key}")
+                print(f"{d}")
+        control_loop = request.form["control_loop"]
+        Kp = int(request.form["Kp"])
+        Ki = int(request.form["Ki"])
+        Kd = int(request.form["Kd"])
+        floats = request.form["floats"]
         target_height = int(request.form["height"])
         threshold = int(request.form["threshold"])
         upper_threshold = target_height + threshold
         lower_threshold = target_height - threshold
-        print(f"{upper_threshold}, {lower_threshold}")
-        print(f"{target_height}")
+        if control_loop == "PID":
+            print(f"{control_loop} has been selected")
+            print(f"{target_height}")
+            print(f"{Kp}, {Ki}, {Kd}")
+            print(f"{floats}")
+        elif control_loop == "Schmitt Trigger":
+            print(f"{control_loop} has been selected")
+            print(f"{target_height}")
+            print(f"{upper_threshold}, {lower_threshold}")
+            print(f"{floats}")
+
         return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
