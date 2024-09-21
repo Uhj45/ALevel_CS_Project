@@ -25,8 +25,18 @@ email text
 # cur.executemany("INSERT INTO customers VALUES (?,?,?)", many_customers)
 
 # Printing Table with a primary key in python console
-cur.execute("SELECT rowid, * FROM customers")
+# cur.execute("SELECT rowid, * FROM customers")
 
+# items = cur.fetchall()
+
+# for item in items:
+#     print(item)
+
+# Updating Records
+
+cur.execute("""UPDATE customers SET first_name = 'Bob'
+                WHERE last_name = 'Elder'
+""")
 items = cur.fetchall()
 
 for item in items:
