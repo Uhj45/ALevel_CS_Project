@@ -12,6 +12,9 @@ last_name text,
 email text
 )""")
 
+# Adding a single item to the table
+cur.execute("INSERT INTO customers VALUES ('John', 'Elder', 'john@compnay.com')")
+
 
 
 conn.commit()
