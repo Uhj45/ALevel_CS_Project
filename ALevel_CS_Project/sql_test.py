@@ -34,15 +34,30 @@ email text
 
 # Updating Records
 
-cur.execute("""UPDATE customers SET first_name = 'Bob'
-                WHERE last_name = 'Elder'
-""")
-items = cur.fetchall()
+# cur.execute("""UPDATE customers SET first_name = 'Bob'
+#                 WHERE last_name = 'Elder'
+# """)
+# items = cur.fetchall()
+#
+# for item in items:
+#     print(item)
 
-for item in items:
-    print(item)
+# Deleting Records
+cur.execute("DELETE FROM customers WHERE rowid = 4")
 
+# Ordering Results
 
+cur.execute("SELECT * FROM customers ORDER BY first_name")
+
+# Using AND/OR
+cur.execute("SELECT * FROM customers WHERE first_name = 'Bob' AND last_name = 'Elder'")
+cur.execute("SELECT * FROM customers WHERE first_name = 'Wes' OR last_name = 'Elder'")
+
+# Limit Results
+cur.execute("SELECT * FROM customers LIMIT 2")
+
+# Dropping Tables
+# cur.execute("DROP TABLE customers")
 
 conn.commit()
 
