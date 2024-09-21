@@ -1,10 +1,16 @@
 import sqlite3
 
-conn = sqlite3.connect('sqlite/customer.db')
+conn = sqlite3.connect('../sqlite/customer.db')
 
 cur = conn.cursor()
 
 # Creates table
+table = """CREATE TABLE people(
+first_name text,
+last_name text,
+email text
+)"""
+cur.execute(table)
 
 cur.execute("""CREATE TABLE customers(
 first_name text,
