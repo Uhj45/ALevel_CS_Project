@@ -16,13 +16,22 @@ email text
 # cur.execute("INSERT INTO customers VALUES ('John', 'Elder', 'john@compnay.com')")
 
 # Adding multiple items to a table
-many_customers = [
-    ('Wes', 'Brown', 'wes@brown.com'),
-    ('Steph', 'Kuewa', 'steph@kuewa.com'),
-    ('Dan', 'Pas', 'dan@pas.com'),
-]
+# many_customers = [
+#     ('Wes', 'Brown', 'wes@brown.com'),
+#     ('Steph', 'Kuewa', 'steph@kuewa.com'),
+#     ('Dan', 'Pas', 'dan@pas.com'),
+# ]
+#
+# cur.executemany("INSERT INTO customers VALUES (?,?,?)", many_customers)
 
-cur.executemany("INSERT INTO customers VALUES (?,?,?)", many_customers)
+# Printing Table with a primary key in python console
+cur.execute("SELECT rowid, * FROM customers")
+
+items = cur.fetchall()
+
+for item in items:
+    print(item)
+
 
 
 conn.commit()
