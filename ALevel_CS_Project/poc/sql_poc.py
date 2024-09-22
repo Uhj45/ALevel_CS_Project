@@ -5,18 +5,25 @@ conn = sqlite3.connect('../sqlite/customer.db')
 cur = conn.cursor()
 
 # Creates table
-table = """CREATE TABLE people(
-first_name text,
-last_name text,
-email text
-)"""
-cur.execute(table)
-
-cur.execute("""CREATE TABLE customers(
-first_name text,
-last_name text,
-email text
-)""")
+# table_name = "people"
+# columns = """
+# first_name text,
+# last_name text,
+# email text,
+# age int
+# """
+#
+#
+# table = f"""CREATE TABLE {table_name}(
+# {columns}
+# )"""
+# cur.execute(table)
+#
+# cur.execute("""CREATE TABLE customers(
+# first_name text,
+# last_name text,
+# email text
+# )""")
 
 # Adding a single item to the table
 # cur.execute("INSERT INTO customers VALUES ('John', 'Elder', 'john@compnay.com')")
@@ -49,18 +56,18 @@ email text
 #     print(item)
 
 # Deleting Records
-cur.execute("DELETE FROM customers WHERE rowid = 4")
+# cur.execute("DELETE FROM customers WHERE rowid = 4")
 
 # Ordering Results
 
-cur.execute("SELECT * FROM customers ORDER BY first_name")
+# cur.execute("SELECT * FROM customers ORDER BY first_name")
 
 # Using AND/OR
-cur.execute("SELECT * FROM customers WHERE first_name = 'Bob' AND last_name = 'Elder'")
-cur.execute("SELECT * FROM customers WHERE first_name = 'Wes' OR last_name = 'Elder'")
+# cur.execute("SELECT * FROM customers WHERE first_name = 'Bob' AND last_name = 'Elder'")
+# cur.execute("SELECT * FROM customers WHERE first_name = 'Wes' OR last_name = 'Elder'")
 
 # Limit Results
-cur.execute("SELECT * FROM customers LIMIT 2")
+# cur.execute("SELECT * FROM customers LIMIT 2")
 
 # Dropping Tables
 # cur.execute("DROP TABLE customers")
