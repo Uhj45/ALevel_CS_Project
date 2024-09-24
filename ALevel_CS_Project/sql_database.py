@@ -130,9 +130,10 @@ class StorePidConstants(BaseDatabase):
         self.db_connection.commit()
 
     def get_item(self):
-        self.cursor.execute(f"")
+        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Ki = '9' ")
 
 test1 = StorePidConstants()
 # test1.create_table()
-test1.add_item()
+# test1.add_item()
+test1.get_item()
 
