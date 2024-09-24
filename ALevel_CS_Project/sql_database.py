@@ -57,7 +57,7 @@ class BaseDatabase:
 
 
 class StoreReadings(BaseDatabase):
-    def __init__(self, db_name="Senors.db", table_name="Senors Readings"):
+    def __init__(self, db_name="Senors.db", table_name="Senors_Readings"):
         super().__init__(db_name)
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
@@ -129,7 +129,8 @@ class StorePidConstants(BaseDatabase):
         self.cursor.execute(f"""INSERT INTO """)
         self.db_connection.commit()
 
+
 test = BaseDatabase()
 test.create_table()
-test1 = StoreReadings()
-test1.create_table()
+# test1 = StoreReadings()
+# test1.create_table()
