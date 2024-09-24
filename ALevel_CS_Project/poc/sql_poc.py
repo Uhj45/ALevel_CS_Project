@@ -72,6 +72,6 @@ cur = conn.cursor()
 # Dropping Tables
 # cur.execute("DROP TABLE customers")
 
-conn.commit()
-
-conn.close()
+# conn.commit()
+#
+# conn.close()
