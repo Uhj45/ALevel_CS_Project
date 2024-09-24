@@ -113,6 +113,13 @@ class StorePidConstants(BaseDatabase):
         Kd int
         """
 
+    def create_table(self):
+        table = f"""CREATE TABLE {self.table_name}(
+        {self.columns}
+        )"""
+        self.cursor.execute(table)
+        self.db_connection.commit()
+
 
 test = BaseDatabase()
 test.create_table()
