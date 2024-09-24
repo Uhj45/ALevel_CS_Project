@@ -100,13 +100,13 @@ class StoreReadings(BaseDatabase):
 
 
 class StorePidConstants(BaseDatabase):
-    def __init__(self, db_name, table_name, columns):
+    def __init__(self, db_name="PID_Constants.db", table_name="PID Constants"):
         super().__init__(db_name)
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
         self.cursor = self.db_connection.cursor()
-        self.db_name = "PID Constants Database"
-        self.table_name = "PID Constants"
+        self.db_name = db_name
+        self.table_name = table_name
         self.columns = """
         Kp int,
         Ki int,
@@ -122,15 +122,17 @@ class StorePidConstants(BaseDatabase):
 
     def add_item(self):
         values = [
-            '23',
-            '45',
-            '67',
+            '23', '45', '65'
         ]
-        self.cursor.execute(f"""INSERT INTO """)
+        self.cursor.execute(f"""INSERT INTO {self.table_name} VALUES {values}""")
+        items = self.cursor.fetchall()
+
+        for item in items:
+            print(item)
         self.db_connection.commit()
 
 
-test = BaseDatabase()
-test.create_table()
-# test1 = StoreReadings()
-# test1.create_table()
+test1 = StorePidConstants()
+test1.create_table()
+test1.add_item()
+
