@@ -121,16 +121,18 @@ class StorePidConstants(BaseDatabase):
         self.db_connection.commit()
 
     def add_item(self):
-        values = ['23', '45', '65']
-        self.cursor.execute(f"INSERT INTO {self.table_name} VALUES (?,?,?)", values)
-        items = self.cursor.fetchall()
-
-        for item in items:
-            print(item)
+        values = [
+            ('23', '45', '65'),
+            ('12', '90', '37'),
+            ('23', '9', '15'),
+        ]
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?)", values)
         self.db_connection.commit()
 
+    def get_item(self):
+        self.cursor.execute(f"")
 
 test1 = StorePidConstants()
-test1.create_table()
+# test1.create_table()
 test1.add_item()
 
