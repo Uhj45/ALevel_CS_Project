@@ -6,7 +6,7 @@ class BaseDatabase:
     create a new subclass and inherit the base attributes and methods
     The subclass should be customised by changing the table name and the columns
     """
-    def __init__(self, db_name="sensor.db"):
+    def __init__(self, db_name="test.db"):
         """
         This initialises the database connection
         :param db_name: Needs to be specified, or it will be set to its default
@@ -57,12 +57,12 @@ class BaseDatabase:
 
 
 class StoreReadings(BaseDatabase):
-    def __init__(self, db_name, table_name="Senors Readings"):
+    def __init__(self, db_name="Senors.db", table_name="Senors Readings"):
         super().__init__(db_name)
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
         self.cursor = self.db_connection.cursor()
-        self.db_name = "Senors Database"
+        self.db_name = db_name
         self.table_name = table_name
         self.columns = """
         Height int,
@@ -120,6 +120,16 @@ class StorePidConstants(BaseDatabase):
         self.cursor.execute(table)
         self.db_connection.commit()
 
+    def add_item(self):
+        values = [
+            '23',
+            '45',
+            '67',
+        ]
+        self.cursor.execute(f"""INSERT INTO """)
+        self.db_connection.commit()
 
 test = BaseDatabase()
 test.create_table()
+test1 = StoreReadings()
+test1.create_table()
