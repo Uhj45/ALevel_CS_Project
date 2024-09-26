@@ -76,6 +76,36 @@ class Fan:
             print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.fan_speed}")
 
 
+
+
+class PCA9685Fan:
+    def
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # fan = Fan()
 # fan.turn_fan_on()
 # time.sleep(10)
