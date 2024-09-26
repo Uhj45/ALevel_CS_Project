@@ -130,7 +130,13 @@ class StorePidConstants(BaseDatabase):
         self.db_connection.commit()
 
     def get_item(self):
-        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Ki = '9' ")
+        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Kp = '12' ")
+        self.db_connection.commit()
+
+    def remove_item(self):
+        self.cursor.execute(f"DELETE FROM {self.table_name} WHERE rowid = 1")
+        self.db_connection.commit()
+
 
 test1 = StorePidConstants()
 # test1.create_table()
