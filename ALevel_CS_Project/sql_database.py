@@ -137,9 +137,13 @@ class StorePidConstants(BaseDatabase):
         self.cursor.execute(f"DELETE FROM {self.table_name} WHERE rowid = 1")
         self.db_connection.commit()
 
+    def update_item(self):
+        self.cursor.execute(f"UPDATE {self.table_name} SET Kp = '56' WHERE rowid = 2 ")
+        self.db_connection.commit()
 
 test1 = StorePidConstants()
 # test1.create_table()
 # test1.add_item()
-test1.get_item()
-
+# test1.get_item()
+# test1.remove_item()
+test1.update_item()
