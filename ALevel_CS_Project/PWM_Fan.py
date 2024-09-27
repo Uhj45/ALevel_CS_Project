@@ -1,6 +1,7 @@
 import RPi.GPIO as GPIO
 import time
-
+import board
+from adafruit_pca9685 import PCA9685
 
 class Fan:
     """
@@ -76,10 +77,24 @@ class Fan:
             print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.fan_speed}")
 
 
-
-
 class PCA9685Fan:
-    def
+    def __init__(self, frequency, channel=0, ):
+        self.frequency = frequency
+        self.channel = channel
+
+        i2c = board.I2C()
+        self.pca = PCA9685(i2c)
+
+    def turn_fan_on(self):
+        self.pca.self.frequency = 1400
+        print(self.pca.self.frequency)
+
+    def turn_fan_off(self):
+        self.pca.self.frequency = 1400
+        self.pca.self.channels[1].duty_cycle = 0
+
+
+
 
 
 
