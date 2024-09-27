@@ -91,27 +91,35 @@ class PCA9685Fan:
             return True
         else:
             print("Value is not between 0 and 100")
+
     def turn_fan_on(self):
-        self.fan_speed = 100
-        self.pca.self.channels[1].duty_cycle= hex(self.fan_speed)
-        print(self.pca.self.frequency)
+        self.fan_speed = 65300
+        print(type(hex(self.fan_speed)))
+        # self.pca.channels[1].duty_cycle = 0xFFFF
+        self.pca.channels[1].duty_cycle = self.fan_speed
 
     def turn_fan_off(self):
         self.fan_speed = 0
-        self.pca.self.channels[1].duty_cycle = hex(self.fan_speed)
+        self.pca.channels[1].duty_cycle = self.fan_speed
 
     def get_fan_speed(self):
-        return self.pca.self.channels[1].duty_cycle
+        return self.pca.channels[1].duty_cycle
 
     def set_fan_speed(self, fan_speed):
-        if self.check_fan_speed(fan_speed):
-            self.fan_speed = fan_speed
-            self.pca.self.channels[1].duty_cycle = hex(self.fan_speed)
-            print(f"Fan speed is {self.pca.self.channel[1].dutycycle}")
+        self.fan_speed = (fan_speed / 100) * 65535
+        if self.check_fan_speed(self.fan_speed):
+            self.pca.channels[1].duty_cycle = self.fan_speed
+            print(f"Fan speed is {self.pca.channel[1].dutycycle}")
 
 
-pca_fan = PCA9685Fan
-pca_fan.turn_fan_on()
+pca_fan = PCA9685Fan()
+# pca_fan.turn_fan_on()
+# time.sleep(5)
+# pca_fan.turn_fan_off()
+
+
+
+
 
 
 
