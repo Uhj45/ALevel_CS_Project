@@ -78,45 +78,40 @@ class Fan:
 
 
 class PCA9685Fan:
-    def __init__(self, frequency, channel=0, ):
-        self.frequency = frequency
+    def __init__(self, channel=0, fan_speed=0):
         self.channel = channel
-
+        self.fan_speed = fan_speed
         i2c = board.I2C()
         self.pca = PCA9685(i2c)
+        self.pca.frequency = 1400
 
+    @staticmethod
+    def check_fan_speed(fan_speed):
+        if 0 <= int(fan_speed) <= 100:
+            return True
+        else:
+            print("Value is not between 0 and 100")
     def turn_fan_on(self):
-        self.pca.self.frequency = 1400
+        self.fan_speed = 100
+        self.pca.self.channels[1].duty_cycle= hex(self.fan_speed)
         print(self.pca.self.frequency)
 
     def turn_fan_off(self):
-        self.pca.self.frequency = 1400
-        self.pca.self.channels[1].duty_cycle = 0
+        self.fan_speed = 0
+        self.pca.self.channels[1].duty_cycle = hex(self.fan_speed)
+
+    def get_fan_speed(self):
+        return self.pca.self.channels[1].duty_cycle
+
+    def set_fan_speed(self, fan_speed):
+        if self.check_fan_speed(fan_speed):
+            self.fan_speed = fan_speed
+            self.pca.self.channels[1].duty_cycle = hex(self.fan_speed)
+            print(f"Fan speed is {self.pca.self.channel[1].dutycycle}")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+pca_fan = PCA9685Fan
+pca_fan.turn_fan_on()
 
 
 
