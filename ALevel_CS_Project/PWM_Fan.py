@@ -114,11 +114,11 @@ class PCA9685Fan:
             print(f"Fan speed is {fan_speed}")
 
 
-pca_fan = PCA9685Fan()
+# pca_fan = PCA9685Fan()
 # pca_fan.turn_fan_on()
 # time.sleep(5)
 # pca_fan.turn_fan_off()
-pca_fan.set_fan_speed(30)
+# pca_fan.set_fan_speed(30)
 
 # fan = Fan()
 # fan.turn_fan_on()
