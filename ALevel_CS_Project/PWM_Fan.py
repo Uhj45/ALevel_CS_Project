@@ -87,7 +87,7 @@ class PCA9685Fan:
 
     @staticmethod
     def check_fan_speed(fan_speed):
-        if 0 <= int(fan_speed) <= 100:
+        if 0 <= fan_speed <= 100:
             return True
         else:
             print("Value is not between 0 and 100")
@@ -106,23 +106,19 @@ class PCA9685Fan:
         return self.pca.channels[1].duty_cycle
 
     def set_fan_speed(self, fan_speed):
-        self.fan_speed = (fan_speed / 100) * 65535
-        if self.check_fan_speed(self.fan_speed):
+        if self.check_fan_speed(fan_speed):
+            self.fan_speed = int((fan_speed / 100) * 65535)
+            # self.fan_speed = 32767
+            print(self.fan_speed)
             self.pca.channels[1].duty_cycle = self.fan_speed
-            print(f"Fan speed is {self.pca.channel[1].dutycycle}")
+            print(f"Fan speed is {fan_speed}")
 
 
 pca_fan = PCA9685Fan()
 # pca_fan.turn_fan_on()
 # time.sleep(5)
 # pca_fan.turn_fan_off()
-
-
-
-
-
-
-
+pca_fan.set_fan_speed(30)
 
 # fan = Fan()
 # fan.turn_fan_on()
