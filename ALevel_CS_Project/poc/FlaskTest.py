@@ -1,12 +1,13 @@
 from crypt import methods
-from LDR import Ldr
-from Temperature_Humidity import TempHumidity
-from OLED_Display import Oled
-from Neopixel_LEDs import Neopixel, Neopixel2
-from Distance_Sensor import DistanceSensor
-from PWM_Fan import Fan
+from ..LDR import Ldr
+from ..Temperature_Humidity import TempHumidity
+from ..OLED_Display import Oled
+from ..Neopixel_LEDs import Neopixel, Neopixel2
+from ..Distance_Sensor import DistanceSensor
+from ..PWM_Fan import PCA9685Fan
 import time
 from flask import Flask, render_template, request, redirect, url_for
+
 
 app = Flask(__name__)
 
@@ -19,9 +20,9 @@ def base():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    distance = DistanceSensor()
-    dist = distance.get_distance()
-    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
+    # distance = DistanceSensor()
+    # dist = distance.get_distance()
+    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/ledcontrol', methods=["GET", "POST"])
@@ -172,10 +173,9 @@ def fan_control():
     if request.method == "GET":
         return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
-        fan_speed = request.form["fanspeed"]
-        fan = Fan()
-        fan.set_speed(fan_speed)
-        time.sleep(5)
+        fan_speed = int(request.form["fanspeed"])
+        pca_fan = PCA9685Fan()
+        pca_fan.set_fan_speed(fan_speed)
         return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
 
 
