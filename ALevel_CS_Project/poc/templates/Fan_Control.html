@@ -4,6 +4,8 @@
 {% block p1 %}Fan Control{% endblock %}
 {% block p2 %}
 <form action="{{ url_for("fan_control") }}" method="POST" >
+    <input type="button" name="turnfanon" value="On">
+    <input type="button" name="turnfanoff" value="Off">
     <p>Enter a fan speed</p>
     <label>
         <input type="number" name="fanspeed" placeholder="Enter fan speed"/>
