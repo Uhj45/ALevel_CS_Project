@@ -166,15 +166,17 @@ def fan_control():
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     print("Creating fan object")
-    # fan1 = Fan()
-    # print("Fan on")
-    # fan1.set_speed(50)
-    # time.sleep(5)
     if request.method == "GET":
         return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
         fan_speed = int(request.form["fanspeed"])
+        turn_fan_on = request.form["turnfanon"]
+        turn_fan_off = request.form["turnfanoff"]
         pca_fan = PCA9685Fan()
+        if turn_fan_on == "On":
+            pca_fan.turn_fan_on()
+        elif turn_fan_off == "Off":
+            pca_fan.turn_fan_off()
         pca_fan.set_fan_speed(fan_speed)
         return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
 
