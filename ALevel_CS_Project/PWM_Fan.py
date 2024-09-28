@@ -112,25 +112,3 @@ class PCA9685Fan:
             print(self.fan_speed)
             self.pca.channels[1].duty_cycle = self.fan_speed
             print(f"Fan speed is {fan_speed}")
-
-
-# pca_fan = PCA9685Fan()
-# pca_fan.turn_fan_on()
-# time.sleep(5)
-# pca_fan.turn_fan_off()
-# pca_fan.set_fan_speed(30)
-
-# fan = Fan()
-# fan.turn_fan_on()
-# time.sleep(10)
-# fan.turn_fan_off()
-# time.sleep(5)
-# fan.turn_fan_on()
-# fan.set_speed(50)
-# time.sleep(10)
-# print(fan.get_speed())
-# fan.increment_fan_speed(200)
-# print(fan.get_speed())
-# fan.set_speed(fan.get_speed() + 5)
-# time.sleep(10)
-# fan.decrement_fan_speed(12)
