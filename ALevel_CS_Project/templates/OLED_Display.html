@@ -1,0 +1,16 @@
+
+{% extends "base2.html" %}
+{% block title %}OLED Display{% endblock %}
+{% block p1 %}OLED Display{% endblock %}
+{% block p2 %}
+<form action="{{ url_for("oled_display") }}" method="POST" >
+    <p>Enter a message to display</p>
+    <label>
+        <input type="text" name="text_to_display" placeholder="Enter a message"/>
+    </label>
+    <br>
+    <input type="submit" value="Submit" />
+    <p id="textOutput"></p>
+</form>
+<p>{{ message }}</p>
+{% endblock %}

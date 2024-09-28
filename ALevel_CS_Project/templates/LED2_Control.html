@@ -1,0 +1,59 @@
+{% extends "base2.html" %}
+{% block title %}LED Control{% endblock %}
+{% block p1 %}LED Control{% endblock %}
+{% block p2 %}
+    <br>
+    <label for="LED1">LED1</label>
+    <br>
+    <input type="radio" id="LED1" name="LED" value="LED_Control.html" onclick="redirectToPage()">
+    <label for="LED2">LED2</label>
+    <br>
+    <input type="radio" id="LED2" name="LED" value="LED2_Control.html" onclick="redirectToPage()">
+    <script>
+        function redirectToPage() {
+            var radios = document.getElementsByName("LED")
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked){}
+                window.location.href = radios[i].value
+            }
+        }
+    </script>
+<form action="{{ url_for("ledcontrol") }}" method="POST">
+    <p>LED2</p>
+    <input type="submit" name="ledcontrol2" value="LED 2 On"/>
+    <input type="submit" name="ledcontrol2" value="LED 2 Off"/>
+    <br>
+    <p>Change LED Colour</p>
+    <label for="greenInput"></label>
+    <input type="number" id="greenInput" placeholder="Green" value="128"/>
+    <label for="redInput"></label>
+    <input type="number" id="redInput" placeholder="Red" value="128"/>
+    <label for="blueInput"></label>
+    <input type="number" id="blueInput" placeholder="Blue" value="128"/>
+    <button id="submitButton" type="button" onclick="submitGRB()">Submit</button>
+    <p id="grbOutput"></p>
+    <script>
+        function submitGRB() {
+            const green = parseInt(document.getElementById("greenInput").value);
+            const red = parseInt(document.getElementById("redInput").value);
+            const blue = parseInt(document.getElementById("blueInput").value)
+
+            if (green < 0 || green > 255 || isNaN(green)) {
+                alert("Green value must be between 0 and 255.");
+                return;
+            }
+            if (red < 0 || red > 255 || isNaN(red)) {
+                alert("Red value must be between 0 and 255.");
+                return;
+            }
+            if (blue < 0 || blue > 255 || isNaN(blue)) {
+                alert("Blue value must be between 0 and 255.");
+                return;
+            }
+            document.getElementById("grbOutput").innerHTML = "GRB values: " + green + ", " + red + ", " + blue;
+        }
+    </script>
+
+</form>
+
+{% endblock %}

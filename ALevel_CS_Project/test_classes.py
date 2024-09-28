@@ -1,8 +1,9 @@
 # from Temperature_Humidity import TempHumidity
 # from OLED_Display import Oled
-from Neopixel_LEDs import Neopixel, Neopixel2
+# from Neopixel_LEDs import Neopixel, Neopixel2
 # from LDR import Ldr
 from Distance_Sensor import DistanceSensor
+from PWM_Fan import PCA9685Fan
 import time
 import RPi.GPIO as GPIO
 
