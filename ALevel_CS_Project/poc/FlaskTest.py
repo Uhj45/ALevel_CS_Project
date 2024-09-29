@@ -169,16 +169,23 @@ def fan_control():
     if request.method == "GET":
         return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
+        fan_status = "Unknown"
         fan_speed = int(request.form["fanspeed"])
-        turn_fan_on = request.form["turnfanon"]
-        turn_fan_off = request.form["turnfanoff"]
+        fancontrol = request.form["fan_control"]
+
         pca_fan = PCA9685Fan()
-        if turn_fan_on == "On":
+        if fancontrol == "On":
+            fan_status = "Fan on"
             pca_fan.turn_fan_on()
-        elif turn_fan_off == "Off":
+            print(fancontrol)
+        elif fancontrol == "Off":
+            fan_status = "Fan off"
             pca_fan.turn_fan_off()
-        pca_fan.set_fan_speed(fan_speed)
-        return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
+            print(fancontrol)
+        else:
+            pca_fan.set_fan_speed(fan_speed)
+            print(fan_speed)
+        return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
 
 
 if __name__ == "__main__":
