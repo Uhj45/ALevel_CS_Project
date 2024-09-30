@@ -19,7 +19,8 @@ class BaseDatabase:
         first_name text,
         last_name text,
         email text,
-        age int
+        age int,
+        car text
         """
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
@@ -32,11 +33,9 @@ class BaseDatabase:
         self.cursor.execute(table)
         self.db_connection.commit()
 
-    def add_item(self):
+    def add_item(self, name, lastname, email, age, car):
         many_customers = [
-             ('Wes', 'Brown', 'wes@brown.com', 23),
-             ('Steph', 'Kuewa', 'steph@kuewa.com', 56),
-             ('Dan', 'Pas', 'dan@pas.com', 47),
+             (f'{name}', f'{lastname}', f'{email}', f'{age}', f'{car}'),
          ]
 
         self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?)", many_customers)
@@ -57,7 +56,7 @@ class BaseDatabase:
 
 
 class StoreReadings(BaseDatabase):
-    def __init__(self, db_name="Senors.db", table_name="SenorsReadings"):
+    def __init__(self, db_name="Senors.db", table_name="SensorResults"):
         super().__init__(db_name)
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
@@ -67,10 +66,9 @@ class StoreReadings(BaseDatabase):
         self.columns = """
         Height int,
         Target Height int,
-        LED1 text,
-        LED2 text,
-        Fan Speed int,
-        Time int
+        Threshold int,
+        Upper_Threshold int,
+        Lower_Threshold int
         """
     # def create_table(self):
     #     table = f"""CREATE TABLE {self.table_name}(
@@ -78,13 +76,11 @@ class StoreReadings(BaseDatabase):
     #     )"""
     #     self.cursor.execute(table)
     #     self.db_connection.commit()
-    def add_item(self):
+    def add_item(self, height, target_height, threshold, upper_threshold, lower_threshold):
         sensor_readings = [
-            ('23', '13', 'On', 'On', '100', '12:45'),
-            ('12', '10', 'Off', 'Off', '65', '14:30'),
-            ('19', '8', 'On', 'Off', '78', '09:30'),
+            (f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}'),
         ]
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?)", sensor_readings)
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?)", sensor_readings)
         self.db_connection.commit()
 
     def remove_item(self):
@@ -105,7 +101,7 @@ class StoreReadings(BaseDatabase):
 
 
 class StorePidConstants(BaseDatabase):
-    def __init__(self, db_name="PIDConstants.db", table_name="PIDConstants"):
+    def __init__(self, db_name="Sensors.db", table_name="PIDConstants"):
         super().__init__(db_name)
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
@@ -156,9 +152,9 @@ class StorePidConstants(BaseDatabase):
 # test.get_item()
 # test.update_item()
 
-test1 = StorePidConstants()
+# test1 = StorePidConstants()
 # test1.create_table()
 # test1.add_item()
-test1.get_item()
+# test1.get_item()
 # test1.remove_item()
 # test1.update_item()
