@@ -33,7 +33,7 @@ class BaseDatabase:
         self.cursor.execute(table)
         self.db_connection.commit()
 
-    def add_item(self, name, lastname, email, age, car):
+    def add_item(self, name, lastname, email, age, car):           # Had to add parameters here to match the parameters used in the subclass
         many_customers = [
              (f'{name}', f'{lastname}', f'{email}', f'{age}', f'{car}'),
          ]
