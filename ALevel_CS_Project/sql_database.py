@@ -81,6 +81,10 @@ class StoreReadings(BaseDatabase):
             (f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}'),
         ]
         self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?)", sensor_readings)
+        self.cursor.execute(f"SELECT * FROM {self.table_name}")
+        items = self.cursor.fetchall()
+        for item in items:
+            print(item)
         self.db_connection.commit()
 
     def remove_item(self):
@@ -147,7 +151,7 @@ class StorePidConstants(BaseDatabase):
 
 # test = StoreReadings()
 # test.create_table()
-# test.add_item()
+# test.add_item(15, 20, 2, 22, 18)
 # test.remove_item()
 # test.get_item()
 # test.update_item()
