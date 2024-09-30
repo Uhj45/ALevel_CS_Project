@@ -7,7 +7,7 @@ echo "${TARFILE}"
  
 # copies files into an archive called ${tarfile}
 # includes all files in current folder and excludes the ones in installation_package and venv-csproject
-tar -czvf "${TARFILE}" --exclude venv-csproject --exclude installation_package *
+tar -czvf "${TARFILE}" --exclude venv-csproject --exclude installation_package --exclude sqlite/ *
 
 # copies the archive file onto the raspberry pi into the csp folder 
 scp -i ~/.ssh/raspberrypi.rsa ./${TARFILE} uhjas@192.168.1.71:csp/tars
