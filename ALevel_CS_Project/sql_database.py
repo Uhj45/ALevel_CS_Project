@@ -88,7 +88,7 @@ class StoreReadings(BaseDatabase):
         self.db_connection.commit()
 
     def remove_item(self):
-        self.cursor.execute(f"DELETE FROM {self.table_name} WHERE rowid = 4")
+        self.cursor.execute(f"DELETE FROM {self.table_name} WHERE rowid = 3")
         self.db_connection.commit()
 
     def update_item(self):
@@ -98,8 +98,11 @@ class StoreReadings(BaseDatabase):
         self.db_connection.commit()
 
     def get_item(self):
-        self.cursor.execute(f"""SELECT rowid FROM {self.table_name} WHERE Height = '19'""")
+        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Height > 12")
+        query_result = self.cursor.fetchall()
 
+        for item in query_result:
+            print(item)
 
 class StorePidConstants(BaseDatabase):
     def __init__(self, db_name="PIDConstants.db", table_name="PIDConstants"):
@@ -147,8 +150,9 @@ class StorePidConstants(BaseDatabase):
 test = StoreReadings()
 # test.create_table()
 # test.add_item()
-test.get_item()
 # test.remove_item()
+# test.get_item()
+test.update_item()
 
 # test1 = StorePidConstants()
 # test1.create_table()
