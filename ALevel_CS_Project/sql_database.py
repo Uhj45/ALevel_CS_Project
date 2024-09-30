@@ -1,4 +1,6 @@
 import sqlite3
+
+
 class BaseDatabase:
     """
     Class provides the basic common methods to use the database
@@ -12,13 +14,6 @@ class BaseDatabase:
         :param db_name: Needs to be specified, or it will be set to its default
         """
         self.db_name = db_name
-        self.table_name = None
-        self.columns = None
-        self.db_filename = f"./sqlite/{self.db_name}"
-        self.db_connection = sqlite3.connect(self.db_filename)
-        self.cursor = self.db_connection.cursor()
-
-    def create_table(self):
         self.table_name = "people"
         self.columns = """
         first_name text,
@@ -26,6 +21,11 @@ class BaseDatabase:
         email text,
         age int
         """
+        self.db_filename = f"./sqlite/{self.db_name}"
+        self.db_connection = sqlite3.connect(self.db_filename)
+        self.cursor = self.db_connection.cursor()
+
+    def create_table(self):
         table = f"""CREATE TABLE {self.table_name}(
         {self.columns}
         )"""
@@ -72,17 +72,19 @@ class StoreReadings(BaseDatabase):
         Fan Speed int,
         Time int
         """
-    def create_table(self):
-        table = f"""CREATE TABLE {self.table_name}(
-        {self.columns}
-        )"""
-        self.cursor.execute(table)
-        self.db_connection.commit()
+    # def create_table(self):
+    #     table = f"""CREATE TABLE {self.table_name}(
+    #     {self.columns}
+    #     )"""
+    #     self.cursor.execute(table)
+    #     self.db_connection.commit()
     def add_item(self):
         sensor_readings = [
-
+            ('23', '13', 'On', 'On', '100', '12:45'),
+            ('12', '10', 'Off', 'Off', '65', '14:30'),
+            ('19', '8', 'On', 'Off', '78', '09:30'),
         ]
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?)", sensor_readings)
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?)", sensor_readings)
         self.db_connection.commit()
 
     def remove_item(self):
@@ -96,7 +98,7 @@ class StoreReadings(BaseDatabase):
         self.db_connection.commit()
 
     def get_item(self):
-        self.cursor.execute(f"""SELECT * FROM {self.table_name} WHERE rowid = 3""")
+        self.cursor.execute(f"""SELECT rowid FROM {self.table_name} WHERE Height = '19'""")
 
 
 class StorePidConstants(BaseDatabase):
@@ -113,12 +115,12 @@ class StorePidConstants(BaseDatabase):
         Kd int
         """
 
-    def create_table(self):
-        table = f"""CREATE TABLE {self.table_name}(
-        {self.columns}
-        )"""
-        self.cursor.execute(table)
-        self.db_connection.commit()
+    # def create_table(self):
+    #     table = f"""CREATE TABLE {self.table_name}(
+    #     {self.columns}
+    #     )"""
+    #     self.cursor.execute(table)
+    #     self.db_connection.commit()
 
     def add_item(self):
         values = [
@@ -141,9 +143,16 @@ class StorePidConstants(BaseDatabase):
         self.cursor.execute(f"UPDATE {self.table_name} SET Kp = '56' WHERE rowid = 2 ")
         self.db_connection.commit()
 
-test1 = StorePidConstants()
+
+test = StoreReadings()
+# test.create_table()
+# test.add_item()
+test.get_item()
+# test.remove_item()
+
+# test1 = StorePidConstants()
 # test1.create_table()
 # test1.add_item()
 # test1.get_item()
 # test1.remove_item()
-test1.update_item()
+# test1.update_item()
