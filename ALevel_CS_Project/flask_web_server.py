@@ -119,8 +119,8 @@ def pid():
     elif request.method == "POST":
         print(request.form)
         print(type(request.form))
-        parameter_list = request.form
-        for key in parameter_list:
+        parameter_list = request.form                         # Holds the key value pairs in a dictionary thats sent from the web form
+        for key in parameter_list:                            # Goes through the dictionary and checks if the required keys for the PID constants are present
             print(parameter_list.get(key))
             if key == "I":
                 i = request.form["I"]
@@ -157,7 +157,7 @@ def pid():
         return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
-@app.route('/fancontrol', methods=["GET", "POST"])
+@app.route('/fancontrol', methods=["GET"])
 def fan_control():
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
@@ -166,22 +166,54 @@ def fan_control():
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     print("Creating fan object")
-    if request.method == "GET":
-        return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
-    elif request.method == "POST":
-        fan_speed = int(request.form["fanspeed"])
-        fancontrol = request.form["fan_control"]
-        fan_status = "Unknown"
-        pca_fan = PCA9685Fan()
-        if fancontrol == "On":
-            print(fancontrol)
-            pca_fan.turn_fan_on()
-        elif fancontrol == "Off":
-            print(fancontrol)
-            pca_fan.turn_fan_off()
-        else:
-            pca_fan.set_fan_speed(fan_speed)
-        return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
+
+    return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+
+
+@app.route('/fan_control_on', methods=["POST"])
+def fan_control_on():
+    ldr = Ldr()
+    LDR_value = ldr.get_light_level()
+    temp_humidity = TempHumidity()
+    temp_humidity.read_sensors()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
+    print(request.form)
+    # fancontrol = request.form["fan_control"]
+    fan_status = "On"
+    pca_fan = PCA9685Fan()
+    pca_fan.turn_fan_on()
+    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
+
+
+@app.route('/fan_control_off', methods=["POST"])
+def fan_control_off():
+    ldr = Ldr()
+    LDR_value = ldr.get_light_level()
+    temp_humidity = TempHumidity()
+    temp_humidity.read_sensors()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
+    fan_status = "Off"
+    pca_fan = PCA9685Fan()
+    pca_fan.turn_fan_off()
+    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
+
+
+@app.route('/fan_control_speed', methods=["POST"])
+def fan_control_speed():
+    ldr = Ldr()
+    LDR_value = ldr.get_light_level()
+    temp_humidity = TempHumidity()
+    temp_humidity.read_sensors()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
+    fan_speed = int(request.form["fanspeed"])
+    pca_fan = PCA9685Fan()
+    pca_fan.turn_fan_off()
+    fan_status = "On"
+    pca_fan.set_fan_speed(fan_speed)
+    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
 
 
 if __name__ == "__main__":
