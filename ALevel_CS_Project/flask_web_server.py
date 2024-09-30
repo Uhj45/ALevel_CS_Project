@@ -20,9 +20,9 @@ def base():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    # distance = DistanceSensor()
-    # dist = distance.get_distance()
-    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    distance = DistanceSensor()
+    dist = distance.get_distance()
+    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
 
 
 @app.route('/ledcontrol', methods=["GET", "POST"])
