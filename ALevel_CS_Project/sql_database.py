@@ -92,17 +92,17 @@ class StoreReadings(BaseDatabase):
         self.db_connection.commit()
 
     def update_item(self):
-        self.cursor.execute(f"""UPDATE {self.table_name} SET {self.columns} = 'Bob'
-                WHERE {self.columns} = 'Elder'
+        self.cursor.execute(f"""UPDATE {self.table_name} SET LED1 = 'Off'
+                WHERE rowid = 1
                 """)
         self.db_connection.commit()
 
     def get_item(self):
         self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Height > 12")
-        query_result = self.cursor.fetchall()
-
-        for item in query_result:
+        query_result1 = self.cursor.fetchall()
+        for item in query_result1:
             print(item)
+
 
 class StorePidConstants(BaseDatabase):
     def __init__(self, db_name="PIDConstants.db", table_name="PIDConstants"):
@@ -135,8 +135,10 @@ class StorePidConstants(BaseDatabase):
         self.db_connection.commit()
 
     def get_item(self):
-        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Kp = '12' ")
-        self.db_connection.commit()
+        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Kp = '56' ")
+        query_result2 = self.cursor.fetchall()
+        for item in query_result2:
+            print(item)
 
     def remove_item(self):
         self.cursor.execute(f"DELETE FROM {self.table_name} WHERE rowid = 1")
@@ -147,16 +149,16 @@ class StorePidConstants(BaseDatabase):
         self.db_connection.commit()
 
 
-test = StoreReadings()
+# test = StoreReadings()
 # test.create_table()
 # test.add_item()
 # test.remove_item()
 # test.get_item()
-test.update_item()
+# test.update_item()
 
-# test1 = StorePidConstants()
+test1 = StorePidConstants()
 # test1.create_table()
 # test1.add_item()
-# test1.get_item()
+test1.get_item()
 # test1.remove_item()
 # test1.update_item()
