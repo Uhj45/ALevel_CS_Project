@@ -5,6 +5,7 @@ from OLED_Display import Oled
 from Neopixel_LEDs import Neopixel, Neopixel2
 from Distance_Sensor import DistanceSensor
 from PWM_Fan import PCA9685Fan
+from sql_database import StoreReadings, StorePidConstants
 import time
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -20,9 +21,9 @@ def base():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    distance = DistanceSensor()
-    dist = distance.get_distance()
-    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
+    # distance = DistanceSensor()
+    # dist = distance.get_distance()
+    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/ledcontrol', methods=["GET", "POST"])
@@ -118,7 +119,6 @@ def pid():
         return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
         print(request.form)
-        print(type(request.form))
         parameter_list = request.form                         # Holds the key value pairs in a dictionary thats sent from the web form
         for key in parameter_list:                            # Goes through the dictionary and checks if the required keys for the PID constants are present
             print(parameter_list.get(key))
@@ -153,6 +153,10 @@ def pid():
             print(f"{target_height}")
             print(f"{upper_threshold}, {lower_threshold}")
             print(f"{floats}")
+            results = StoreReadings()
+            distance = DistanceSensor()
+            height = distance.get_distance()
+            results.add_item(height, target_height, threshold, upper_threshold, lower_threshold)
 
         return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
