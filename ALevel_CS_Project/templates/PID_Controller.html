@@ -56,7 +56,14 @@
                         datasets: [
                             {
                                 label: "Data points",
-                                data: {{ values | safe }},
+                                data: {{ value1 | safe }},
+                                fill: false,
+                                borderColor: "rgb(255, 192, 75",
+                                lineTension: 0.1
+                            },
+                            {
+                                label: "Data points",
+                                data: {{ value2 | safe }},
                                 fill: false,
                                 borderColor: "rgb(75, 192, 255",
                                 lineTension: 0.1
