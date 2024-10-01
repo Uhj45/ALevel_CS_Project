@@ -104,36 +104,37 @@ def pid():
     humid_val = temp_humidity.get_humidity()
 
     data = [
-        ("01-01-2020", 1597),
-        ("02-01-2020", 1456),
-        ("03-01-2020", 1908),
-        ("04-01-2020", 896),
-        ("05-01-2020", 755),
-        ("06-01-2020", 110),
-        ("07-01-2020", 980),
+        ("01-01-2020", 1597, 10),
+        ("02-01-2020", 1456, 11),
+        ("03-01-2020", 1908, 12),
+        ("04-01-2020", 896, 13),
+        ("05-01-2020", 755, 14),
+        ("06-01-2020", 110, 15),
+        ("07-01-2020", 980, 16),
      ]
     labels = [row[0] for row in data]
-    values = [row[1] for row in data]
+    value1 = [row[1] for row in data]
+    value2 = [row[2] for row in data]
 
     if request.method == "GET":
-        return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("PID_Controller.html", labels=labels, value1=value1, value2=value2, LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
         print(request.form)
         parameter_list = request.form                         # Holds the key value pairs in a dictionary thats sent from the web form
         for key in parameter_list:                            # Goes through the dictionary and checks if the required keys for the PID constants are present
-            print(parameter_list.get(key))
+            # print(parameter_list.get(key))
             if key == "I":
                 i = request.form["I"]
-                print(f"I is in the list: {'I' in key}")
-                print(f"{i}")
+                # print(f"I is in the list: {'I' in key}")
+                # print(f"{i}")
             if key == "P":
                 p = request.form["P"]
-                print(f"P is in the list: {'P' in key}")
-                print(f"{p}")
+                # print(f"P is in the list: {'P' in key}")
+                # print(f"{p}")
             if key == "D":
                 d = request.form["D"]
-                print(f"D is in the list: {'D' in key}")
-                print(f"{d}")
+                # print(f"D is in the list: {'D' in key}")
+                # print(f"{d}")
         control_loop = request.form["control_loop"]
         Kp = int(request.form["Kp"])
         Ki = int(request.form["Ki"])
@@ -149,16 +150,13 @@ def pid():
             print(f"{Kp}, {Ki}, {Kd}")
             print(f"{floats}")
         elif control_loop == "Schmitt Trigger":
-            print(f"{control_loop} has been selected")
-            print(f"{target_height}")
-            print(f"{upper_threshold}, {lower_threshold}")
-            print(f"{floats}")
             results = StoreReadings()
             distance = DistanceSensor()
             height = distance.get_distance()
-            results.add_item(height, target_height, threshold, upper_threshold, lower_threshold)
+            runid = int(time.time())
+            results.add_item(runid, height, target_height, threshold, upper_threshold, lower_threshold, Kp, Ki, Kd)
 
-        return render_template("PID_Controller.html", labels=labels, values=values, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("PID_Controller.html", labels=labels, value1=value1, value2=value2, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/fancontrol', methods=["GET"])
