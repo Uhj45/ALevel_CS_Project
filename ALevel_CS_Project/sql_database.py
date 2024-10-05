@@ -88,7 +88,7 @@ class StoreReadings(BaseDatabase):
     #     )"""
     #     self.cursor.execute(table)
     #     self.db_connection.commit()
-    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold, kp, ki, kd, floats):
+    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold, floats, kp=0, ki=0, kd=0):
         epoch_time = int(time.time())
         sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}', f'{kp}', f'{ki}', f'{kd}', f'{floats}')]
         self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
