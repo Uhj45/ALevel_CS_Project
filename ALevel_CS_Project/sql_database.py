@@ -26,6 +26,7 @@ class BaseDatabase:
         pet text
         job text
         company text
+        kids int
         """
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
@@ -38,7 +39,7 @@ class BaseDatabase:
         self.cursor.execute(table)
         self.db_connection.commit()
 
-    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job):           # Had to add parameters here to match the parameters used in the subclass
+    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job, kids):           # Had to add parameters here to match the parameters used in the subclass
         many_customers = [
              (f'{name}', f'{lastname}', f'{email}', f'{age}', f'{car}'),
          ]
@@ -78,7 +79,8 @@ class StoreReadings(BaseDatabase):
         Lower_Threshold int,
         Kp float,
         Ki float,
-        Kd float
+        Kd float,
+        Float text
         """
     # def create_table(self):
     #     table = f"""CREATE TABLE {self.table_name}(
@@ -86,10 +88,10 @@ class StoreReadings(BaseDatabase):
     #     )"""
     #     self.cursor.execute(table)
     #     self.db_connection.commit()
-    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold, kp, ki, kd):
+    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold, kp, ki, kd, floats):
         epoch_time = int(time.time())
-        sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}', f'{kp}', f'{ki}', f'{kd}')]
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?)", sensor_readings)
+        sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}', f'{kp}', f'{ki}', f'{kd}', f'{floats}')]
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
         self.cursor.execute(f"SELECT * FROM {self.table_name}")
         items = self.cursor.fetchall()
         for item in items:
