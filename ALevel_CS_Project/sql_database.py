@@ -78,9 +78,9 @@ class StoreReadings(BaseDatabase):
         Upper_Threshold int,
         Lower_Threshold int,
         Float text,
-        Kp DEFAULT 0,
-        Ki DEFAULT 0,
-        Kd DEFAULT 0
+        Kp float DEFAULT "0" NOT NULL,
+        Ki float DEFAULT "0" NOT NULL,
+        Kd float DEFAULT "0" NOT NULL
         """
     # def create_table(self):
     #     table = f"""CREATE TABLE {self.table_name}(
@@ -90,7 +90,8 @@ class StoreReadings(BaseDatabase):
     #     self.db_connection.commit()
     def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold, floats, kp, ki, kd):
         epoch_time = int(time.time())
-        sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}', f'{floats}' f'{kp}', f'{ki}', f'{kd}')]
+        sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}', f'{floats}', f'{kp}', f'{ki}', f'{kd}')]
+        # print(sensor_readings)
         self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
         self.cursor.execute(f"SELECT * FROM {self.table_name}")
         items = self.cursor.fetchall()
