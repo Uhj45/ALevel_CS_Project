@@ -107,7 +107,7 @@ class StoreReadings(BaseDatabase):
         self.db_connection.commit()
 
     def get_item(self, column):
-        self.cursor.execute(f"SELECT {column} FROM {self.table_name}")
+        self.cursor.execute(f"SELECT {column} FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
         query_result1 = self.cursor.fetchall()
         for item in query_result1:
             print(item)
