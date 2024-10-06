@@ -114,7 +114,8 @@ class StoreReadings(BaseDatabase):
 
     def get_recent_record(self):
         get_record = self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY runid DESC LIMIT 1")
-        print(get_record)
+        for item in get_record:
+            print(item)
 
 class StorePidConstants(BaseDatabase):
     def __init__(self, db_name="Sensors.db", table_name="PIDConstants"):
