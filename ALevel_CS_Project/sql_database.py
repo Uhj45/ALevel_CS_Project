@@ -94,9 +94,6 @@ class StoreReadings(BaseDatabase):
         # print(sensor_readings)
         self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
         self.cursor.execute(f"SELECT * FROM {self.table_name}")
-        items = self.cursor.fetchall()
-        for item in items:
-            print(item)
         self.db_connection.commit()
 
     def remove_item(self):
@@ -115,6 +112,10 @@ class StoreReadings(BaseDatabase):
         for item in query_result1:
             print(item)
 
+    def get_all_records(self):
+        items = self.cursor.fetchall()
+        for item in items:
+            print(item)
 
 class StorePidConstants(BaseDatabase):
     def __init__(self, db_name="Sensors.db", table_name="PIDConstants"):
