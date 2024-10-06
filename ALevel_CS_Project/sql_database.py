@@ -57,7 +57,7 @@ class BaseDatabase:
                 """)
         self.db_connection.commit()
 
-    def get_item(self):
+    def get_item(self, name):
         self.cursor.execute(f"""SELECT * FROM {self.table_name} WHERE rowid = 3""")
 
 
@@ -78,9 +78,9 @@ class StoreReadings(BaseDatabase):
         Upper_Threshold int,
         Lower_Threshold int,
         Float text,
-        Kp float DEFAULT "0" NOT NULL,
-        Ki float DEFAULT "0" NOT NULL,
-        Kd float DEFAULT "0" NOT NULL
+        Kp float,
+        Ki float,
+        Kd float
         """
     # def create_table(self):
     #     table = f"""CREATE TABLE {self.table_name}(
@@ -106,16 +106,15 @@ class StoreReadings(BaseDatabase):
                 """)
         self.db_connection.commit()
 
-    def get_item(self):
-        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Height > 12")
+    def get_item(self, column):
+        self.cursor.execute(f"SELECT {column} FROM {self.table_name}")
         query_result1 = self.cursor.fetchall()
         for item in query_result1:
             print(item)
 
-    def get_all_records(self):
-        items = self.cursor.fetchall()
-        for item in items:
-            print(item)
+    def get_recent_record(self):
+        get_record = self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY runid DESC LIMIT 1")
+        print(get_record)
 
 class StorePidConstants(BaseDatabase):
     def __init__(self, db_name="Sensors.db", table_name="PIDConstants"):
