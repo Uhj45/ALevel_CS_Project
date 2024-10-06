@@ -94,6 +94,27 @@ def oled_display():
         return "Unknown error"
 
 
+def schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
+    results = StoreReadings()
+    print(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+    for i in range(0, 6):
+        distance = DistanceSensor()
+        height = distance.get_distance()
+        results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+        time.sleep(2)
+    results.get_all_records()
+
+
+def pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
+    results = StoreReadings()
+    for i in range(0, 6):
+        distance = DistanceSensor()
+        height = distance.get_distance()
+        results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+        time.sleep(2)
+    results.get_all_records()
+
+
 @app.route('/pid', methods=["GET", "POST"])
 def pid():
     ldr = Ldr()
@@ -103,21 +124,21 @@ def pid():
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
 
-    data = [
-        ("01-01-2020", 1597, 10),
-        ("02-01-2020", 1456, 11),
-        ("03-01-2020", 1908, 12),
-        ("04-01-2020", 896, 13),
-        ("05-01-2020", 755, 14),
-        ("06-01-2020", 110, 15),
-        ("07-01-2020", 980, 16),
-     ]
-    labels = [row[0] for row in data]
-    value1 = [row[1] for row in data]
-    value2 = [row[2] for row in data]
+    # data = [
+    #     ("01-01-2020", 1597, 10),
+    #     ("02-01-2020", 1456, 11),
+    #     ("03-01-2020", 1908, 12),
+    #     ("04-01-2020", 896, 13),
+    #     ("05-01-2020", 755, 14),
+    #     ("06-01-2020", 110, 15),
+    #     ("07-01-2020", 980, 16),
+    #  ]
+    # labels = [row[0] for row in data]
+    # value1 = [row[1] for row in data]
+    # value2 = [row[2] for row in data]
 
     if request.method == "GET":
-        return render_template("PID_Controller.html", labels=labels, value1=value1, value2=value2, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
     elif request.method == "POST":
         print(request.form)
         parameter_list = request.form                         # Holds the key value pairs in a dictionary thats sent from the web form
@@ -136,27 +157,24 @@ def pid():
                 # print(f"D is in the list: {'D' in key}")
                 # print(f"{d}")
         control_loop = request.form["control_loop"]
-        Kp = int(request.form["Kp"])
-        Ki = int(request.form["Ki"])
-        Kd = int(request.form["Kd"])
         floats = request.form["floats"]
         target_height = int(request.form["height"])
-        threshold = int(request.form["threshold"])
-        upper_threshold = target_height + threshold
-        lower_threshold = target_height - threshold
+        run_id = int(time.time())
+        Kp = Ki = Kd = 0
+        threshold = upper_threshold = lower_threshold = 0
         if control_loop == "PID":
-            print(f"{control_loop} has been selected")
-            print(f"{target_height}")
-            print(f"{Kp}, {Ki}, {Kd}")
-            print(f"{floats}")
-        elif control_loop == "Schmitt Trigger":
-            results = StoreReadings()
-            distance = DistanceSensor()
-            height = distance.get_distance()
-            runid = int(time.time())
-            results.add_item(runid, height, target_height, threshold, upper_threshold, lower_threshold, Kp, Ki, Kd)
+            Kp = int(request.form["Kp"])
+            Ki = int(request.form["Ki"])
+            Kd = int(request.form["Kd"])
+            pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
 
-        return render_template("PID_Controller.html", labels=labels, value1=value1, value2=value2, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        elif control_loop == "Schmitt Trigger":
+            threshold = int(request.form["threshold"])
+            upper_threshold = target_height + threshold
+            lower_threshold = target_height - threshold
+            schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+
+        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/fancontrol', methods=["GET"])
