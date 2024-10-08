@@ -1,4 +1,6 @@
 from crypt import methods
+from datetime import datetime
+from tabulate import tabulate
 from LDR import Ldr
 from Temperature_Humidity import TempHumidity
 from OLED_Display import Oled
@@ -94,15 +96,20 @@ def oled_display():
         return "Unknown error"
 
 
+def get_values():
+    results = StoreReadings()
+    return results.get_item()
+
+
 def schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
     results = StoreReadings()
-    print(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
     for i in range(0, 6):
         distance = DistanceSensor()
         height = distance.get_distance()
         results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
         time.sleep(2)
-    results.get_all_records()
+    results.get_recent_record()
+
 
 
 def pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
@@ -112,7 +119,14 @@ def pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, 
         height = distance.get_distance()
         results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
         time.sleep(2)
-    results.get_all_records()
+    results.get_recent_record()
+
+
+@app.route('/get_data', methods=['GET'])
+def get_data():
+    data = get_values()
+    print(f"This is my data: \n {tabulate(data, tablefmt='grid')}")
+    return f"This is my data: \n {tabulate(data, tablefmt='grid')}"
 
 
 @app.route('/pid', methods=["GET", "POST"])
@@ -123,19 +137,6 @@ def pid():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-
-    # data = [
-    #     ("01-01-2020", 1597, 10),
-    #     ("02-01-2020", 1456, 11),
-    #     ("03-01-2020", 1908, 12),
-    #     ("04-01-2020", 896, 13),
-    #     ("05-01-2020", 755, 14),
-    #     ("06-01-2020", 110, 15),
-    #     ("07-01-2020", 980, 16),
-    #  ]
-    # labels = [row[0] for row in data]
-    # value1 = [row[1] for row in data]
-    # value2 = [row[2] for row in data]
 
     if request.method == "GET":
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
@@ -174,7 +175,10 @@ def pid():
             lower_threshold = target_height - threshold
             schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
 
-        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        data = get_values()
+        labels = [row[1] for row in data]
+        values = [row[0] for row in data]
+        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, values=values)
 
 
 @app.route('/fancontrol', methods=["GET"])
