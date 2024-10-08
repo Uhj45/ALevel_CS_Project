@@ -57,7 +57,7 @@ class BaseDatabase:
                 """)
         self.db_connection.commit()
 
-    def get_item(self, name):
+    def get_item(self):
         self.cursor.execute(f"""SELECT * FROM {self.table_name} WHERE rowid = 3""")
 
 
@@ -106,11 +106,11 @@ class StoreReadings(BaseDatabase):
                 """)
         self.db_connection.commit()
 
-    def get_item(self, column):
-        self.cursor.execute(f"SELECT {column} FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
-        query_result1 = self.cursor.fetchall()
-        for item in query_result1:
-            print(item)
+    def get_item(self):
+        # Query's the table to get all values from the Height column with the most recent runid value ready to be fetched
+        self.cursor.execute(f"SELECT Height,Time FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
+        # returns all values that were specified in the query and prints them onto a blank webpage
+        return self.cursor.fetchall()
 
     def get_recent_record(self):
         get_record = self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY runid DESC LIMIT 1")
