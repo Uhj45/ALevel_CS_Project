@@ -177,8 +177,8 @@ def pid():
 
         data = get_values()
         labels = [row[1] for row in data]
-        values = [row[0] for row in data]
-        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, values=values)
+        value1 = [row[0] for row in data]
+        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1)
 
 
 @app.route('/fancontrol', methods=["GET"])
