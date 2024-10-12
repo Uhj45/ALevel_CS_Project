@@ -111,7 +111,6 @@ def schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower
     results.get_recent_record()
 
 
-
 def pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
     results = StoreReadings()
     for i in range(0, 6):
@@ -178,7 +177,10 @@ def pid():
         data = get_values()
         labels = [row[1] for row in data]
         value1 = [row[0] for row in data]
-        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1)
+        value2 = [row[2] for row in data]
+        value3 = [row[3] for row in data]
+        value4 = [row[4] for row in data]
+        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4)
 
 
 @app.route('/fancontrol', methods=["GET"])
