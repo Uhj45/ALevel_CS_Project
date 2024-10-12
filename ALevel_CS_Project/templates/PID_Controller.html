@@ -60,11 +60,46 @@
                                 fill: true,
                                 borderColor: "rgb(255, 192, 75)",
                                 lineTension: 0.1
+                            },
+                            {
+                                label: "Target Height",
+                                data: {{ value2 | safe }},
+                                fill: true,
+                                borderColor: "rgb(0, 204, 0)",
+                                lineTension: 0.1
+                            },
+                            {
+                                label: "Upper Threshold",
+                                data: {{ value3 | safe }},
+                                fill: true,
+                                borderColor: "rgb(28, 3, 250)",
+                                lineTension: 0.1
+                            },
+                            {
+                                label: "Lower Threshold",
+                                data: {{ value4 | safe }},
+                                fill: true,
+                                borderColor: "rgb(255, 64, 56)",
+                                lineTension: 0.1
                             }
                         ]
                     },
                     options: {
-                        responsive: false
+                        responsive: true,
+                        scales: {
+                            x:{
+                               title: {
+                                   display: true,
+                                   text: 'Time'
+                               }
+                            }
+                        },
+                        y:{
+                            title:{
+                                display: true,
+                                text: 'Height'
+                            }
+                        }
                     }
                 })
             </script>
