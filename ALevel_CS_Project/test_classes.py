@@ -72,18 +72,19 @@ import RPi.GPIO as GPIO
 # # Object for the distance sensor class
 # distance_readings = DistanceSensor()
 #
-# for i in range(0,4):
+# for i in range(0, 100):
 #     dist = distance_readings.get_distance()
-#     print(f"Distance: {dist:.1f} cm ")
+#     print(f"Distance: {i}, {dist:.1f} cm ")
+#     time.sleep(3)
 #
 # GPIO.cleanup()
 
-pca_fan = PCA9685Fan()
-pca_fan.turn_fan_on()
-time.sleep(5)
-pca_fan.turn_fan_off()
-time.sleep(5)
-pca_fan.set_fan_speed(30)
+# pca_fan = PCA9685Fan()
+# pca_fan.turn_fan_on()
+# time.sleep(5)
+# pca_fan.turn_fan_off()
+# time.sleep(5)
+# pca_fan.set_fan_speed(30)
 
 # fan = Fan()
 # fan.turn_fan_on()
@@ -99,3 +100,18 @@ pca_fan.set_fan_speed(30)
 # fan.set_speed(fan.get_speed() + 5)
 # time.sleep(10)
 # fan.decrement_fan_speed(12)
+
+# distance_readings = DistanceSensor()
+fan = PCA9685Fan()
+#
+# for i in range(0, 20):
+#     fan.increment_fan_speed(5)
+#     print(distance_readings.get_distance())
+#     time.sleep(3)
+
+distance_readings = DistanceSensor()
+fan.turn_fan_off()
+for i in range(0, 100):
+    dist = distance_readings.get_distance()
+    print(f"Distance: {i}, {dist:.1f} cm ")
+    time.sleep(3)
