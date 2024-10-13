@@ -10,7 +10,7 @@ from PWM_Fan import PCA9685Fan
 from sql_database import StoreReadings, StorePidConstants
 import time
 from flask import Flask, render_template, request, redirect, url_for
-
+from Algorthims import Schmitttrigger
 
 app = Flask(__name__)
 
@@ -101,14 +101,14 @@ def get_values():
     return results.get_item()
 
 
-def schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
-    results = StoreReadings()
-    for i in range(0, 6):
-        distance = DistanceSensor()
-        height = distance.get_distance()
-        results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
-        time.sleep(2)
-    results.get_recent_record()
+# def schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
+#     results = StoreReadings()
+#     for i in range(0, 6):
+#         distance = DistanceSensor()
+#         height = distance.get_distance()
+#         results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+#         time.sleep(2)
+#     results.get_recent_record()
 
 
 def pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
@@ -172,14 +172,16 @@ def pid():
             threshold = int(request.form["threshold"])
             upper_threshold = target_height + threshold
             lower_threshold = target_height - threshold
-            schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+            # schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+            algorthim = Schmitttrigger(target_height, upper_threshold, lower_threshold)
+            algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, floats)
 
-        data = get_values()
-        labels = [row[1] for row in data]
-        value1 = [row[0] for row in data]
-        value2 = [row[2] for row in data]
-        value3 = [row[3] for row in data]
-        value4 = [row[4] for row in data]
+            data = get_values()
+            labels = [row[1] for row in data]
+            value1 = [row[0] for row in data]
+            value2 = [row[2] for row in data]
+            value3 = [row[3] for row in data]
+            value4 = [row[4] for row in data]
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4)
 
 
