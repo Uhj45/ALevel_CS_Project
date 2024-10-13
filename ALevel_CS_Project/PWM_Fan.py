@@ -78,29 +78,39 @@ class Fan:
 
 
 class PCA9685Fan:
-    def __init__(self, channel=0, fan_speed=0):
+    """
+    class to control the fan using the PCA9685 chip
+    """
+    def __init__(self, channel=0, fan_speed=0, duty_cycle=0):
+        """
+        Initialises the object with a channel number and a fan speed. If nothing is passed defaults to 0
+        :param channel: int channel number (0 to 15)
+        :param fan_speed: int percentage
+        :param duty_cycle: int absolute value for the duty cycle (0 to 65535)
+        """
         self.channel = channel
-        self.fan_speed = fan_speed
+        self.percentage_fan_speed = fan_speed
+        self.duty_cycle = duty_cycle
         i2c = board.I2C()
         self.pca = PCA9685(i2c)
         self.pca.frequency = 1400
 
-    @staticmethod
-    def check_fan_speed(fan_speed):
+    def check_fan_speed(self, fan_speed):
         if 0 <= fan_speed <= 100:
+            self.percentage_fan_speed = fan_speed
             return True
         else:
             print(f"Value is not between 0 and 100, {fan_speed}, {type(fan_speed)}")
 
     def turn_fan_on(self):
-        self.fan_speed = 65300
-        print(type(hex(self.fan_speed)))
+        self.duty_cycle = 65300
+        print(type(hex(self.duty_cycle)))
         # self.pca.channels[1].duty_cycle = 0xFFFF
-        self.pca.channels[1].duty_cycle = self.fan_speed
+        self.pca.channels[1].duty_cycle = self.duty_cycle
 
     def turn_fan_off(self):
-        self.fan_speed = 0
-        self.pca.channels[1].duty_cycle = self.fan_speed
+        self.duty_cycle = 0
+        self.pca.channels[1].duty_cycle = self.duty_cycle
 
     def get_fan_speed(self):
         return self.pca.channels[1].duty_cycle
@@ -112,21 +122,21 @@ class PCA9685Fan:
         :return:
         """
         if self.check_fan_speed(fan_speed):
-            self.fan_speed = int((fan_speed / 100) * 65535)
+            self.duty_cycle = int((fan_speed / 100) * 65535)
             # self.fan_speed = 32767
-            print(self.fan_speed)
-            self.pca.channels[1].duty_cycle = self.fan_speed
+            print(self.percentage_fan_speed)
+            self.pca.channels[1].duty_cycle = self.duty_cycle
             print(f"Fan speed is {fan_speed}")
 
     def increment_fan_speed(self, increment):
-        speed_to_check = self.fan_speed + increment
+        speed_to_check = self.percentage_fan_speed + increment
         if self.check_fan_speed(speed_to_check):
-            self.fan_speed = self.fan_speed + increment
-            self.set_fan_speed(self.fan_speed)
-            print(f"Fan speed was incremented by: {increment}", f"Fan speed is at: {self.fan_speed}")
+            self.percentage_fan_speed = speed_to_check
+            self.set_fan_speed(self.percentage_fan_speed)
+            print(f"Fan speed was incremented by: {increment}", f"Fan speed is at: {self.percentage_fan_speed}")
 
     def decrement_fan_speed(self, decrement):
-        if self.check_fan_speed(self.fan_speed - decrement):
-            self.fan_speed = self.fan_speed - decrement
-            self.set_fan_speed(self.fan_speed)
-            print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.fan_speed}")
+        if self.check_fan_speed(self.percentage_fan_speed - decrement):
+            self.percentage_fan_speed = self.percentage_fan_speed - decrement
+            self.set_fan_speed(self.percentage_fan_speed)
+            print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.percentage_fan_speed}")
