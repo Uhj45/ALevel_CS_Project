@@ -90,7 +90,7 @@ class PCA9685Fan:
         if 0 <= fan_speed <= 100:
             return True
         else:
-            print("Value is not between 0 and 100")
+            print(f"Value is not between 0 and 100, {fan_speed}, {type(fan_speed)}")
 
     def turn_fan_on(self):
         self.fan_speed = 65300
@@ -106,9 +106,27 @@ class PCA9685Fan:
         return self.pca.channels[1].duty_cycle
 
     def set_fan_speed(self, fan_speed):
+        """
+        This function takes a speed and checks its between 0% and 100%, it then converts this percentage to an absolute value that is needed and updates the duty cycle
+        :param fan_speed: integer that needs to be between 0% and 100%
+        :return:
+        """
         if self.check_fan_speed(fan_speed):
             self.fan_speed = int((fan_speed / 100) * 65535)
             # self.fan_speed = 32767
             print(self.fan_speed)
             self.pca.channels[1].duty_cycle = self.fan_speed
             print(f"Fan speed is {fan_speed}")
+
+    def increment_fan_speed(self, increment):
+        speed_to_check = self.fan_speed + increment
+        if self.check_fan_speed(speed_to_check):
+            self.fan_speed = self.fan_speed + increment
+            self.set_fan_speed(self.fan_speed)
+            print(f"Fan speed was incremented by: {increment}", f"Fan speed is at: {self.fan_speed}")
+
+    def decrement_fan_speed(self, decrement):
+        if self.check_fan_speed(self.fan_speed - decrement):
+            self.fan_speed = self.fan_speed - decrement
+            self.set_fan_speed(self.fan_speed)
+            print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.fan_speed}")
