@@ -23,10 +23,11 @@ class BaseDatabase:
         car text,
         clothes text,
         accessory text,
-        pet text
-        job text
-        company text
-        kids int
+        pet text,
+        job text,
+        company text,
+        kids int,
+        salary int,
         """
         self.db_filename = f"./sqlite/{self.db_name}"
         self.db_connection = sqlite3.connect(self.db_filename)
@@ -39,7 +40,7 @@ class BaseDatabase:
         self.cursor.execute(table)
         self.db_connection.commit()
 
-    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job, kids):           # Had to add parameters here to match the parameters used in the subclass
+    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job, kids, salary):           # Had to add parameters here to match the parameters used in the subclass
         many_customers = [
              (f'{name}', f'{lastname}', f'{email}', f'{age}', f'{car}'),
          ]
@@ -77,6 +78,7 @@ class StoreReadings(BaseDatabase):
         Threshold int,
         Upper_Threshold int,
         Lower_Threshold int,
+        Fan_Speed int,
         Float text,
         Kp float,
         Ki float,
@@ -88,11 +90,11 @@ class StoreReadings(BaseDatabase):
     #     )"""
     #     self.cursor.execute(table)
     #     self.db_connection.commit()
-    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold, floats, kp, ki, kd):
+    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold,fan_speed, floats, kp, ki, kd):
         epoch_time = int(time.time())
-        sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}', f'{floats}', f'{kp}', f'{ki}', f'{kd}')]
+        sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}',f'{fan_speed}', f'{floats}', f'{kp}', f'{ki}', f'{kd}')]
         # print(sensor_readings)
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
         self.cursor.execute(f"SELECT * FROM {self.table_name}")
         self.db_connection.commit()
 
@@ -108,7 +110,7 @@ class StoreReadings(BaseDatabase):
 
     def get_item(self):
         # Query's the table to get all values from the Height column with the most recent runid value ready to be fetched
-        self.cursor.execute(f"SELECT Height,Time, Target Height, Upper_Threshold, Lower_Threshold FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
+        self.cursor.execute(f"SELECT Height,Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
         # returns all values that were specified in the query and prints them onto a blank webpage
         return self.cursor.fetchall()
 
