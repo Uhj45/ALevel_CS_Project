@@ -54,9 +54,9 @@ class Neopixel:
         }
         self.g, self.r, self.b = colours[colour]
 
-        print(colours)
-        print(colour)
-        print(self.g, self.r, self.b)
+        # print(colours)
+        # print(colour)
+        # print(self.g, self.r, self.b)
 
     def turn_led_on(self):
         """
