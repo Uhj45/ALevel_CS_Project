@@ -29,7 +29,7 @@ class Schmitttrigger:
         for i in range(0, 50):
             distance = distance_readings.get_distance()
             print(f"Distance: {distance}")
-            results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, floats, kp=0, ki=0, kd=0)
+            results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
             if distance < float(lower_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
                 LED1.set_predefined_colour("red")
