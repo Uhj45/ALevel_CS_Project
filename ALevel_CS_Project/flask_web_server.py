@@ -177,12 +177,21 @@ def pid():
             algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, floats)
 
             data = get_values()
-            labels = [row[1] for row in data]
-            value1 = [row[0] for row in data]
-            value2 = [row[2] for row in data]
-            value3 = [row[3] for row in data]
-            value4 = [row[4] for row in data]
-        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4)
+            print(f"{data}, {type(data)}")
+            labels = [row[1] for row in data]      # Time
+            value1 = [row[0] for row in data]      # Actual measured height
+            value2 = [row[2] for row in data]      # Target Height
+            value3 = [row[3] for row in data]      # Upper Threshold
+            value4 = [row[4] for row in data]      # Lower Threshold
+            value5 = [row[5] for row in data]      # Fan speed
+
+            scaled_fan_speed = []
+            # This scales down each value of the fan speed by a 1000 and adds to a list so that it can be plotted as a graph
+            for i in value5:
+                duty_cycle_scaled = i / 1000
+                print(f"{duty_cycle_scaled}")
+                scaled_fan_speed.append(duty_cycle_scaled)
+        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4, value5=scaled_fan_speed)
 
 
 @app.route('/fancontrol', methods=["GET"])
