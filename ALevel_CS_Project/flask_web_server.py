@@ -23,9 +23,9 @@ def base():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    # distance = DistanceSensor()
-    # dist = distance.get_distance()
-    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    distance = DistanceSensor()
+    dist = distance.get_distance()
+    return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
 
 
 @app.route('/ledcontrol', methods=["GET", "POST"])
@@ -36,8 +36,10 @@ def ledcontrol():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
+    distance = DistanceSensor()
+    dist = distance.get_distance()
     if request.method == "GET":
-        return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
         led_control = request.form["Submit"]
         led1 = Neopixel2(brightness=1, phyiscal_led="LED1")
@@ -84,8 +86,10 @@ def oled_display():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
+    distance = DistanceSensor()
+    dist = distance.get_distance()
     if request.method == "GET":
-        return render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
         text_to_display = request.form["text_to_display"]
         oled = Oled()
@@ -136,9 +140,10 @@ def pid():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-
+    distance = DistanceSensor()
+    dist = distance.get_distance()
     if request.method == "GET":
-        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
         print(request.form)
         parameter_list = request.form                         # Holds the key value pairs in a dictionary thats sent from the web form
