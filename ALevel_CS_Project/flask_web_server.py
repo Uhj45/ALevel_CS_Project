@@ -182,7 +182,7 @@ def pid():
             algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, floats)
 
             data = get_values()
-            print(f"{data}, {type(data)}")
+            # print(f"{data}, {type(data)}")
             labels = [row[1] for row in data]      # Time
             value1 = [row[0] for row in data]      # Actual measured height
             value2 = [row[2] for row in data]      # Target Height
@@ -194,7 +194,7 @@ def pid():
             # This scales down each value of the fan speed by a 1000 and adds to a list so that it can be plotted as a graph
             for i in value5:
                 duty_cycle_scaled = i / 1000
-                print(f"{duty_cycle_scaled}")
+                # print(f"{duty_cycle_scaled}")
                 scaled_fan_speed.append(duty_cycle_scaled)
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4, value5=scaled_fan_speed)
 
