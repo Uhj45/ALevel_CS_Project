@@ -27,15 +27,15 @@ class Schmitttrigger:
         LED2 = Neopixel2(brightness=0.8)
         results = StoreReadings()
         for i in range(0, 50):
-            distance = distance_readings.get_distance()
+            distance = 23 - distance_readings.get_distance()
             print(f"Distance: {distance}")
             results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
-            if distance < float(lower_threshold):
+            if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
                 LED1.set_predefined_colour("red")
                 LED1.turn_led_on()
                 fan.decrement_fan_speed(2)
-            elif distance > float(upper_threshold):
+            elif distance < float(lower_threshold):
                 # Turn LED1 on and decrease fan speed and add height value to table
                 LED1.set_predefined_colour("red")
                 LED1.turn_led_on()
