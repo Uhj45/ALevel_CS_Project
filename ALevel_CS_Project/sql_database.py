@@ -119,6 +119,12 @@ class StoreReadings(BaseDatabase):
         for item in get_record:
             print(item)
 
+    def get_run_id(self):
+        # This will get all the unique run_ids and put them into a html that will be used for the dropdown
+        self.cursor.execute(f"SELECT DISTINCT RunID FROM {self.table_name}")
+        return self.cursor.fetchall()
+
+
 class StorePidConstants(BaseDatabase):
     def __init__(self, db_name="Sensors.db", table_name="PIDConstants"):
         super().__init__(db_name)
