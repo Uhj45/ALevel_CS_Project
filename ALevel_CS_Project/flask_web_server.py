@@ -1,5 +1,7 @@
 from crypt import methods
 from datetime import datetime
+from sre_constants import error
+
 from tabulate import tabulate
 from LDR import Ldr
 from Temperature_Humidity import TempHumidity
@@ -196,9 +198,32 @@ def plot_graph():
     formatted_creation_date = []
     for plot_creation_time in runid_values:
         plot_creation_time = plot_creation_time[0]
-        date_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(plot_creation_time))
-        formatted_creation_date.append(date_time)
-    return render_template("plot_graph.html", runid_values=formatted_creation_date)
+        date_time = time.strftime('%Y-%m-%d_%H:%M:%S', time.gmtime(plot_creation_time))
+        formatted_creation_date.append(f"{date_time} {plot_creation_time}")
+    if request.method == "GET":
+        return render_template("plot_graph.html", runid_values=formatted_creation_date)
+    elif request.method == "POST":
+        graph = request.form["plot_graph"]
+        if graph == "Plot Graph":
+            time_stamp = request.form["runid"]
+            print(time_stamp.split(" ")[1])
+            runid = time_stamp.split(" ")[1]
+
+            graph_data = StoreReadings()
+            graph_dt = graph_data.get_graph_data(runid)
+            epoch_time_graph = [row[1] for row in graph_dt]
+            actual_height_graph = [row[0] for row in graph_dt]
+            target_height_graph = [row[2] for row in graph_dt]
+            upper_thresh_graph = [row[3] for row in graph_dt]
+            lower_thresh_graph = [row[4] for row in graph_dt]
+            fan_speed_graph = [row[5] for row in graph_dt]
+            scaled_fan_speed = []
+            for i in fan_speed_graph:
+                duty_cycle_scaled = i / 1000
+                # print(f"{duty_cycle_scaled}")
+                scaled_fan_speed.append(duty_cycle_scaled)
+        print(f"Date: {formatted_creation_date}")
+        return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=epoch_time_graph, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed)
 
 
 @app.route('/fancontrol', methods=["GET"])
