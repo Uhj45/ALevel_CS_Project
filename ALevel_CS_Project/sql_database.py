@@ -121,7 +121,12 @@ class StoreReadings(BaseDatabase):
 
     def get_run_id(self):
         # This will get all the unique run_ids and put them into a html that will be used for the dropdown
-        self.cursor.execute(f"SELECT DISTINCT RunID FROM {self.table_name}")
+        self.cursor.execute(f"SELECT DISTINCT RunID FROM {self.table_name} ORDER BY runid DESC ")
+        return self.cursor.fetchall()
+
+    def get_graph_data(self, date):
+        # This will get all the graph data based on the runid that has been selected
+        self.cursor.execute(f"SELECT Height, Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed FROM {self.table_name} WHERE runid = {date}")
         return self.cursor.fetchall()
 
 
