@@ -189,11 +189,16 @@ def pid():
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4, value5=scaled_fan_speed)
 
 
-@app.route('/create_old_graphs', methods=["GET", "POST"])
+@app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
     get_runid = StoreReadings()
     runid_values = get_runid.get_run_id()
-    return render_template("plot_graph.html", runid_values=runid_values)
+    formatted_creation_date = []
+    for plot_creation_time in runid_values:
+        plot_creation_time = plot_creation_time[0]
+        date_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(plot_creation_time))
+        formatted_creation_date.append(date_time)
+    return render_template("plot_graph.html", runid_values=formatted_creation_date)
 
 
 @app.route('/fancontrol', methods=["GET"])
