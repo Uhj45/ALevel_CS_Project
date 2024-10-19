@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form action="{{ url_for(create_old_graphs) }}" method="POST">
-    <label for="runid">Select a RunID to plot a graph</label>
-    <select id="runid" name="runid">
-        {% for value in runid_values %}
-        <option value="{{ value }}">{{ value }}</option>
-        {% endfor %}
-    </select>
-</form>
-</body>
-</html>
+{% extends "base2.html" %}
+{% block title %}OLED Display{% endblock %}
+{% block p1 %}OLED Display{% endblock %}
+{% block p2 %}
+    <form action="{{ url_for("plot_graph") }}" method="POST" >
+        <label for="runid">Select a RunID to plot a graph</label>
+        <select id="runid" name="runid">
+            {% for value in runid_values %}
+                <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <br>
+        <input type="submit" value="Plot Graph">
+    </form>
+{% endblock %}
