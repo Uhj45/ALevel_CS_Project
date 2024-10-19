@@ -9,7 +9,7 @@ from Distance_Sensor import DistanceSensor
 from PWM_Fan import PCA9685Fan
 from sql_database import StoreReadings, StorePidConstants
 import time
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from Algorthims import Schmitttrigger
 
 app = Flask(__name__)
@@ -105,16 +105,6 @@ def get_values():
     return results.get_item()
 
 
-# def schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
-#     results = StoreReadings()
-#     for i in range(0, 6):
-#         distance = DistanceSensor()
-#         height = distance.get_distance()
-#         results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
-#         time.sleep(2)
-#     results.get_recent_record()
-
-
 def pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
     results = StoreReadings()
     for i in range(0, 6):
@@ -197,6 +187,13 @@ def pid():
                 # print(f"{duty_cycle_scaled}")
                 scaled_fan_speed.append(duty_cycle_scaled)
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4, value5=scaled_fan_speed)
+
+
+@app.route('/create_old_graphs', methods=["GET", "POST"])
+def plot_graph():
+    get_runid = StoreReadings()
+    runid_values = get_runid.get_run_id()
+    return render_template("plot_graph.html", runid_values=runid_values)
 
 
 @app.route('/fancontrol', methods=["GET"])
