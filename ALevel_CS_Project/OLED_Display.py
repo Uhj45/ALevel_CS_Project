@@ -26,20 +26,9 @@ class Oled:
         self.oled.contrast(50)
 
     def display_text(self, text_to_display, x=0, y=0, size=1):
-        # if x:
-        #     print(f"setting self.x = {x}")
-        #     self.x = x
-        # if y:
-        #     print(f"setting self.y = {y}")
-        #     self.y = y
-        # if size:
-        #     print(f"setting self.size = {size}")
-        #     self.size = size
         self.x = x
         self.y = y
         self.size = size
-        # print(f"displaying text, {text_to_display}")
-        print(f"{x}, {self.x}, {y}, {self.y}, {text_to_display}")
         self.oled.text(text_to_display, self.x, self.y, "white", font_name="font5x8.bin", size=self.size)
         self.oled.show()
 
