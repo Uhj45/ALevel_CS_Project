@@ -52,6 +52,42 @@ class Schmitttrigger:
             time.sleep(0.5)
 
 
+class Algorithms:
+    def __init__(self, float, target_height):
+        self.float = float
+        self.target_height = target_height
 
 
+class ProportionalAlgorithm(Algorithms):
+    def __init__(self, float, target_height, Kp):
+        super().__init__(float, target_height)
+        self.float = float
+        self.target_height = target_height
+        self.Kp = Kp
+
+    def get_config(self):
+        print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}")
+
+class ProportionalIntegralAlgorithm(Algorithms):
+    def __init__(self, float, target_height, Kp, Ki):
+        super().__init__(float, target_height)
+        self.float = float
+        self.target_height = target_height
+        self.Kp = Kp
+        self.Ki = Ki
+
+    def get_config(self):
+        print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
+
+class PIDAlgorithm(Algorithms):
+    def __init__(self, float, target_height, Kp, Ki, Kd):
+        super().__init__(float, target_height)
+        self.float = float
+        self.target_height = target_height
+        self.Kp = Kp
+        self.Ki = Ki
+        self.Kd = Kd
+
+    def get_config(self):
+        print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}, Kd: {self.Kd}")
 
