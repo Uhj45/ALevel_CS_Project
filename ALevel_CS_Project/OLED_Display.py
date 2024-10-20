@@ -30,5 +30,7 @@ class Oled:
         self.oled.text(text_to_display, self.x, self.y, "white", font_name="font5x8.bin", size=self.size)
         self.oled.show()
 
-
-
+    def clear_screen(self):
+        self.oled.fill(0)
+        self.oled.show()
+        time.sleep(1)
