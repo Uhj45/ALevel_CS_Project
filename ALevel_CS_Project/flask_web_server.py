@@ -12,7 +12,7 @@ from PWM_Fan import PCA9685Fan
 from sql_database import StoreReadings, StorePidConstants
 import time
 from flask import Flask, render_template, request
-from Algorthims import Schmitttrigger
+from Algorthims import Schmitttrigger, ProportionalAlgorithm, ProportionalIntegralAlgorithm, PIDAlgorithm
 
 app = Flask(__name__)
 
@@ -134,25 +134,27 @@ def pid():
     humid_val = temp_humidity.get_humidity()
     distance = DistanceSensor()
     dist = distance.get_distance()
+    proportional_alg_selected = None
+    integral_alg_selected = None
+    derivative_alg_selected = None
     if request.method == "GET":
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
         print(request.form)
         parameter_list = request.form                         # Holds the key value pairs in a dictionary thats sent from the web form
         for key in parameter_list:                            # Goes through the dictionary and checks if the required keys for the PID constants are present
-            # print(parameter_list.get(key))
-            if key == "I":
-                i = request.form["I"]
-                # print(f"I is in the list: {'I' in key}")
-                # print(f"{i}")
             if key == "P":
-                p = request.form["P"]
-                # print(f"P is in the list: {'P' in key}")
-                # print(f"{p}")
+                proportional_alg_selected = request.form["P"]
+                print(f"P: {proportional_alg_selected}")
+            if key == "I":
+                integral_alg_selected = request.form["I"]
+                print(f"I: {integral_alg_selected}")
+
             if key == "D":
-                d = request.form["D"]
-                # print(f"D is in the list: {'D' in key}")
-                # print(f"{d}")
+                derivative_alg_selected = request.form["D"]
+                print(f"D: {derivative_alg_selected}")
+        print(f"P: {proportional_alg_selected}, I: {integral_alg_selected}, D: {derivative_alg_selected}")
+
         control_loop = request.form["control_loop"]
         floats = request.form["floats"]
         target_height = int(request.form["height"])
@@ -163,7 +165,18 @@ def pid():
             Kp = int(request.form["Kp"])
             Ki = int(request.form["Ki"])
             Kd = int(request.form["Kd"])
-            pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
+            if proportional_alg_selected == "on" and (derivative_alg_selected != "on") and (integral_alg_selected != "on"):
+                selected_algorithm = ProportionalAlgorithm(floats, target_height, Kp)
+                selected_algorithm.get_config()
+            elif proportional_alg_selected == "on" and integral_alg_selected == "on" and (derivative_alg_selected != "on"):
+                selected_algorithm = ProportionalIntegralAlgorithm(floats, target_height, Kp, Ki)
+                selected_algorithm.get_config()
+            elif proportional_alg_selected == "on" and integral_alg_selected == "on" and derivative_alg_selected == "on":
+                selected_algorithm = PIDAlgorithm(floats, target_height, Kp, Ki, Kd)
+                selected_algorithm.get_config()
+            else:
+                print("Invalid combination of algorithms")
+            # pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
 
         elif control_loop == "Schmitt Trigger":
             threshold = int(request.form["threshold"])
