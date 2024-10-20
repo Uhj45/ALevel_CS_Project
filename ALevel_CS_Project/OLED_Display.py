@@ -8,7 +8,7 @@ class Oled:
     """
     Uhjas
     """
-    def __init__(self, size=1, x=0, y=0):
+    def __init__(self, x=0, y=0, size=1):
         """
         These parameters are localised to the class and can only be used inside the class
         :param x:
@@ -25,8 +25,14 @@ class Oled:
         self.oled.poweron()
         self.oled.contrast(50)
 
-    def display_text(self, text_to_display):
-        print(f"displaying text, {text_to_display}")
+    def display_text(self, text_to_display, x=0, y=0, size=1):
+        if x:
+            self.x =x
+        if y:
+            self.y =y
+        if size:
+            self.size = size
+        # print(f"displaying text, {text_to_display}")
         self.oled.text(text_to_display, self.x, self.y, "white", font_name="font5x8.bin", size=self.size)
         self.oled.show()
 
