@@ -1,6 +1,6 @@
 # from Temperature_Humidity import TempHumidity
-# from OLED_Display import Oled
-# from Neopixel_LEDs import Neopixel, Neopixel2
+from OLED_Display import Oled
+from Neopixel_LEDs import Neopixel, Neopixel2
 # from LDR import Ldr
 from Distance_Sensor import DistanceSensor
 from PWM_Fan import PCA9685Fan
@@ -17,6 +17,10 @@ import RPi.GPIO as GPIO
 # Objects from the Oled class
 # display = Oled()   # This creates an object in the class to display simple text to the screen
 # text = "This is my text"
+# display.display_text(text)
+# time.sleep(2)
+# display.clear_screen()
+# text = "hello"
 # display.display_text(text)
 #
 # display2 = Oled(x=20, y=20)   # This creates an object with two parameters that determine the position of the text
@@ -39,9 +43,10 @@ import RPi.GPIO as GPIO
 # led2 = Neopixel()
 # led2.turn_led_off()
 # time.sleep(2)
-# led3 = Neopixel(1.0)
-# led3.set_predefined_colour("mint")
-# led3.change_colour()
+led3 = Neopixel2(1.0)
+led3.set_predefined_colour("mint")
+led3.change_colour()
+led3.turn_led_on()
 # time.sleep(2)
 # led4 = Neopixel(1.0)
 # led4.set_predefined_colour("brown")
@@ -102,16 +107,16 @@ import RPi.GPIO as GPIO
 # fan.decrement_fan_speed(12)
 
 # distance_readings = DistanceSensor()
-fan = PCA9685Fan()
+# fan = PCA9685Fan()
 #
 # for i in range(0, 20):
 #     fan.increment_fan_speed(5)
 #     print(distance_readings.get_distance())
 #     time.sleep(3)
 
-distance_readings = DistanceSensor()
-fan.turn_fan_off()
-for i in range(0, 100):
-    dist = distance_readings.get_distance()
-    print(f"Distance: {i}, {dist:.1f} cm ")
-    time.sleep(3)
+# distance_readings = DistanceSensor()
+# fan.turn_fan_off()
+# for i in range(0, 100):
+#     dist = distance_readings.get_distance()
+#     print(f"Distance: {i}, {dist:.1f} cm ")
+#     time.sleep(3)
