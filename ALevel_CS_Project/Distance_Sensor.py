@@ -40,6 +40,6 @@ class DistanceSensor:
         Distance = ElapsedTime * 34326
         Distance = Distance/2
         time.sleep(0.5)
-        return Distance
+        return round(Distance, 2)
 
 
