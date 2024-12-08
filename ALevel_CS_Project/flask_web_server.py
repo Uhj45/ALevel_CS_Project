@@ -137,6 +137,9 @@ def pid():
     proportional_alg_selected = None
     integral_alg_selected = None
     derivative_alg_selected = None
+    labels = None
+    value1 = value2 = value3 = value4 = None
+    scaled_fan_speed = None
     if request.method == "GET":
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
