@@ -1,0 +1,77 @@
+
+{% extends "base2.html" %}
+{% block title %}PID Controller{% endblock %}
+{% block p1 %}PID Controller{% endblock %}
+{% block p2 %}This is the PID Controller
+    <div class="container2">
+        <div class="tile_pid">
+            <form action="{{ url_for("pid") }}" method="POST">
+                <label for="floats">Choose a float:</label>
+                <select name="floats" id="floats">
+                    <option value="float_1">Float 1</option>
+                    <option value="float_2">Float 2</option>
+                    <option value="float_3">Float 3</option>
+                </select>
+                <br>
+                <label for="height">Height</label>
+                <input type="number" id="height" name="height" placeholder="target height" value="10"><br><br>
+
+                <label for="pid">PID</label>
+                <input type="radio" id="pid" name="control_loop" value="PID"><br><br>
+                <label for="P">P</label>
+                <input type="checkbox" id="P" name="P">
+                <label for="I">I</label>
+                <input type="checkbox" id="I" name="I">
+                <label for="D">D</label>
+                <input type="checkbox" id="D" name="D"><br>
+
+                <label for="Kp">Kp</label>
+                <input type="number" id="height" name="Kp" value="3"><br>
+                <label for="Ki">Ki</label>
+                <input type="number" id="Ki" name="Ki" value="4"><br>
+                <label for="Kd">Kd</label>
+                <input type="number" id="Kd" name="Kd" value="5">
+                <br>
+                <br>
+                <label for="schmitt_trigger">Schmitt Trigger</label>
+                <input type="radio" id="schmitt_trigger" name="control_loop" value="Schmitt Trigger"><br><br>
+                <label for="threshold">Threshold</label>
+                <input type="number" id="threshold" name="threshold" value="10">
+
+                <br>
+                <br>
+                <input type="submit" value="Start">
+
+            </form>
+        </div>
+        <div class="tile_graph">
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+            <canvas id="lineChart" width="400" height="400"></canvas>
+            <script>
+                var ctx = document.getElementById("lineChart").getContext("2d")
+                var lineChart = new Chart(ctx, {
+                    type:"line",
+                    data: {
+                        labels: {{ labels | safe }},
+                        datasets: [
+                            {
+                                label: "Data points",
+                                data: {{ values | safe }},
+                                fill: false,
+                                borderColor: "rgb(75, 192, 255",
+                                lineTension: 0.1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: false
+                    }
+                })
+            </script>
+    </div>
+    </div>
+
+
+
+
+{% endblock %}

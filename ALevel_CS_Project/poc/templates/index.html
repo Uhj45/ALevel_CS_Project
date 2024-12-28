@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width initial-scale=1.0">
+<!--<meta http-equiv="refresh" content="2">-->
+<link rel= "stylesheet" type= "text/css" href= "static/style.css">
+
+<title>Remote Pi Hub</title>
+</head>
+<body>
+  <header>
+    <h1>Remote Pi Hub</h1>
+  </header>
+  <div class="sidenav">
+    <a href="#">LEDControl</a>
+    <a href="#">PID Controller</a>
+    <a href="#">OLED Display</a>
+  </div>
+  <div class="tiles-container">
+    <div class="tile">
+      <h2>LDR</h2>
+      <p>LDR value is {{ LDR }}</p>
+    </div>
+    <div class="tile">
+      <h2>Temperature</h2>
+      <p>Temperature: {{ temp_val }}</p>
+    </div>
+    <div class="tile">
+      <h2>Humidity</h2>
+      <p>Humidity: {{ humid_val }}
+    </div>
+    <div class="tile">
+      <h2>Distance</h2>
+      <p>Distance: </p>
+    </div>
+    <div class="tile">
+      <h2>LED 1</h2>
+      <p></p>
+    </div>
+    <div class="tile">
+      <h2>LED 2</h2>
+      <p></p>
+    </div>
+    <div class="tile">
+      <h2>OLED Display</h2>
+      <p>Message: </p>
+    </div>
+    <div class="tile">
+      <h2>PWM Fan</h2>
+      <p>Fan speed: </p>
+    </div>
+    <div class="tile">
+      <h2>PID</h2>
+      <p>Target Distance: </p>
+    </div>
+  </div>
+
+</body>
+</html>

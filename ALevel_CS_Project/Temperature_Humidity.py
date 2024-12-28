@@ -2,19 +2,35 @@ import adafruit_dht
 import time
 import board
 
+
 class TempHumidity:
-    def __int__(self, temperature=None, humidity=None):
-        self.temperature = temperature
-        self.humidity = humidity
+    """
+    Gets the temperature and humidity readings from DHT22 sensor
+    """
+    def __init__(self):
+        """
+        Initialises the GPIO pin for the DHT22 sensor to talk over the SPI bus
+        """
+        self.temperature = None
+        self.humidity = None
+        self.sensor = None
 
-    def get_temperature_humidity(self):
-        sensor = adafruit_dht.DHT22(board.MOSI)
-        return sensor.temperature, sensor.humidity
+    def get_temperature(self):
 
+        # self.temperature = self.sensor.temperature
+        # self.sensor.exit()  # This gets rid of the "lost access to message queue" error as it says that the sensor is exiting
+        return self.temperature
 
-# for i in range(0, 5):
-#     print(f"Temperature: {temperature} °C", f"Humidity: {humidity} %")
-#     time.sleep(1)
+    def get_humidity(self):
+        # self.humidity = self.sensor.humidity
+        return self.humidity
 
-readings = TempHumidity()
-print(readings.get_temperature_humidity())
+    def read_sensors(self):
+        self.sensor = adafruit_dht.DHT22(board.MOSI)  # The pin needs to be initialised here every time to get a reading,
+                                                      # can't be in the init function as it will only initialise once and
+                                                      # won't be able to call the get functions to get a new reading
+                                                      # and will keep using the same value
+        self.sensor.measure()
+        self.temperature = self.sensor.temperature
+        self.humidity = self.sensor.humidity
+        self.sensor.exit()

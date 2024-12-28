@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <!--<meta http-equiv="refresh" content="2">-->
+    <link rel= "stylesheet" type= "text/css" href= "static/style.css">
+    <title>{% block title %}Remote Pi Hub{% endblock  %}</title>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <a href="/">Home</a>
+        <a href="/oleddisplay">OLED Display</a>
+        <a href="/pid">PID Controller</a>
+        <a href="/plot_graphs">Plot Graphs</a>
+        <a href="/ledcontrol">LED Control</a>
+        <a href = "/fancontrol">Fan Control</a>
+    </div>
+
+    <div class="content1">
+        <div class="header">
+            <p>{% block p1 %}Home Dashboard{% endblock %}</p>
+        </div>
+        <div class="content3">
+            <div class="container">
+                <div class="tile">LDR value is {{ LDR }}</div>
+                <div class="tile">Temperature: {{ temp }}</div>
+                <div class="tile">Humidity: {{ humidity }}</div>
+                <div class="tile">Distance: {{ dist }} </div>
+            </div>
+            <div class="container">
+                <div class="tile">LED1
+                    <p>{{ ledstatus1 }}</p>
+                </div>
+                <div class="tile">LED2
+                    <p>{{ ledstatus2 }}</p>
+                </div>
+                <div class="tile">Fan Speed: {{ fan_speed }}
+                    <p> {{ fan_status }}</p>
+                </div>
+                <div class="tile">PID constants: </div>
+            </div>
+        </div>
+        <div class="content4">
+            <p>{% block p2 %}This is my sensor control.{% endblock %}</p>
+        </div>
+    </div>
+</div>
+
+
+{% block content %}{% endblock %}
+</body>
+</html>
