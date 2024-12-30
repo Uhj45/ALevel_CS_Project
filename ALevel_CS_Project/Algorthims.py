@@ -44,11 +44,11 @@ class Schmitttrigger:
         distance = current_av_height
         return distance
 
-    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats):
+    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats, iterations):
         previous_height = 0
         self.fan.turn_fan_on()
         self.fan.set_fan_speed(60)
-        for i in range(0, 10):
+        for i in range(0, iterations):
             # distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
             distance = self.check_float_stable(previous_height)
             self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
