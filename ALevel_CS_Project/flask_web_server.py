@@ -183,11 +183,12 @@ def pid():
 
         elif control_loop == "Schmitt Trigger":
             threshold = int(request.form["threshold"])
+            iterations = int(request.form["iterations"])
             upper_threshold = target_height + threshold
             lower_threshold = target_height - threshold
             # schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
             algorthim = Schmitttrigger(target_height, upper_threshold, lower_threshold)
-            algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, floats)
+            algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, floats, iterations)
 
             data = get_values()
             # print(f"{data}, {type(data)}")
