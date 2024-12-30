@@ -34,7 +34,7 @@ class Schmitttrigger:
     def check_float_stable(self, target_height, threshold, upper_threshold, lower_threshold, runid, floats):
         previous_height = 0
         current_av_height = 0
-        for j in range(0, 5):
+        for j in range(0, 3):
             current_av_height = self.calc_average_height()
             print(f"Current height: {current_av_height}, Previous height: {previous_height}")
             if current_av_height > previous_height:
