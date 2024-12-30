@@ -44,15 +44,19 @@ class Schmitttrigger:
         distance = current_av_height
         return distance
 
-    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats, iterations):
+    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats, duration):
         previous_height = 0
         self.fan.turn_fan_on()
         self.fan.set_fan_speed(60)
-        for i in range(0, iterations):
+        start_time = time.time()
+        print(start_time)
+        elapsed_time = 0
+        while elapsed_time < duration:
+        # for i in range(0, iterations):
             # distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
             distance = self.check_float_stable(previous_height)
             self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
-            print(f"Distance ({i}): {distance}")
+            print(f"Distance ({elapsed_time}): {distance}")
             if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
                 self.LED1.set_predefined_colour("red")
@@ -72,9 +76,9 @@ class Schmitttrigger:
             else:
                 self.fan.turn_fan_off()
 
-            self.check_float_stable(target_height, threshold, upper_threshold, lower_threshold, runid, floats)
+            # self.check_float_stable(target_height, threshold, upper_threshold, lower_threshold, runid, floats)
             time.sleep(0.5)
-
+            elapsed_time = time.time() - start_time
 
 class Algorithms:
     def __init__(self, float, target_height):
