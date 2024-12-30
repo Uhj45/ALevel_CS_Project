@@ -169,9 +169,12 @@ class PostTest:
         self.screen.clear_screen()
         fan.turn_fan_off()
 
+    def finish_post(self):
+        self.screen.display_text("POST Finished",0, 0, 1)
+        self.screen.clear_screen()
+
 
 test = PostTest()
-
 test.test_temperature_sensor()
 test.test_humidity_sensor()
 test.led_test("LED1")
@@ -179,7 +182,7 @@ test.led_test("LED2")
 test.test_ldr_sensor()
 test.test_distance()
 test.test_fan()
-
+test.finish_post()
 
 
 
