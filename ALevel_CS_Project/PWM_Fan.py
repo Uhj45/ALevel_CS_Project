@@ -124,7 +124,6 @@ class PCA9685Fan:
         if self.check_fan_speed(fan_speed):
             self.duty_cycle = int((fan_speed / 100) * 65535)
             # self.fan_speed = 32767
-            print(self.percentage_fan_speed)
             self.pca.channels[1].duty_cycle = self.duty_cycle
             print(f"Fan speed is {fan_speed}")
 
