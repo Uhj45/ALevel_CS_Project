@@ -17,37 +17,54 @@ class Schmitttrigger:
         self.target_height = target_height
         self.lower_threshold = lower_threshold
         self.upper_threshold = upper_threshold
+        self.fan = PCA9685Fan()
+        self.distance_readings = DistanceSensor()
+        self.LED1 = Neopixel2(brightness=0.8)
+        self.LED2 = Neopixel2(brightness=0.8)
+        self.results = StoreReadings()
+
+    def calc_average_height(self):
+        heights_list = []
+        for i in range(0, 5):
+            height = self.distance_readings.get_distance()
+            heights_list.append(height)
+        average_height = sum(heights_list)/len(heights_list)
+        return average_height
 
     def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats):
-        fan = PCA9685Fan()
-        fan.turn_fan_on()
-        fan.set_fan_speed(60)
-        distance_readings = DistanceSensor()
-        LED1 = Neopixel2(brightness=0.8)
-        LED2 = Neopixel2(brightness=0.8)
-        results = StoreReadings()
+        self.fan.turn_fan_on()
+        self.fan.set_fan_speed(60)
         for i in range(0, 50):
-            distance = 23 - distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
+            distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
             print(f"Distance: {distance}")
-            results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
+            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
             if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
-                LED1.set_predefined_colour("red")
-                LED1.turn_led_on()
-                fan.decrement_fan_speed(2)
+                self.LED1.set_predefined_colour("red")
+                self.LED1.turn_led_on()
+                self.fan.decrement_fan_speed(2)
             elif distance < float(lower_threshold):
                 # Turn LED1 on and decrease fan speed and add height value to table
-                LED1.set_predefined_colour("red")
-                LED1.turn_led_on()
-                fan.increment_fan_speed(2)
+                self.LED1.set_predefined_colour("red")
+                self.LED1.turn_led_on()
+                self.fan.increment_fan_speed(2)
             elif float(lower_threshold) < distance < float(upper_threshold) or distance == float(target_height):
                 # Turn LED2 On and Add height value to table
-                LED1.turn_led_off()
-                LED2.set_predefined_colour("green")
-                LED2.turn_led_on()
+                self.LED1.turn_led_off()
+                self.LED2.set_predefined_colour("green")
+                self.LED2.turn_led_on()
 
+            previous_height = 0
+            for j in range(0, 5):
+                current_height = self.calc_average_height()
+                print(f"Current height: {current_height}, Previous height: {previous_height}")
+                if current_height > previous_height:
+                    print("Keep fan speed the same")
+                elif current_height < previous_height:
+                    self.fan.increment_fan_speed(2)
+                previous_height = current_height
             else:
-                fan.turn_fan_off()
+                self.fan.turn_fan_off()
 
             time.sleep(0.5)
 
