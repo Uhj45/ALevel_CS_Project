@@ -39,12 +39,13 @@ class Schmitttrigger:
             print(f"Current height: {current_av_height}, Previous height: {previous_height}")
             if current_av_height > previous_height:
                 print("Keep fan speed the same")
-            elif current_av_height < previous_height:
-                self.fan.increment_fan_speed(2)
+            # elif current_av_height < previous_height:
+            #     self.fan.increment_fan_speed(2)
             previous_height = current_av_height
         distance = current_av_height
         self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
         return distance
+
     def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats):
         self.fan.turn_fan_on()
         self.fan.set_fan_speed(60)
@@ -52,7 +53,6 @@ class Schmitttrigger:
             # distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
             distance = self.calc_average_height()
             print(f"Distance ({i}): {distance}")
-            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
             if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
                 self.LED1.set_predefined_colour("red")
