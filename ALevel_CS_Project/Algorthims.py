@@ -26,7 +26,7 @@ class Schmitttrigger:
     def calc_average_height(self):
         heights_list = []
         for i in range(0, 5):
-            height = self.distance_readings.get_distance()
+            height = 23 - self.distance_readings.get_distance()
             heights_list.append(height)
         average_height = sum(heights_list)/len(heights_list)
         return average_height
