@@ -30,6 +30,7 @@ class Schmitttrigger:
             heights_list.append(height)
         average_height = sum(heights_list)/len(heights_list)
         return average_height
+
     def check_float_stable(self, target_height, threshold, upper_threshold, lower_threshold, runid, floats):
         previous_height = 0
         current_av_height = 0
@@ -43,13 +44,14 @@ class Schmitttrigger:
             previous_height = current_av_height
         distance = current_av_height
         self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
-
+        return distance
     def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats):
         self.fan.turn_fan_on()
         self.fan.set_fan_speed(60)
         for i in range(0, 50):
-            distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
-            print(f"Distance: {distance}")
+            # distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
+            distance = self.calc_average_height()
+            print(f"Distance ({i}): {distance}")
             self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
             if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
