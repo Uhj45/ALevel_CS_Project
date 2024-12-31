@@ -168,9 +168,11 @@ def pid():
             Kp = int(request.form["Kp"])
             Ki = int(request.form["Ki"])
             Kd = int(request.form["Kd"])
+            duration = int(request.form["duration"])
             if proportional_alg_selected == "on" and (derivative_alg_selected != "on") and (integral_alg_selected != "on"):
                 selected_algorithm = ProportionalAlgorithm(floats, target_height, Kp)
                 selected_algorithm.get_config()
+                selected_algorithm.run_proportional_algorithm(duration)
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and (derivative_alg_selected != "on"):
                 selected_algorithm = ProportionalIntegralAlgorithm(floats, target_height, Kp, Ki)
                 selected_algorithm.get_config()
