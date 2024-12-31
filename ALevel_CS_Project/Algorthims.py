@@ -84,7 +84,8 @@ class Algorithms:
     def __init__(self, float, target_height):
         self.float = float
         self.target_height = target_height
-
+        self.fan = PCA9685Fan()
+        self.distance_readings = DistanceSensor()
 
 class ProportionalAlgorithm(Algorithms):
     def __init__(self, float, target_height, Kp):
@@ -92,6 +93,37 @@ class ProportionalAlgorithm(Algorithms):
         self.float = float
         self.target_height = target_height
         self.Kp = Kp
+
+    def calculate_proportional_term(self, measured_height):
+        """
+        This function will take in the measured height and the target height to calculate a value for
+        the proportional term
+        :param measured_height: this is a reading from the distance sensor.
+        :return:
+        """
+        error = self.target_height - measured_height
+        proportional_term = int(self.Kp * error)
+        print(f"Error: {self.target_height} - {measured_height} = {error}, proportional term: {proportional_term}")
+        return proportional_term
+
+    def run_proportional_algorithm(self, duration):
+        """
+        This will run in a while loop for a set amount of time determined by the user.
+        This will try to lift the object to the target height.
+        :return:
+        """
+        start_time = time.time()
+        print(start_time)
+        elapsed_time = 0
+        while elapsed_time < duration:
+            measured_height = 23 - self.distance_readings.get_distance()
+            print(measured_height)
+            p_term = self.calculate_proportional_term(measured_height)
+            if measured_height == self.target_height:
+                print("Fan speed constant")
+            else:
+                self.fan.set_raw_fan_speed(p_term)
+            elapsed_time = time.time() - start_time
 
     def get_config(self):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}")
