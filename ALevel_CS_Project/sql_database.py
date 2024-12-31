@@ -140,6 +140,7 @@ class StorePidConstants(BaseDatabase):
         self.db_name = db_name
         self.table_name = table_name
         self.columns = """
+        Float text,
         Kp int,
         Ki int,
         Kd int
@@ -152,17 +153,13 @@ class StorePidConstants(BaseDatabase):
     #     self.cursor.execute(table)
     #     self.db_connection.commit()
 
-    def add_item(self):
-        values = [
-            ('23', '45', '65'),
-            ('12', '90', '37'),
-            ('23', '9', '15'),
-        ]
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?)", values)
+    def add_item(self, floats, Kp, Ki, Kd, a, b, c, d, e, f, g):
+        values = [(f'{floats}', f'{Kp}', f'{Ki}', f'{Kd}')]
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?)", values)
         self.db_connection.commit()
 
     def get_item(self):
-        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Kp = '56' ")
+        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Floats = 'float_1' ")
         query_result2 = self.cursor.fetchall()
         for item in query_result2:
             print(item)
