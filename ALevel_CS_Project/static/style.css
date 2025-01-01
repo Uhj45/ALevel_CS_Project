@@ -102,8 +102,10 @@ div {
   border-radius: 10px;
   text-decoration: none; /* Remove default link underline */
   display: block; /* Make the tile block-level for better styling */
-  width: 50%;
-  height: 400px;
+  width: 70%;
+  height: 450px;
+  position: relative;
+  top: -20px;
 }
 .tiles-container {
   margin-left: 230px;
