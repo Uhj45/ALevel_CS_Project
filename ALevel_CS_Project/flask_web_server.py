@@ -213,7 +213,13 @@ def pid():
             duty_cycle_scaled = i / 1000
             # print(f"{duty_cycle_scaled}")
             scaled_fan_speed.append(duty_cycle_scaled)
-        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=value6,value7=value7,value8=value8,value9=value9,value10=value10,value11=value11)
+
+        scaled_p_term = []
+        for i in value9:
+            p_term_scaled = i / 100
+            scaled_p_term.append(p_term_scaled)
+        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=value6,value7=value7,value8=value8,value9=scaled_p_term,value10=value10,value11=value11)
+
 
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
