@@ -107,6 +107,16 @@ div {
   position: relative;
   top: -20px;
 }
+.plot_graph {
+  background-color: whitesmoke;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none; /* Remove default link underline */
+  display: block; /* Make the tile block-level for better styling */
+  width: 70%;
+  height: 450px;
+}
 .tiles-container {
   margin-left: 230px;
   padding-left: 230;
