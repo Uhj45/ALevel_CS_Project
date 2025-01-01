@@ -1,7 +1,7 @@
 #!/bin/bash
 USAGE="mac_to_pi.sh <archive_filename>"
 ARCHIVE_NAME=${1}
-# variable to store the location of archive file and names the achrive using the first argument in the script 
+# variable to store the location of archive file and names the archive using the first argument in the script
 TARFILE="installation_package/${ARCHIVE_NAME}.tar.gz"
 echo "${TARFILE}"
  
