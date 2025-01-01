@@ -40,7 +40,7 @@ class BaseDatabase:
         self.cursor.execute(table)
         self.db_connection.commit()
 
-    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job, kids, salary):           # Had to add parameters here to match the parameters used in the subclass
+    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job, kids, salary, boss_name, work_location, computer):           # Had to add parameters here to match the parameters used in the subclass
         many_customers = [
              (f'{name}', f'{lastname}', f'{email}', f'{age}', f'{car}'),
          ]
@@ -81,8 +81,11 @@ class StoreReadings(BaseDatabase):
         Fan_Speed int,
         Float text,
         Kp float,
+        P_Term float,
         Ki float,
-        Kd float
+        I_term float,
+        Kd float,
+        D_term
         """
     # def create_table(self):
     #     table = f"""CREATE TABLE {self.table_name}(
@@ -90,11 +93,11 @@ class StoreReadings(BaseDatabase):
     #     )"""
     #     self.cursor.execute(table)
     #     self.db_connection.commit()
-    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold,fan_speed, floats, kp, ki, kd):
+    def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold,fan_speed, floats, kp, p_term, ki,i_term, kd, d_term):
         epoch_time = int(time.time())
-        sensor_readings = [(f'{runid}', f'{epoch_time}', f'{height}', f'{target_height}', f'{threshold}', f'{upper_threshold}', f'{lower_threshold}',f'{fan_speed}', f'{floats}', f'{kp}', f'{ki}', f'{kd}')]
+        sensor_readings = [(f'{runid}',f'{epoch_time}',f'{height}',f'{target_height}',f'{threshold}',f'{upper_threshold}',f'{lower_threshold}',f'{fan_speed}',f'{floats}',f'{kp}',f'{p_term}',f'{ki}',f'{i_term}',f'{kd}',f'{p_term}')]
         # print(sensor_readings)
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
         self.cursor.execute(f"SELECT * FROM {self.table_name}")
         self.db_connection.commit()
 
@@ -110,7 +113,7 @@ class StoreReadings(BaseDatabase):
 
     def get_item(self):
         # Query's the table to get all values from the Height column with the most recent runid value ready to be fetched
-        self.cursor.execute(f"SELECT Height,Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
+        self.cursor.execute(f"SELECT Height,Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed, Kp, Ki, Kd, P_Term, I_Term, D_Term FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
         # returns all values that were specified in the query and prints them onto a blank webpage
         return self.cursor.fetchall()
 
@@ -131,46 +134,6 @@ class StoreReadings(BaseDatabase):
         return self.cursor.fetchall()
 
 
-class StorePidConstants(BaseDatabase):
-    def __init__(self, db_name="Sensors.db", table_name="PIDConstants"):
-        super().__init__(db_name)
-        self.db_filename = f"./sqlite/{self.db_name}"
-        self.db_connection = sqlite3.connect(self.db_filename)
-        self.cursor = self.db_connection.cursor()
-        self.db_name = db_name
-        self.table_name = table_name
-        self.columns = """
-        Float text,
-        Kp int,
-        Ki int,
-        Kd int
-        """
-
-    # def create_table(self):
-    #     table = f"""CREATE TABLE {self.table_name}(
-    #     {self.columns}
-    #     )"""
-    #     self.cursor.execute(table)
-    #     self.db_connection.commit()
-
-    def add_item(self, floats, Kp, Ki, Kd, a, b, c, d, e, f, g):
-        values = [(f'{floats}', f'{Kp}', f'{Ki}', f'{Kd}')]
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?)", values)
-        self.db_connection.commit()
-
-    def get_item(self):
-        self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Floats = 'float_1' ")
-        query_result2 = self.cursor.fetchall()
-        for item in query_result2:
-            print(item)
-
-    def remove_item(self):
-        self.cursor.execute(f"DELETE FROM {self.table_name} WHERE rowid = 1")
-        self.db_connection.commit()
-
-    def update_item(self):
-        self.cursor.execute(f"UPDATE {self.table_name} SET Kp = '56' WHERE rowid = 2 ")
-        self.db_connection.commit()
 
 
 # test = StoreReadings()
@@ -179,10 +142,3 @@ class StorePidConstants(BaseDatabase):
 # test.remove_item()
 # test.get_item()
 # test.update_item()
-
-# test1 = StorePidConstants()
-# test1.create_table()
-# test1.add_item()
-# test1.get_item()
-# test1.remove_item()
-# test1.update_item()
