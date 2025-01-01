@@ -55,7 +55,7 @@ class Schmitttrigger:
         # for i in range(0, iterations):
             # distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
             distance = self.check_float_stable(previous_height)
-            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0)
+            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0, p_term=0,d_term=0,i_term=0)
             print(f"Distance ({elapsed_time}): {distance}")
             if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
@@ -81,16 +81,32 @@ class Schmitttrigger:
             elapsed_time = time.time() - start_time
 
 class Algorithms:
-    def __init__(self, float, target_height):
-        self.float = float
+    def __init__(self, floats, target_height):
+        self.float = floats
         self.target_height = target_height
         self.fan = PCA9685Fan()
         self.distance_readings = DistanceSensor()
+        self.results = StoreReadings()
+        self.Kp = 0
+        self.Ki = 0
+        self.Kd = 0
+        self.threshold = 0
+        self.upper_threshold = 0
+        self.lower_threshold = 0
+        self.p_term = 0
+        self.i_term = 0
+        self.d_term = 0
+        self.fan_speed = 0
+        self.height = 0
+
+    def add_pid_values(self, runid):
+        self.results.add_item(runid,self. height,self.target_height,self.threshold,self.upper_threshold,self.lower_threshold,self.fan_speed,self.float,self.Kp,self.p_term,self.Ki,self.i_term,self.Kd,self.d_term)
+
 
 class ProportionalAlgorithm(Algorithms):
-    def __init__(self, float, target_height, Kp):
-        super().__init__(float, target_height)
-        self.float = float
+    def __init__(self, floats, target_height, Kp):
+        super().__init__(floats, target_height)
+        self.float = floats
         self.target_height = target_height
         self.Kp = Kp
 
@@ -106,7 +122,7 @@ class ProportionalAlgorithm(Algorithms):
         print(f"Error: {self.target_height} - {measured_height} = {error}, proportional term: {proportional_term}")
         return proportional_term
 
-    def run_proportional_algorithm(self, duration):
+    def run_proportional_algorithm(self, runid, duration):
         """
         This will run in a while loop for a set amount of time determined by the user.
         This will try to lift the object to the target height.
@@ -119,6 +135,7 @@ class ProportionalAlgorithm(Algorithms):
             measured_height = 23 - self.distance_readings.get_distance()
             print(measured_height)
             p_term = self.calculate_proportional_term(measured_height)
+            self.add_pid_values(runid)
             if measured_height == self.target_height:
                 print("Fan speed constant")
             else:
@@ -129,9 +146,9 @@ class ProportionalAlgorithm(Algorithms):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}")
 
 class ProportionalIntegralAlgorithm(Algorithms):
-    def __init__(self, float, target_height, Kp, Ki):
-        super().__init__(float, target_height)
-        self.float = float
+    def __init__(self, floats, target_height, Kp, Ki):
+        super().__init__(floats, target_height)
+        self.float = floats
         self.target_height = target_height
         self.Kp = Kp
         self.Ki = Ki
@@ -140,9 +157,9 @@ class ProportionalIntegralAlgorithm(Algorithms):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
 
 class PIDAlgorithm(Algorithms):
-    def __init__(self, float, target_height, Kp, Ki, Kd):
-        super().__init__(float, target_height)
-        self.float = float
+    def __init__(self, floats, target_height, Kp, Ki, Kd):
+        super().__init__(floats, target_height)
+        self.float = floats
         self.target_height = target_height
         self.Kp = Kp
         self.Ki = Ki
