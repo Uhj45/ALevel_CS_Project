@@ -9,7 +9,7 @@ from OLED_Display import Oled
 from Neopixel_LEDs import Neopixel, Neopixel2
 from Distance_Sensor import DistanceSensor
 from PWM_Fan import PCA9685Fan
-from sql_database import StoreReadings, StorePidConstants
+from sql_database import StoreReadings
 import time
 from flask import Flask, render_template, request
 from Algorthims import Schmitttrigger, ProportionalAlgorithm, ProportionalIntegralAlgorithm, PIDAlgorithm
@@ -172,7 +172,7 @@ def pid():
             if proportional_alg_selected == "on" and (derivative_alg_selected != "on") and (integral_alg_selected != "on"):
                 selected_algorithm = ProportionalAlgorithm(floats, target_height, Kp)
                 selected_algorithm.get_config()
-                selected_algorithm.run_proportional_algorithm(duration)
+                selected_algorithm.run_proportional_algorithm(run_id,duration)
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and (derivative_alg_selected != "on"):
                 selected_algorithm = ProportionalIntegralAlgorithm(floats, target_height, Kp, Ki)
                 selected_algorithm.get_config()
@@ -192,22 +192,28 @@ def pid():
             algorthim = Schmitttrigger(target_height, upper_threshold, lower_threshold)
             algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, floats, duration)
 
-            data = get_values()
-            # print(f"{data}, {type(data)}")
-            labels = [row[1] for row in data]      # Time
-            value1 = [row[0] for row in data]      # Actual measured height
-            value2 = [row[2] for row in data]      # Target Height
-            value3 = [row[3] for row in data]      # Upper Threshold
-            value4 = [row[4] for row in data]      # Lower Threshold
-            value5 = [row[5] for row in data]      # Fan speed
+        data = get_values()
+        # print(f"{data}, {type(data)}")
+        labels = [row[1] for row in data]      # Time
+        value1 = [row[0] for row in data]      # Actual measured height
+        value2 = [row[2] for row in data]      # Target Height
+        value3 = [row[3] for row in data]      # Upper Threshold
+        value4 = [row[4] for row in data]      # Lower Threshold
+        value5 = [row[5] for row in data]      # Fan speed
+        value6 = [row[6] for row in data]      # Proportional constant
+        value7 = [row[7] for row in data]      # Integral constant
+        value8 = [row[8] for row in data]      # Derivative constant
+        value9 = [row[9] for row in data]      # Proportional term
+        value10 = [row[10] for row in data]    # Integral term
+        value11 = [row[11] for row in data]    # Derivative term
 
-            scaled_fan_speed = []
-            # This scales down each value of the fan speed by a 1000 and adds to a list so that it can be plotted as a graph
-            for i in value5:
-                duty_cycle_scaled = i / 1000
-                # print(f"{duty_cycle_scaled}")
-                scaled_fan_speed.append(duty_cycle_scaled)
-        return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, labels=labels, value1=value1, value2=value2, value3=value3, value4=value4, value5=scaled_fan_speed)
+        scaled_fan_speed = []
+        # This scales down each value of the fan speed by a 1000 and adds to a list so that it can be plotted as a graph
+        for i in value5:
+            duty_cycle_scaled = i / 1000
+            # print(f"{duty_cycle_scaled}")
+            scaled_fan_speed.append(duty_cycle_scaled)
+        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=value6,value7=value7,value8=value8,value9=value9,value10=value10,value11=value11)
 
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
