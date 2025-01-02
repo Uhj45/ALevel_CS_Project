@@ -159,7 +159,7 @@ def pid():
         print(f"P: {proportional_alg_selected}, I: {integral_alg_selected}, D: {derivative_alg_selected}")
 
         control_loop = request.form["control_loop"]
-        floats = request.form["floats"]
+        hover_foam = request.form["hover_foam"]
         target_height = int(request.form["height"])
         run_id = int(time.time())
         Kp = Ki = Kd = 0
@@ -170,15 +170,15 @@ def pid():
             Kd = int(request.form["Kd"])
             duration = int(request.form["duration"])
             if proportional_alg_selected == "on" and (derivative_alg_selected != "on") and (integral_alg_selected != "on"):
-                selected_algorithm = ProportionalAlgorithm(floats, target_height, Kp)
+                selected_algorithm = ProportionalAlgorithm(hover_foam, target_height, Kp)
                 selected_algorithm.get_config()
                 selected_algorithm.run_proportional_algorithm(run_id,duration)
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and (derivative_alg_selected != "on"):
-                selected_algorithm = ProportionalIntegralAlgorithm(floats, target_height, Kp, Ki)
+                selected_algorithm = ProportionalIntegralAlgorithm(hover_foam, target_height, Kp, Ki)
                 selected_algorithm.get_config()
                 selected_algorithm.run_proportional_integral_algorithm(run_id, duration)
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and derivative_alg_selected == "on":
-                selected_algorithm = PIDAlgorithm(floats, target_height, Kp, Ki, Kd)
+                selected_algorithm = PIDAlgorithm(hover_foam, target_height, Kp, Ki, Kd)
                 selected_algorithm.get_config()
                 selected_algorithm.run_pid_algorithm(run_id, duration)
             else:
@@ -192,7 +192,7 @@ def pid():
             lower_threshold = target_height - threshold
             # schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
             algorthim = Schmitttrigger(target_height, upper_threshold, lower_threshold)
-            algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, floats, duration)
+            algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, hover_foam, duration)
 
         data = get_values()
         # print(f"{data}, {type(data)}")
@@ -209,7 +209,7 @@ def pid():
         value10 = [row[10] for row in data]    # Integral term
         value11 = [row[11] for row in data]    # Derivative term
         # graph_title = "Hello World! " + control_loop + "threshold " + "target : " + target_height
-        graph_title = f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, Ki: {Ki}, Kd: {Kd}, Time: {run_id}, Float: {floats}"
+        graph_title = f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, Ki: {Ki}, Kd: {Kd}, Time: {run_id}, Float: {hover_foam}"
 
         scaled_fan_speed = []
         # This scales down each value of the fan speed by a 1000 and adds to a list so that it can be plotted as a graph
