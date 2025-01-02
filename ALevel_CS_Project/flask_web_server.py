@@ -176,6 +176,7 @@ def pid():
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and (derivative_alg_selected != "on"):
                 selected_algorithm = ProportionalIntegralAlgorithm(floats, target_height, Kp, Ki)
                 selected_algorithm.get_config()
+                selected_algorithm.run_proportional_integral_algorithm(run_id, duration)
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and derivative_alg_selected == "on":
                 selected_algorithm = PIDAlgorithm(floats, target_height, Kp, Ki, Kd)
                 selected_algorithm.get_config()
@@ -214,11 +215,21 @@ def pid():
             # print(f"{duty_cycle_scaled}")
             scaled_fan_speed.append(duty_cycle_scaled)
 
+        scaled_p_constant = []
+        for i in value6:
+            p_constant_scaled = i / 1000
+            scaled_p_constant.append(p_constant_scaled)
         scaled_p_term = []
         for i in value9:
-            p_term_scaled = i / 100
+            p_term_scaled = i / 1000
             scaled_p_term.append(p_term_scaled)
-        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=value6,value7=value7,value8=value8,value9=scaled_p_term,value10=value10,value11=value11)
+
+        scaled_i_term = []
+        for i in value10:
+            i_term_scaled = i / 100
+            scaled_i_term.append(i_term_scaled)
+
+        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,value9=scaled_p_term,value10=scaled_i_term,value11=value11)
 
 
 
