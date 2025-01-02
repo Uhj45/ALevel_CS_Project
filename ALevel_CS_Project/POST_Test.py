@@ -171,7 +171,6 @@ class PostTest:
 
     def finish_post(self):
         self.screen.display_text("POST Finished",0, 0, 1)
-        self.screen.clear_screen()
 
 
 test = PostTest()
