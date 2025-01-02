@@ -170,6 +170,7 @@ class ProportionalAlgorithm(Algorithms):
             else:
                 self.fan.set_raw_fan_speed(self.control)
             elapsed_time = time.time() - start_time
+            self.leds.turn_led_off()
 
     def get_config(self):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}")
@@ -208,6 +209,7 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
             else:
                 self.fan.set_raw_fan_speed(self.control)
             elapsed_time = time.time() - start_time
+            self.leds.turn_led_off()
 
     def get_config(self):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
@@ -246,7 +248,7 @@ class PIDAlgorithm(ProportionalIntegralAlgorithm):
             else:
                 self.fan.set_raw_fan_speed(self.control)
             elapsed_time = time.time() - start_time
-
+            self.leds.turn_led_off()
     def get_config(self):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}, Kd: {self.Kd}")
 
