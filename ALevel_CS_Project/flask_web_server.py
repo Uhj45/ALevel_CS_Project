@@ -232,8 +232,6 @@ def pid():
 
         return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,value9=scaled_p_term,value10=scaled_i_term,value11=value11)
 
-
-
 @app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
     get_runid = StoreReadings()
@@ -260,13 +258,33 @@ def plot_graph():
             upper_thresh_graph = [row[3] for row in graph_dt]
             lower_thresh_graph = [row[4] for row in graph_dt]
             fan_speed_graph = [row[5] for row in graph_dt]
+            p_constant_graph = [row[6] for row in graph_dt]
+            i_constant_graph = [row[7] for row in graph_dt]
+            d_constant_graph = [row[8] for row in graph_dt]
+            p_term_graph = [row[9] for row in graph_dt]
+            i_term_graph = [row[10] for row in graph_dt]
+            d_term_graph = [row[11] for row in graph_dt]
             scaled_fan_speed = []
             for i in fan_speed_graph:
                 duty_cycle_scaled = i / 1000
                 # print(f"{duty_cycle_scaled}")
                 scaled_fan_speed.append(duty_cycle_scaled)
-        print(f"Date: {formatted_creation_date}")
-        return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=epoch_time_graph, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed)
+            scaled_p_constant = []
+            for i in p_constant_graph:
+                p_constant_scaled = i / 1000
+                scaled_p_constant.append(p_constant_scaled)
+            scaled_p_term = []
+            for i in p_term_graph:
+                p_term_scaled = i / 1000
+                scaled_p_term.append(p_term_scaled)
+
+            scaled_i_term = []
+            for i in i_term_graph:
+                i_term_scaled = i / 100
+                scaled_i_term.append(i_term_scaled)
+
+        # print(f"Date: {formatted_creation_date}")
+            return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=epoch_time_graph, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed, p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph, d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term, i_term_graph=scaled_i_term, d_term_graph=d_term_graph )
 
 
 @app.route('/fancontrol', methods=["GET"])
