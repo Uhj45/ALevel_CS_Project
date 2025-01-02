@@ -32,7 +32,7 @@ class Schmitttrigger:
         average_height = sum(heights_list)/len(heights_list)
         return average_height
 
-    def check_float_stable(self, previous_height):
+    def check_foam_stable(self, previous_height):
         current_av_height = 0
         for j in range(0, 3):
             current_av_height = self.calc_average_height()
@@ -43,7 +43,7 @@ class Schmitttrigger:
         distance = current_av_height
         return distance
 
-    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, floats, duration):
+    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, hover_foam, duration):
         previous_height = 0
         self.fan.turn_fan_on()
         self.fan.set_fan_speed(60)
@@ -51,8 +51,8 @@ class Schmitttrigger:
         print(start_time)
         elapsed_time = 0
         while elapsed_time < duration:
-            distance = self.check_float_stable(previous_height)
-            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0, p_term=0,d_term=0,i_term=0)
+            distance = self.check_foam_stable(previous_height)
+            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), hover_foam, kp=0, ki=0, kd=0, p_term=0,d_term=0,i_term=0)
             print(f"Distance ({elapsed_time}): {distance}")
             if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
@@ -77,8 +77,8 @@ class Schmitttrigger:
             elapsed_time = time.time() - start_time
 
 class Algorithms:
-    def __init__(self, floats, target_height):
-        self.float = floats
+    def __init__(self, hover_foam, target_height):
+        self.hover_foam = hover_foam
         self.target_height = target_height
         self.fan = PCA9685Fan()
         self.distance_readings = DistanceSensor()
@@ -105,7 +105,7 @@ class Algorithms:
         print(f"P_Error: {self.target_height} - {measured_height:5.2f} = {self.error:5.2f}, P_Term: {self.p_term:9.2f}, I_Error: {self.integral_error:9.2f}, I_Term: {self.i_term:9.2f}, D_Term: {self.d_term:9.2f} Duty_Cycle: {self.control}")
 
     def add_pid_values(self, runid, measured_height):
-        self.results.add_item(runid,measured_height,self.target_height,self.threshold,self.upper_threshold,self.lower_threshold,self.control,self.float,self.Kp,self.p_term,self.Ki,self.i_term,self.Kd,self.d_term)
+        self.results.add_item(runid,measured_height,self.target_height,self.threshold,self.upper_threshold,self.lower_threshold,self.control,self.hover_foam,self.Kp,self.p_term,self.Ki,self.i_term,self.Kd,self.d_term)
 
     def calc_average_height(self):
         heights_list = []
@@ -129,10 +129,20 @@ class Algorithms:
         self.oled_display.display_text(f"Fan: {self.control}",0, 12,1)
         self.oled_display.display_text(f"ET: {int(elapsed_time)}",0,24,1)
 
+    def get_hover_foam_value(self):
+        idle_fan_speed = 0
+        if self.hover_foam == "hover_foam_1":
+            idle_fan_speed = 44000
+        elif self.hover_foam == "hover_foam_2":
+            idle_fan_speed = 46000
+        elif self.hover_foam == "hover_foam_3":
+            idle_fan_speed = 50000
+        return idle_fan_speed
+
 class ProportionalAlgorithm(Algorithms):
-    def __init__(self, floats, target_height, Kp):
-        super().__init__(floats, target_height)
-        self.float = floats
+    def __init__(self, hover_foam, target_height, Kp):
+        super().__init__(hover_foam, target_height)
+        self.hover_foam = hover_foam
         self.target_height = target_height
         self.Kp = Kp
         self.error = 0
@@ -146,8 +156,8 @@ class ProportionalAlgorithm(Algorithms):
         """
         self.error = measured_height - self.target_height
         proportional_term = int(self.Kp * self.error)
-        if proportional_term < 44000:
-            proportional_term = 44000
+        if proportional_term < self.get_hover_foam_value():
+            proportional_term = self.get_hover_foam_value()
         return proportional_term
         # return abs(proportional_term)
 
@@ -177,12 +187,12 @@ class ProportionalAlgorithm(Algorithms):
             self.leds.turn_led_off()
 
     def get_config(self):
-        print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}")
+        print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}")
 
 class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
-    def __init__(self, floats, target_height, Kp, Ki):
-        super().__init__(floats, target_height, Kp)
-        self.float = floats
+    def __init__(self, hover_foam, target_height, Kp, Ki):
+        super().__init__(hover_foam, target_height, Kp)
+        self.hover_foam = hover_foam
         self.target_height = target_height
         self.Kp = Kp
         self.Ki = Ki
@@ -217,12 +227,12 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
             self.leds.turn_led_off()
 
     def get_config(self):
-        print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
+        print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
 
 class PIDAlgorithm(ProportionalIntegralAlgorithm):
-    def __init__(self, floats, target_height, Kp, Ki, Kd):
-        super().__init__(floats, target_height, Kp, Ki)
-        self.float = floats
+    def __init__(self, hover_foam, target_height, Kp, Ki, Kd):
+        super().__init__(hover_foam, target_height, Kp, Ki)
+        self.hover_foam = hover_foam
         self.target_height = target_height
         self.Kp = Kp
         self.Ki = Ki
@@ -256,5 +266,5 @@ class PIDAlgorithm(ProportionalIntegralAlgorithm):
             elapsed_time = time.time() - start_time
             self.leds.turn_led_off()
     def get_config(self):
-        print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}, Kd: {self.Kd}")
+        print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}, Kd: {self.Kd}")
 
