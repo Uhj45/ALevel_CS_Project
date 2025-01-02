@@ -130,7 +130,7 @@ class StoreReadings(BaseDatabase):
     def get_graph_data(self, date):
         print(f"Value: {date}")
         # This will get all the graph data based on the runid that has been selected
-        self.cursor.execute(f"SELECT Height, Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed FROM {self.table_name} WHERE runid = {date}")
+        self.cursor.execute(f"SELECT Height, Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed, Kp, Ki, Kd, P_Term, I_Term, D_Term FROM {self.table_name} WHERE runid = {date}")
         return self.cursor.fetchall()
 
 
