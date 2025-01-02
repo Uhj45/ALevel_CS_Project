@@ -32,7 +32,7 @@ class DistanceSensor:
             StartTime = time.time()                 # This will get the first timestamp
         while GPIO.input(self.pinEcho):             # This while loop will get the last timestamp when the signal is high
             StopTime = time.time()                  # This will get the last timestamp once the signal has been received
-            if StopTime - StartTime >= 0.04:        # Checks that the elapsed time is less than 0.04 otherwise the object is too close to the sensor
+            if StopTime - StartTime >= 0.04:        # If the time taken to send and receive the signal is below 0.04 which suggests that the object is really close to the sensor
                 print("That's really close")
                 StopTime = StartTime
 
