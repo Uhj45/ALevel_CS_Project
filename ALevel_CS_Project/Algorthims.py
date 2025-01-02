@@ -2,6 +2,7 @@
 from PWM_Fan import PCA9685Fan
 from Distance_Sensor import DistanceSensor
 from Neopixel_LEDs import Neopixel2
+from OLED_Display import Oled
 from sql_database import StoreReadings
 import time
 
@@ -82,6 +83,7 @@ class Algorithms:
         self.fan = PCA9685Fan()
         self.distance_readings = DistanceSensor()
         self.leds = Neopixel2(brightness=0.8, phyiscal_led="LED2")
+        self.oled_display = Oled()
         self.results = StoreReadings()
         self.Kp = 0
         self.Ki = 0
@@ -121,6 +123,12 @@ class Algorithms:
             self.leds.set_predefined_colour("red")
             self.leds.turn_led_on()
 
+    def log_values_to_oled_screen(self, measured_height, elapsed_time):
+        self.oled_display.clear_screen()
+        self.oled_display.display_text(f"AH : {measured_height:.2f} ({self.target_height})",0,0,1)
+        self.oled_display.display_text(f"Fan: {self.control}",0, 12,1)
+        self.oled_display.display_text(f"ET: {int(elapsed_time)}",0,24,1)
+
 class ProportionalAlgorithm(Algorithms):
     def __init__(self, floats, target_height, Kp):
         super().__init__(floats, target_height)
@@ -158,6 +166,7 @@ class ProportionalAlgorithm(Algorithms):
             self.p_term = self.calculate_proportional_term(measured_height)
             self.control = self.p_term
             self.log_values_to_screen(measured_height)
+            self.log_values_to_oled_screen(measured_height, elapsed_time)
             self.light_leds(measured_height, self.target_height)
             self.add_pid_values(runid, measured_height)
             if measured_height == self.target_height:
@@ -197,6 +206,7 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
             self.i_term = self.calculate_integral_term(measured_height)
             self.control = int(self.p_term + self.i_term)
             self.log_values_to_screen(measured_height)
+            self.log_values_to_oled_screen(measured_height, elapsed_time)
             self.light_leds(measured_height, self.target_height)
             self.add_pid_values(runid, measured_height)
             if measured_height == self.target_height:
@@ -236,6 +246,7 @@ class PIDAlgorithm(ProportionalIntegralAlgorithm):
             self.d_term = self.calculate_derivative_term()
             self.control = int(self.p_term + self.i_term + self.d_term)
             self.log_values_to_screen(measured_height)
+            self.log_values_to_oled_screen(measured_height, elapsed_time)
             self.light_leds(measured_height, self.target_height)
             self.add_pid_values(runid, measured_height)
             if measured_height == self.target_height:
