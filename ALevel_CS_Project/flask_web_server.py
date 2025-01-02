@@ -180,6 +180,7 @@ def pid():
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and derivative_alg_selected == "on":
                 selected_algorithm = PIDAlgorithm(floats, target_height, Kp, Ki, Kd)
                 selected_algorithm.get_config()
+                selected_algorithm.run_pid_algorithm(run_id, duration)
             else:
                 print("Invalid combination of algorithms")
             # pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
