@@ -170,7 +170,8 @@ class PostTest:
         fan.turn_fan_off()
 
     def finish_post(self):
-        self.screen.display_text("POST Finished",0, 0, 1)
+        self.screen.display_text("POST",0, 0, 2)
+        self.screen.display_text("Finished", 0, 16, 2)
 
 
 test = PostTest()
