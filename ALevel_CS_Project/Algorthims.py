@@ -86,6 +86,7 @@ class Algorithms:
         self.target_height = target_height
         self.fan = PCA9685Fan()
         self.distance_readings = DistanceSensor()
+        self.leds = Neopixel2(brightness=0.8, phyiscal_led="LED2")
         self.results = StoreReadings()
         self.Kp = 0
         self.Ki = 0
@@ -116,6 +117,14 @@ class Algorithms:
             heights_list.append(height)
         average_height = sum(heights_list)/len(heights_list)
         return average_height
+
+    def light_leds(self, measured_height, target_height):
+        if (target_height - 1) < measured_height < (target_height + 1):
+            self.leds.set_predefined_colour("green")
+            self.leds.turn_led_on()
+        else:
+            self.leds.set_predefined_colour("red")
+            self.leds.turn_led_on()
 
 class ProportionalAlgorithm(Algorithms):
     def __init__(self, floats, target_height, Kp):
@@ -154,6 +163,7 @@ class ProportionalAlgorithm(Algorithms):
             self.p_term = self.calculate_proportional_term(measured_height)
             self.control = self.p_term
             self.log_values_to_screen(measured_height)
+            self.light_leds(measured_height, self.target_height)
             self.add_pid_values(runid, measured_height)
             if measured_height == self.target_height:
                 print("Fan speed constant")
@@ -191,6 +201,7 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
             self.i_term = self.calculate_integral_term(measured_height)
             self.control = int(self.p_term + self.i_term)
             self.log_values_to_screen(measured_height)
+            self.light_leds(measured_height, self.target_height)
             self.add_pid_values(runid, measured_height)
             if measured_height == self.target_height:
                 print("Fan speed constant")
@@ -228,14 +239,13 @@ class PIDAlgorithm(ProportionalIntegralAlgorithm):
             self.d_term = self.calculate_derivative_term()
             self.control = int(self.p_term + self.i_term + self.d_term)
             self.log_values_to_screen(measured_height)
+            self.light_leds(measured_height, self.target_height)
             self.add_pid_values(runid, measured_height)
             if measured_height == self.target_height:
                 print("Fan speed constant")
             else:
                 self.fan.set_raw_fan_speed(self.control)
             elapsed_time = time.time() - start_time
-
-
 
     def get_config(self):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}, Kd: {self.Kd}")
