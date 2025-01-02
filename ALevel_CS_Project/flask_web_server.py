@@ -234,6 +234,19 @@ def pid():
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
+    epoch_time_graph = None
+    actual_height_graph = None
+    target_height_graph = None
+    upper_thresh_graph = None
+    lower_thresh_graph = None
+    scaled_fan_speed = None
+    scaled_p_constant = None
+    i_constant_graph = None
+    d_constant_graph = None
+    scaled_p_term = None
+    scaled_i_term = None
+    d_term_graph = None
+
     get_runid = StoreReadings()
     runid_values = get_runid.get_run_id()
     formatted_creation_date = []
@@ -264,15 +277,18 @@ def plot_graph():
             p_term_graph = [row[9] for row in graph_dt]
             i_term_graph = [row[10] for row in graph_dt]
             d_term_graph = [row[11] for row in graph_dt]
+
             scaled_fan_speed = []
             for i in fan_speed_graph:
                 duty_cycle_scaled = i / 1000
                 # print(f"{duty_cycle_scaled}")
                 scaled_fan_speed.append(duty_cycle_scaled)
+
             scaled_p_constant = []
             for i in p_constant_graph:
                 p_constant_scaled = i / 1000
                 scaled_p_constant.append(p_constant_scaled)
+
             scaled_p_term = []
             for i in p_term_graph:
                 p_term_scaled = i / 1000
@@ -283,8 +299,8 @@ def plot_graph():
                 i_term_scaled = i / 100
                 scaled_i_term.append(i_term_scaled)
 
-        # print(f"Date: {formatted_creation_date}")
-            return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=epoch_time_graph, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed, p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph, d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term, i_term_graph=scaled_i_term, d_term_graph=d_term_graph )
+            print(f"Date: {formatted_creation_date}")
+            return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=epoch_time_graph, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed, p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph, d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term, i_term_graph=scaled_i_term, d_term_graph=d_term_graph)
 
 
 @app.route('/fancontrol', methods=["GET"])
