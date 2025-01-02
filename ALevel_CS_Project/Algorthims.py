@@ -135,7 +135,8 @@ class ProportionalAlgorithm(Algorithms):
         self.error = measured_height - self.target_height
         proportional_term = int(self.Kp * self.error)
 #        print(f"Error: {self.target_height} - {measured_height} = {self.error}, proportional term: {proportional_term}")
-
+        if proportional_term < 44000:
+            proportional_term = 44000
         return proportional_term
         # return abs(proportional_term)
 
@@ -187,8 +188,8 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
         elapsed_time = 0
 
         while elapsed_time < duration:
-            measured_height = self.distance_readings.get_distance()
-            # measured_height = self.calc_average_height()
+  #          measured_height = self.distance_readings.get_distance()
+            measured_height = self.calc_average_height()
             self.p_term = self.calculate_proportional_term(measured_height)
             self.i_term = self.calculate_integral_term(measured_height)
             self.control = int(self.p_term + self.i_term)
