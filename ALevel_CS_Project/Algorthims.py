@@ -104,7 +104,7 @@ class Algorithms:
         time.sleep(2)                         # This is to give the float time to fall to the bottom if it was already at the top
 
     def log_values_to_screen(self, measured_height):
-        print(f"P_Error: {self.target_height} - {measured_height:5.2f} = {self.error:5.2f}, P_Term: {self.p_term:9.2f}, I_Error: {self.integral_error:9.2f}, I_Term: {self.i_term:9.2f}, Duty_Cycle: {self.control}")
+        print(f"P_Error: {self.target_height} - {measured_height:5.2f} = {self.error:5.2f}, P_Term: {self.p_term:9.2f}, I_Error: {self.integral_error:9.2f}, I_Term: {self.i_term:9.2f}, D_Term: {self.d_term:9.2f} Duty_Cycle: {self.control}")
 
     def add_pid_values(self, runid, measured_height):
         self.results.add_item(runid,measured_height,self.target_height,self.threshold,self.upper_threshold,self.lower_threshold,self.control,self.float,self.Kp,self.p_term,self.Ki,self.i_term,self.Kd,self.d_term)
@@ -134,7 +134,6 @@ class ProportionalAlgorithm(Algorithms):
         """
         self.error = measured_height - self.target_height
         proportional_term = int(self.Kp * self.error)
-#        print(f"Error: {self.target_height} - {measured_height} = {self.error}, proportional term: {proportional_term}")
         if proportional_term < 44000:
             proportional_term = 44000
         return proportional_term
@@ -150,7 +149,6 @@ class ProportionalAlgorithm(Algorithms):
         print(start_time)
         elapsed_time = 0
         while elapsed_time < duration:
-           # measured_height = self.distance_readings.get_distance()
             measured_height = self.calc_average_height()
             # print(measured_height)
             self.p_term = self.calculate_proportional_term(measured_height)
@@ -188,7 +186,6 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
         elapsed_time = 0
 
         while elapsed_time < duration:
-  #          measured_height = self.distance_readings.get_distance()
             measured_height = self.calc_average_height()
             self.p_term = self.calculate_proportional_term(measured_height)
             self.i_term = self.calculate_integral_term(measured_height)
@@ -204,14 +201,41 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
     def get_config(self):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
 
-class PIDAlgorithm(Algorithms):
+class PIDAlgorithm(ProportionalIntegralAlgorithm):
     def __init__(self, floats, target_height, Kp, Ki, Kd):
-        super().__init__(floats, target_height)
+        super().__init__(floats, target_height, Kp, Ki)
         self.float = floats
         self.target_height = target_height
         self.Kp = Kp
         self.Ki = Ki
         self.Kd = Kd
+        self.dt = 1
+        self.prev_error = 0
+
+    def calculate_derivative_term(self):
+        derivative = self.error - self.prev_error
+        derivative_term = derivative * self.Kd * self.dt
+        return derivative_term
+
+    def run_pid_algorithm(self, runid, duration):
+        start_time = time.time()
+        print(start_time)
+        elapsed_time = 0
+        while elapsed_time < duration:
+            measured_height = self.calc_average_height()
+            self.p_term = self.calculate_proportional_term(measured_height)
+            self.i_term = self.calculate_integral_term(measured_height)
+            self.d_term = self.calculate_derivative_term()
+            self.control = int(self.p_term + self.i_term + self.d_term)
+            self.log_values_to_screen(measured_height)
+            self.add_pid_values(runid, measured_height)
+            if measured_height == self.target_height:
+                print("Fan speed constant")
+            else:
+                self.fan.set_raw_fan_speed(self.control)
+            elapsed_time = time.time() - start_time
+
+
 
     def get_config(self):
         print(f"Float: {self.float}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}, Kd: {self.Kd}")
