@@ -38,8 +38,6 @@ class Schmitttrigger:
             print(f"Current height: {current_av_height}, Previous height: {previous_height}")
             if current_av_height > previous_height:
                 print("Keep fan speed the same")
-            # elif current_av_height < previous_height:
-            #     self.fan.increment_fan_speed(2)
             previous_height = current_av_height
         distance = current_av_height
         return distance
@@ -52,8 +50,6 @@ class Schmitttrigger:
         print(start_time)
         elapsed_time = 0
         while elapsed_time < duration:
-        # for i in range(0, iterations):
-            # distance = 23 - self.distance_readings.get_distance()  # This measures the distance and subtracts from 23 (original height)
             distance = self.check_float_stable(previous_height)
             self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), floats, kp=0, ki=0, kd=0, p_term=0,d_term=0,i_term=0)
             print(f"Distance ({elapsed_time}): {distance}")
@@ -76,7 +72,6 @@ class Schmitttrigger:
             else:
                 self.fan.turn_fan_off()
 
-            # self.check_float_stable(target_height, threshold, upper_threshold, lower_threshold, runid, floats)
             time.sleep(0.5)
             elapsed_time = time.time() - start_time
 
