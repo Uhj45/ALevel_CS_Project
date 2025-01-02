@@ -208,6 +208,8 @@ def pid():
         value9 = [row[9] for row in data]      # Proportional term
         value10 = [row[10] for row in data]    # Integral term
         value11 = [row[11] for row in data]    # Derivative term
+        # graph_title = "Hello World! " + control_loop + "threshold " + "target : " + target_height
+        graph_title = f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, Ki: {Ki}, Kd: {Kd}, Time: {run_id}, Float: {floats}"
 
         scaled_fan_speed = []
         # This scales down each value of the fan speed by a 1000 and adds to a list so that it can be plotted as a graph
@@ -230,23 +232,10 @@ def pid():
             i_term_scaled = i / 100
             scaled_i_term.append(i_term_scaled)
 
-        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,value9=scaled_p_term,value10=scaled_i_term,value11=value11)
+        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,value9=scaled_p_term,value10=scaled_i_term,value11=value11,graph_title=graph_title)
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
-    epoch_time_graph = None
-    actual_height_graph = None
-    target_height_graph = None
-    upper_thresh_graph = None
-    lower_thresh_graph = None
-    scaled_fan_speed = None
-    scaled_p_constant = None
-    i_constant_graph = None
-    d_constant_graph = None
-    scaled_p_term = None
-    scaled_i_term = None
-    d_term_graph = None
-
     get_runid = StoreReadings()
     runid_values = get_runid.get_run_id()
     formatted_creation_date = []
