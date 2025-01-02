@@ -136,7 +136,7 @@ class PCA9685Fan:
             self.duty_cycle = duty_cycle
 
         self.pca.channels[1].duty_cycle = self.duty_cycle
-        print(f"Fan speed is {self.percentage_fan_speed}, Raw value: {self.duty_cycle}, Duty cycle: {duty_cycle}")
+        # # print(f"Fan Raw value: {self.duty_cycle}, Required Duty cycle: {duty_cycle}")
 
     def increment_fan_speed(self, increment):
         speed_to_check = self.percentage_fan_speed + increment
