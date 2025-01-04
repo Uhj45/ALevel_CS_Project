@@ -5,6 +5,9 @@ import time
 
 
 class Neopixel:
+    """
+    Class to control the Neopixel LEDs
+    """
     def __init__(self, brightness=0, g=0, r=0, b=0,):
         """
         Initialise the GPIO pins and Neopixel LED
@@ -145,7 +148,20 @@ class Neopixel:
 
 
 class Neopixel2(Neopixel):
+    """
+    Inherits all attributes and functions from the Neopixel class.
+    When an object is created, the physical_led attribute must be specified
+    """
     def __init__(self,brightness=0, g=0, b=0, r=0, phyiscal_led="LED1"):
+        """
+        Initialise the GPIO pins and Neopixel LED
+        Allow user to change the brightness and the colour of the leds
+        :param brightness: float value between 0.0 and 1.0 where 1.0 is full brightness
+        :param g: int values between 0 and 255
+        :param r: int values between 0 and 255
+        :param b: int values between 0 and 255
+        :param phyiscal_led: string which is either LED1 or LED2 (this can be extended to support more LEDs)
+        """
         super().__init__(brightness=0, g=0, b=0, r=0)
         self.brightness = brightness
         self.g = g
@@ -155,6 +171,8 @@ class Neopixel2(Neopixel):
         GPIO.setmode(GPIO.BCM)
         order = neopixel.GRB
 
+        # This if elif statement should be replaced by a dictionary to extend support for more LEDs.
+        # The keys for the dictionary would be the LED names and the values would be the GPIO pins
         if led_pin == "LED1":
             self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
         elif led_pin == "LED2":

@@ -3,6 +3,13 @@ import time
 
 
 class DistanceSensor:
+    """
+    This class returns the distance of an object in front of the distance sensor.
+    This is done by sending a pulse to the object and measures the time taken for it to bounce back.
+    The trigger pin is driven LOW for 0.5 seconds and then driven HIGH for 10ms to start sending the pulses. The start time is noted
+    The echo pin is monitored for a logic HIGH which indicates when a pulse has returned and the stop time is noted
+    The elapsed time is calculated and used to work out the distance of the object using the speed of sound in air
+    """
     def __init__(self):
         """
         Initialises the GPIO pins for the distance sensor

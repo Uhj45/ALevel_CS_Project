@@ -6,6 +6,9 @@ import time
 
 
 class Ldr:
+    """
+    class to retrieve light level from the LDR sensor
+    """
     def __init__(self):
         """
         Initialises GPIO pins for LDR to use I2C bus
