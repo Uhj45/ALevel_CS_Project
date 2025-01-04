@@ -1,16 +1,18 @@
 # Algorithms for the fan: Schimtt Trigger, P, PI, PID
-from PWM_Fan import PCA9685Fan
+from PWM_Fan import PwmFan
 from Distance_Sensor import DistanceSensor
-from Neopixel_LEDs import Neopixel2
+from Neopixel_LEDs import NeopixelLeds
 from OLED_Display import Oled
 from sql_database import StoreReadings
 import time
 
 
 class Schmitttrigger:
+    """
+    This class contains the schmitt trigger algorithm to hover the foam at a certain height
+    """
     def __init__(self, target_height, lower_threshold, upper_threshold):
         """
-        This class will contain the schmitt trigger algorithm to hover the fan at a certain height
         :param target_height: This is given by the user through the webpage
         :param lower_threshold: This is calculated using the target height and the threshold given by the user
         :param upper_threshold: This is calculated using the target height and the threshold given by the user
@@ -18,13 +20,17 @@ class Schmitttrigger:
         self.target_height = target_height
         self.lower_threshold = lower_threshold
         self.upper_threshold = upper_threshold
-        self.fan = PCA9685Fan()
+        self.fan = PwmFan()
         self.distance_readings = DistanceSensor()
-        self.LED1 = Neopixel2(brightness=0.8)
-        self.LED2 = Neopixel2(brightness=0.8)
+        self.LED1 = NeopixelLeds(brightness=0.8)
+        self.LED2 = NeopixelLeds(brightness=0.8)
         self.results = StoreReadings()
 
     def calc_average_height(self):
+        """
+        Measures the height of the float multiple times and then calculating an average height
+        :return:
+        """
         heights_list = []
         for i in range(0, 5):
             height = 23 - self.distance_readings.get_distance()
@@ -33,6 +39,12 @@ class Schmitttrigger:
         return average_height
 
     def check_foam_stable(self, previous_height):
+        """
+        This checks if the previous average height is less than the current average height
+        hence confirming if the float is still moving
+        :param previous_height:
+        :return:
+        """
         current_av_height = 0
         for j in range(0, 3):
             current_av_height = self.calc_average_height()
@@ -44,6 +56,17 @@ class Schmitttrigger:
         return distance
 
     def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, hover_foam, duration):
+        """
+        This will lift the foam to the target height. It will use the LEDs to indicate whether the float is within the thresholds
+        :param target_height: int that set by the user
+        :param upper_threshold: int calculated using the threshold and the target height
+        :param lower_threshold: int calculated using the threshold and the target height
+        :param threshold: int that is set by the userand it's used to calculate the upper and lower thresholds
+        :param runid:
+        :param hover_foam:
+        :param duration: int that is set by the user and sets the amount of time the algorithm runs for
+        :return:
+        """
         previous_height = 0
         self.fan.turn_fan_on()
         self.fan.set_fan_speed(60)
@@ -77,12 +100,15 @@ class Schmitttrigger:
             elapsed_time = time.time() - start_time
 
 class Algorithms:
+    """
+    This is the base class for all the algorithms which will inherit these attributes
+    """
     def __init__(self, hover_foam, target_height):
         self.hover_foam = hover_foam
         self.target_height = target_height
-        self.fan = PCA9685Fan()
+        self.fan = PwmFan()
         self.distance_readings = DistanceSensor()
-        self.leds = Neopixel2(brightness=0.8, phyiscal_led="LED2")
+        self.leds = NeopixelLeds(brightness=0.8, phyiscal_led="LED2")
         self.oled_display = Oled()
         self.results = StoreReadings()
         self.Kp = 0
@@ -140,6 +166,9 @@ class Algorithms:
         return idle_fan_speed
 
 class ProportionalAlgorithm(Algorithms):
+    """
+    This will include the function to run the proportional term of the PID algorithm
+    """
     def __init__(self, hover_foam, target_height, Kp):
         super().__init__(hover_foam, target_height)
         self.hover_foam = hover_foam
@@ -152,7 +181,7 @@ class ProportionalAlgorithm(Algorithms):
         This function will take in the measured height and the target height to calculate a value for
         the proportional term
         :param measured_height: this is a reading from the distance sensor.
-        :return:
+        :return: proportional_term
         """
         self.error = measured_height - self.target_height
         proportional_term = int(self.Kp * self.error)
@@ -190,6 +219,9 @@ class ProportionalAlgorithm(Algorithms):
         print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}")
 
 class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
+    """
+    This will include the function to run the Proportional and Integral terms in the PID algorithm
+    """
     def __init__(self, hover_foam, target_height, Kp, Ki):
         super().__init__(hover_foam, target_height, Kp)
         self.hover_foam = hover_foam
@@ -199,6 +231,12 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
         self.integral_error = 0
 
     def calculate_integral_term(self, measured_height):
+        """
+        This function will take in the measured height and the target height to calculate a value for
+        the integral term
+        :param measured_height: int
+        :return: integral_term
+        """
         # # self.error = self.calc_average_height() - self.target_height
         self.error = measured_height - self.target_height
         self.integral_error = self.integral_error + self.error
@@ -206,6 +244,13 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
         return integral_term
 
     def run_proportional_integral_algorithm(self, runid, duration):
+        """
+        This will run in a while loop for a set amount of time determined by the user.
+        Adds the proportional and integral terms to determine and fan speed to lift the object to the target height.
+        :param runid:
+        :param duration:
+        :return:
+        """
         start_time = time.time()
         print(start_time)
         elapsed_time = 0
@@ -230,6 +275,9 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
         print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
 
 class PIDAlgorithm(ProportionalIntegralAlgorithm):
+    """
+    This will include the function to run the full PID algorithm using proportional, integral and derivative terms
+    """
     def __init__(self, hover_foam, target_height, Kp, Ki, Kd):
         super().__init__(hover_foam, target_height, Kp, Ki)
         self.hover_foam = hover_foam
@@ -241,11 +289,23 @@ class PIDAlgorithm(ProportionalIntegralAlgorithm):
         self.prev_error = 0
 
     def calculate_derivative_term(self):
+        """
+        This function will take in the measured height and the target height to calculate a value for
+        the derivative term
+        :return:
+        """
         derivative = self.error - self.prev_error
         derivative_term = derivative * self.Kd * self.dt
         return derivative_term
 
     def run_pid_algorithm(self, runid, duration):
+        """
+        This will run in a while loop for a set amount of time determined by the user.
+        Adds the proportional, integral and derivative terms to determine and fan speed to lift the object to the target height.
+        :param runid:
+        :param duration:
+        :return:
+        """
         start_time = time.time()
         print(start_time)
         elapsed_time = 0
