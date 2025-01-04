@@ -6,9 +6,9 @@ from tabulate import tabulate
 from LDR import Ldr
 from Temperature_Humidity import TempHumidity
 from OLED_Display import Oled
-from Neopixel_LEDs import Neopixel, Neopixel2
+from Neopixel_LEDs import Neopixel, NeopixelLeds
 from Distance_Sensor import DistanceSensor
-from PWM_Fan import PCA9685Fan
+from PWM_Fan import PwmFan
 from sql_database import StoreReadings
 import time
 from flask import Flask, render_template, request
@@ -44,8 +44,8 @@ def ledcontrol():
         return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
         led_control = request.form["Submit"]
-        led1 = Neopixel2(brightness=1, phyiscal_led="LED1")
-        led2 = Neopixel2(brightness=1, phyiscal_led="LED2")
+        led1 = NeopixelLeds(brightness=1, phyiscal_led="LED1")
+        led2 = NeopixelLeds(brightness=1, phyiscal_led="LED2")
         ledstatus1 = "Unknown"
         ledstatus2 = "Unknown"
         green = int(request.form["green"])
@@ -316,7 +316,7 @@ def fan_control_on():
     print(request.form)
     # fancontrol = request.form["fan_control"]
     fan_status = "On"
-    pca_fan = PCA9685Fan()
+    pca_fan = PwmFan()
     pca_fan.turn_fan_on()
     return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
 
@@ -330,7 +330,7 @@ def fan_control_off():
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     fan_status = "Off"
-    pca_fan = PCA9685Fan()
+    pca_fan = PwmFan()
     pca_fan.turn_fan_off()
     return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
 
@@ -344,7 +344,7 @@ def fan_control_speed():
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
     fan_speed = int(request.form["fanspeed"])
-    pca_fan = PCA9685Fan()
+    pca_fan = PwmFan()
     pca_fan.turn_fan_off()
     fan_status = "On"
     pca_fan.set_fan_speed(fan_speed)
