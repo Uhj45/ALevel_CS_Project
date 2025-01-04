@@ -147,7 +147,7 @@ class Neopixel:
                 time.sleep(0.01)
 
 
-class Neopixel2(Neopixel):
+class NeopixelLeds(Neopixel):
     """
     Inherits all attributes and functions from the Neopixel class.
     When an object is created, the physical_led attribute must be specified
