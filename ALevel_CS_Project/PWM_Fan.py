@@ -77,7 +77,7 @@ class Fan:
             print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.fan_speed}")
 
 
-class PCA9685Fan:
+class PwmFan:
     """
     class to control the fan using the PCA9685 chip
     """
