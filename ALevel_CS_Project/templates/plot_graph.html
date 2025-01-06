@@ -19,6 +19,7 @@
         <canvas id="lineChart" width="700" height="500"></canvas>
         <script>
             var ctx = document.getElementById("lineChart").getContext("2d")
+            var graph_title = "{{ graph_title | escape }}"
             var lineChart = new Chart(ctx, {
                 type:"line",
                 data: {
@@ -108,7 +109,7 @@
                     responsive: false,
                     title: {
                         display: true,
-                        text: "Hello world"
+                        text: graph_title
                     },
 
                     scales: {
