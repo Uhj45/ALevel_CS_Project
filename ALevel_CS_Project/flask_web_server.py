@@ -16,6 +16,14 @@ from Algorthims import Schmitttrigger, ProportionalAlgorithm, ProportionalIntegr
 
 app = Flask(__name__)
 
+def calc_x_axis_time_increments(list_of_epoch_times):
+    total = 0
+    x_axis_increments = [0]
+    for i in range(len(list_of_epoch_times) - 1):
+        time_diff = list_of_epoch_times[i+1] - list_of_epoch_times[i]
+        total = total + time_diff
+        x_axis_increments.append(total)
+    return x_axis_increments
 
 @app.route('/')
 def base():
@@ -211,6 +219,8 @@ def pid():
         # graph_title = "Hello World! " + control_loop + "threshold " + "target : " + target_height
         graph_title = f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, Ki: {Ki}, Kd: {Kd}, Time: {run_id}, Float: {hover_foam}"
 
+        x_axis_increments = calc_x_axis_time_increments(labels)
+
         scaled_fan_speed = []
         # This scales down each value of the fan speed by a 1000 and adds to a list so that it can be plotted as a graph
         for i in value5:
@@ -232,7 +242,7 @@ def pid():
             i_term_scaled = i / 100
             scaled_i_term.append(i_term_scaled)
 
-        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=labels,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,value9=scaled_p_term,value10=scaled_i_term,value11=value11,graph_title=graph_title)
+        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=x_axis_increments,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,value9=scaled_p_term,value10=scaled_i_term,value11=value11,graph_title=graph_title)
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
@@ -267,6 +277,18 @@ def plot_graph():
             i_term_graph = [row[10] for row in graph_dt]
             d_term_graph = [row[11] for row in graph_dt]
 
+            x_axis_increments = calc_x_axis_time_increments(epoch_time_graph)
+
+            if upper_thresh_graph[0]-target_height_graph[0] < 0:
+                algorithm = "PID"
+                threshold = 0
+            else:
+                algorithm = "Schmitt"
+                threshold = upper_thresh_graph[0]-target_height_graph[0]
+
+            graph_title = (f" Control Loop: {algorithm}, Target: {target_height_graph[0]}, Threshold: {threshold}, "
+                           f"Kp: {p_constant_graph[0]}, Ki: {i_constant_graph[0]}, Kd: {d_constant_graph[0]}, Time: {epoch_time_graph[0]}")
+
             scaled_fan_speed = []
             for i in fan_speed_graph:
                 duty_cycle_scaled = i / 1000
@@ -289,7 +311,7 @@ def plot_graph():
                 scaled_i_term.append(i_term_scaled)
 
             print(f"Date: {formatted_creation_date}")
-            return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=epoch_time_graph, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed, p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph, d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term, i_term_graph=scaled_i_term, d_term_graph=d_term_graph)
+            return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=x_axis_increments, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed, p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph, d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term, i_term_graph=scaled_i_term, d_term_graph=d_term_graph, graph_title=graph_title)
 
 
 @app.route('/fancontrol', methods=["GET"])
