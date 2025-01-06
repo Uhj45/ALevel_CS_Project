@@ -153,16 +153,16 @@ class Algorithms:
         self.oled_display.clear_screen()
         self.oled_display.display_text(f"AH : {measured_height:.2f} ({self.target_height})",0,0,1)
         self.oled_display.display_text(f"Fan: {self.control}",0, 12,1)
-        self.oled_display.display_text(f"ET: {int(elapsed_time)}",0,24,1)
+        self.oled_display.display_text(f"ET : {int(elapsed_time)}",0,24,1)
 
     def get_hover_foam_value(self):
         idle_fan_speed = 0
         if self.hover_foam == "hover_foam_1":
             idle_fan_speed = 44000
         elif self.hover_foam == "hover_foam_2":
-            idle_fan_speed = 46000
+            idle_fan_speed = 48000
         elif self.hover_foam == "hover_foam_3":
-            idle_fan_speed = 50000
+            idle_fan_speed = 59000
         return idle_fan_speed
 
 class ProportionalAlgorithm(Algorithms):
