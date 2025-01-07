@@ -1,10 +1,10 @@
 # This file will run on the Raspberry Pi to test all the hardware is working
 from OLED_Display import Oled
 from Temperature_Humidity import TempHumidity
-from Neopixel_LEDs import Neopixel, Neopixel2
+from Neopixel_LEDs import Neopixel, NeopixelLeds
 from LDR import Ldr
 from Distance_Sensor import DistanceSensor
-from PWM_Fan import PCA9685Fan
+from PWM_Fan import PwmFan
 import time
 import RPi.GPIO as GPIO
 
@@ -53,10 +53,10 @@ class PostTest:
     # Test LED 1 and LED 2
     def led_test(self, physical_led):
         if physical_led == "LED1":
-            led = Neopixel2(brightness=0.8, phyiscal_led="LED1")
+            led = NeopixelLeds(brightness=0.8, phyiscal_led="LED1")
             led_label = "LED1"
         elif physical_led == "LED2":
-            led = Neopixel2(brightness=0.8, phyiscal_led="LED2")
+            led = NeopixelLeds(brightness=0.8, phyiscal_led="LED2")
             led_label = "LED2"
         self.screen.clear_screen()
 
@@ -145,7 +145,7 @@ class PostTest:
 
     # Test Fan
     def test_fan(self):
-        fan = PCA9685Fan()
+        fan = PwmFan()
         self.screen.clear_screen()
         self.screen.display_text("Fan Test", 0, 0, 2)
         time.sleep(1)
