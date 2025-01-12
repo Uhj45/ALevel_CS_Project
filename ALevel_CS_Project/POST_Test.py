@@ -63,44 +63,44 @@ class PostTest:
         self.screen.display_text(led_label, 0, 0, 2)
         time.sleep(1)
         self.screen.clear_screen()
-        led_1_label = f"On"
+        led_state_label = f"On"
         self.screen.display_text(led_label, 0, 0, 1)
-        self.screen.display_text(led_1_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,15, 2)
         led.set_predefined_colour("pink")
         led.change_colour()
         led.turn_led_on()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"Off"
+        led_state_label = f"Off"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_1_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,15, 2)
         time.sleep(1)
         led.turn_led_off()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"Green"
+        led_state_label = f"Green"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_1_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,15, 2)
         time.sleep(1)
         led.set_predefined_colour("green")
         led.turn_led_on()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"Blue"
+        led_state_label = f"Blue"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_1_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,15, 2)
         time.sleep(1)
         led.set_predefined_colour("blue")
         led.turn_led_on()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"Red"
+        led_state_label = f"Red"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_1_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,15, 2)
         time.sleep(1)
         led.set_predefined_colour("red")
         led.turn_led_on()
@@ -108,9 +108,9 @@ class PostTest:
 
         # led_2.turn_led_off()
         self.screen.clear_screen()
-        led_1_label = f"Purple"
+        led_state_label = f"Purple"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_1_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,15, 2)
         time.sleep(1)
         led.set_colour(0, 153, 204)
         led.change_colour()
