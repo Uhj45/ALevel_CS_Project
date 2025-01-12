@@ -175,7 +175,24 @@ class PostTest:
         self.screen.clear_screen()
         fan.turn_fan_off()
 
+    def new_fan_test(self):
+        fan = PwmFan()
+        fan_test_data = [
+            {"test": "Test: 100%", "speed": 100},
+            {"test": "Test: 0%", "speed": 0},
+            {"test": "Test: 50%", "speed": 50}
+        ]
+
+        for test_data in fan_test_data:
+            self.screen.clear_screen()
+            test_message = test_data["test"]
+            speed = test_data["speed"]
+            self.screen.display_test(test_message, f"Speed: {speed}")
+            fan.set_fan_speed(speed)
+            time.sleep(3)
+
     def start_finish_post(self, message):
+        self.screen.clear_screen()
         self.screen.display_text("POST",0, 0, 2)
         self.screen.display_text(message, 0, 16, 2)
 
@@ -188,7 +205,8 @@ test.led_test("LEFT_LED")
 test.led_test("RIGHT_LED")
 test.test_ldr_sensor()
 test.test_distance()
-test.test_fan()
+# test.test_fan()
+test.new_fan_test()
 test.start_finish_post("Finished")
 
 
