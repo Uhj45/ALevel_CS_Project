@@ -19,13 +19,14 @@ class Oled:
         self.x = x
         self.y = y
         self.size = size
-        DISPLAY_WIDTH = 128
-        DISPLAY_HEIGHT = 32
+        DISPLAY_WIDTH = 128                    # Assigns the width of the display to the variable
+        DISPLAY_HEIGHT = 32                    # Assigns the height of the display to the variable
         i2c = busio.I2C(board.SCL, board.SDA)
-        self.oled = adafruit_ssd1306.SSD1306_I2C(DISPLAY_WIDTH, DISPLAY_HEIGHT, i2c, addr=0x3c)  # oled has been changed to an instance variable so it can be used throughout the class
-        self.oled.poweron()
-        self.oled.contrast(50)
-
+        # oled has been updated to self.oled, an instance variable, so it can be used throughout the class objects
+        self.oled = adafruit_ssd1306.SSD1306_I2C(DISPLAY_WIDTH, DISPLAY_HEIGHT, i2c, addr=0x3c)
+        self.oled.poweron()                    # Turns the screen on
+        self.oled.contrast(50)                 # Sets the brightness of the screen to 50 which makes it easier to see
+                                               # the display under ambient conditions
     def display_text(self, text_to_display, x=0, y=0, size=1):
         """
         Function to display text
@@ -39,15 +40,15 @@ class Oled:
         self.y = y
         self.size = size
         self.oled.text(text_to_display, self.x, self.y, "white", font_name="font5x8.bin", size=self.size)
-        self.oled.show()
+        self.oled.show()    # Displays the text on the OLED display
 
     def clear_screen(self):
         """
         Clears the OLED display of any text
         :return:
         """
-        self.oled.fill(0)
-        self.oled.show()
+        self.oled.fill(0)    # Clears the pixels in the display buffer/memory
+        self.oled.show()     # The buffer is written to the OLED display and hence clears the screen
         time.sleep(1)
 
     def display_test(self,device, test_name):

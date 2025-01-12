@@ -15,7 +15,8 @@ class BaseDatabase:
         """
         self.db_name = db_name
         self.table_name = "people"
-        self.columns = """
+        # Dummy columns names and data type placeholder have to be specified
+        self.columns = """  
         first_name text,
         last_name text,
         email text,
@@ -40,7 +41,8 @@ class BaseDatabase:
         self.cursor.execute(table)
         self.db_connection.commit()
 
-    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job, kids, salary, boss_name, work_location, computer):           # Had to add parameters here to match the parameters used in the subclass
+    # Had to add parameters here to match the parameters used in the subclass
+    def add_item(self, name, lastname, email, age, car, clothes, accessory, pet, job, kids, salary, boss_name, work_location, computer):
         many_customers = [
              (f'{name}', f'{lastname}', f'{email}', f'{age}', f'{car}'),
          ]
@@ -49,16 +51,28 @@ class BaseDatabase:
         self.db_connection.commit()
 
     def remove_item(self):
+        """
+        Deletes item from the table
+        :return:
+        """
         self.cursor.execute(f"DELETE FROM {self.table_name} WHERE rowid = 4")
         self.db_connection.commit()
 
     def update_item(self):
+        """
+        Updates an item in the table to a new value
+        :return:
+        """
         self.cursor.execute(f"""UPDATE {self.table_name} SET {self.columns} = 'Bob'
                 WHERE {self.columns} = 'Elder'
                 """)
         self.db_connection.commit()
 
     def get_item(self):
+        """
+        Returns all items that match the rowid from the table
+        :return:
+        """
         self.cursor.execute(f"""SELECT * FROM {self.table_name} WHERE rowid = 3""")
 
 
@@ -95,15 +109,16 @@ class StoreReadings(BaseDatabase):
         Creates database and tables in the correct directory and with names specified
         :return:
         """
-        table = f"""CREATE TABLE {self.table_name}(
+        table = f"""CREATE TABLE {self.table_name}(         
         {self.columns}
         )"""
-        self.cursor.execute(table)
-        self.db_connection.commit()
+        # The variable "table" is assigned to the SQL commands to create a table with the defined columns and table name
+        self.cursor.execute(table)    # Creates a new cursor and executes the SQL commands
+        self.db_connection.commit()   # Updates the database with the new changes
 
     def add_item(self, runid, height, target_height, threshold, upper_threshold, lower_threshold,fan_speed, floats, kp, p_term, ki,i_term, kd, d_term):
         """
-        Adds values to the database under the columns specified
+        Adds values of the parameters passed into this function to the database under the columns specified
         :param runid:
         :param height:
         :param target_height:
@@ -120,10 +135,10 @@ class StoreReadings(BaseDatabase):
         :param d_term:
         :return:
         """
-        epoch_time = int(time.time())
+        epoch_time = int(time.time())    # Gets the epoch time
         sensor_readings = [(f'{runid}',f'{epoch_time}',f'{height}',f'{target_height}',f'{threshold}',f'{upper_threshold}',f'{lower_threshold}',f'{fan_speed}',f'{floats}',f'{kp}',f'{p_term}',f'{ki}',f'{i_term}',f'{kd}',f'{d_term}')]
         # print(sensor_readings)
-        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)
+        self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)   #
         self.cursor.execute(f"SELECT * FROM {self.table_name}")
         self.db_connection.commit()
 
@@ -153,7 +168,7 @@ class StoreReadings(BaseDatabase):
         # Query's the table to get all values from the Height column with the most recent runid value ready to be fetched
         self.cursor.execute(f"SELECT Height,Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed, Kp, Ki, Kd, P_Term, I_Term, D_Term FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
         # returns all values that were specified in the query and prints them onto a blank webpage
-        return self.cursor.fetchall()
+        return self.cursor.fetchall()    # Fetches all the rows of the query and retuns and list
 
     def get_recent_record(self):
         get_record = self.cursor.execute(f"SELECT * FROM {self.table_name} ORDER BY runid DESC LIMIT 1")

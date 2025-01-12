@@ -4,15 +4,14 @@ import adafruit_ads1x15.ads1115 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 import time
 
-
 class Ldr:
     """
-    class to retrieve light level from the LDR sensor
+    Class to retrieve and return light level from the LDR sensor connected to the ADC chip on channel 0
     """
     def __init__(self):
         """
-        Initialises GPIO pins for LDR to use I2C bus
-        :param lightlevel:
+        Initialises GPIO pins for ADC chip to use I2C bus
+        :param self.lightlevel:
         """
         self.lightlevel = None
 
@@ -22,7 +21,7 @@ class Ldr:
 
     def get_light_level(self):
         """
-        returns the ldr reading
+        Returns the ldr reading
         :return: int value
         """
         self.lightlevel = self.ldr.value

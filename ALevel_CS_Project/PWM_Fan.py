@@ -96,6 +96,11 @@ class PwmFan:
         self.pca.frequency = 1400
 
     def check_fan_speed(self, fan_speed):
+        """
+        Checks the percentage fan speed passed in is between 0 and 100
+        :param fan_speed:
+        :return:
+        """
         if 0 <= fan_speed <= 100:
             self.percentage_fan_speed = fan_speed
             return True
@@ -103,10 +108,8 @@ class PwmFan:
             print(f"Value is not between 0 and 100, {fan_speed}, {type(fan_speed)}")
 
     def turn_fan_on(self):
-        self.duty_cycle = 65300
-        print(type(hex(self.duty_cycle)))
-        # self.pca.channels[1].duty_cycle = 0xFFFF
-        self.pca.channels[1].duty_cycle = self.duty_cycle
+        self.duty_cycle = 65300                            # Sets the duty cycle to the maximum raw fan speed
+        self.pca.channels[1].duty_cycle = self.duty_cycle  # Sends the value to the fan
 
     def turn_fan_off(self):
         self.duty_cycle = 0
@@ -117,7 +120,8 @@ class PwmFan:
 
     def set_fan_speed(self, fan_speed):
         """
-        This function takes a speed and checks its between 0% and 100%, it then converts this percentage to an absolute value that is needed and updates the duty cycle
+        This function takes a speed and checks it's between 0% and 100%,
+        it then converts this percentage to an absolute raw value and sets the duty cycle
         :param fan_speed: integer that needs to be between 0% and 100%
         :return:
         """
@@ -128,25 +132,39 @@ class PwmFan:
             print(f"Fan speed is {fan_speed}, Raw value: {self.duty_cycle}")
 
     def set_raw_fan_speed(self, duty_cycle):
+        """
+        Sets the raw fan speed, checks the duty cycle passed in is between 0 and 65535
+        :param duty_cycle:
+        :return:
+        """
         if duty_cycle < 0:
-            self.duty_cycle = 0
+            self.duty_cycle = 0         # As duty cycle can't be negative, duty cycle is set to 0
         elif duty_cycle > 65535:
-            self.duty_cycle = 65535
+            self.duty_cycle = 65535     # As duty cycle can't be bigger than 65535, the duty cycle is set to maximum
         else:
             self.duty_cycle = duty_cycle
 
         self.pca.channels[1].duty_cycle = self.duty_cycle
-        # # print(f"Fan Raw value: {self.duty_cycle}, Required Duty cycle: {duty_cycle}")
 
     def increment_fan_speed(self, increment):
+        """
+        Function increments the fan speed by a certain amount depending on the value that is passed in
+        :param increment: int that increases the current fan speed by a certain amount
+        :return:
+        """
         speed_to_check = self.percentage_fan_speed + increment
-        if self.check_fan_speed(speed_to_check):
+        if self.check_fan_speed(speed_to_check):           # Checks the increased fan speed is still between 0 and 100%
             self.percentage_fan_speed = speed_to_check
-            self.set_fan_speed(self.percentage_fan_speed)
+            self.set_fan_speed(self.percentage_fan_speed)  # sets the new fan speed
             print(f"Fan speed was incremented by: {increment}", f"Fan speed is at: {self.percentage_fan_speed}")
 
     def decrement_fan_speed(self, decrement):
-        if self.check_fan_speed(self.percentage_fan_speed - decrement):
+        """
+        Function decrements the fan speed by a certain amount depending on the value that is passed in
+        :param decrement: int that increases the fan speed by a certain amount
+        :return:
+        """
+        if self.check_fan_speed(self.percentage_fan_speed - decrement):  # Checks the decreased fan speed is still between 0 and 100%
             self.percentage_fan_speed = self.percentage_fan_speed - decrement
-            self.set_fan_speed(self.percentage_fan_speed)
+            self.set_fan_speed(self.percentage_fan_speed)                # sets the new fan speed
             print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.percentage_fan_speed}")

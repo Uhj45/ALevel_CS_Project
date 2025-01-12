@@ -14,9 +14,15 @@ import time
 from flask import Flask, render_template, request
 from Algorthims import Schmitttrigger, ProportionalAlgorithm, ProportionalIntegralAlgorithm, PIDAlgorithm
 
-app = Flask(__name__)
+app = Flask(__name__)            # Initialises the Flask class and sets up the web application
 
 def calc_x_axis_time_increments(list_of_epoch_times):
+    """
+    Each measurement is recorded with a timestamps in the database as an epoch which is a 16-digit number
+    This function calculates the time difference for each measurement and is used for the x-axis on the graph
+    :param list_of_epoch_times: takes in the list of epoch times that are stored in the database
+    :return: a list of time increments that are then used for the x-axis on the graph
+    """
     total = 0
     x_axis_increments = [0]
     for i in range(len(list_of_epoch_times) - 1):
@@ -25,8 +31,14 @@ def calc_x_axis_time_increments(list_of_epoch_times):
         x_axis_increments.append(total)
     return x_axis_increments
 
-@app.route('/')
+@app.route('/')       # A route decorator that specifies the URL root endpoint
 def base():
+    """
+    This creates objects for all the sensors and retrieves readings before returning them to an HTML webpage
+    The HTML file for this route is passed in to the render_template function which displays the webpage when this
+    endpoint is specified in the URL
+    :return: rendered webpage
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
@@ -40,6 +52,10 @@ def base():
 
 @app.route('/ledcontrol', methods=["GET", "POST"])
 def ledcontrol():
+    """
+    This route controls the Neopixel LEDs.
+    :return:
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
@@ -51,22 +67,26 @@ def ledcontrol():
     if request.method == "GET":
         return render_template("LED_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
+        #
         led_control = request.form["Submit"]
-        led1 = NeopixelLeds(brightness=1, phyiscal_led="LED1")
-        led2 = NeopixelLeds(brightness=1, phyiscal_led="LED2")
+        led1 = NeopixelLeds(brightness=1, phyiscal_led="LED1")    # Creates an object for the right LED
+        led2 = NeopixelLeds(brightness=1, phyiscal_led="LED2")    # Creates an object for the left LED
         ledstatus1 = "Unknown"
         ledstatus2 = "Unknown"
-        green = int(request.form["green"])
+        green = int(request.form["green"])                        # The RGB values are retrieved
         red = int(request.form["red"])
         blue = int(request.form["blue"])
         print(f"{green}, {red}, {blue}")
-        led1.set_colour(green, red, blue)
-        led2.set_colour(green, red, blue)
-        if led_control == "Submit":
-            LED = request.form["LED"]
-            control = request.form["Control"]
+        led1.set_colour(green, red, blue)                         # Sets the colour for the right LED
+        led2.set_colour(green, red, blue)                         # Sets the colour for the left LED
+        if led_control == "Submit":                               # Retrieves the rest of the
+            LED = request.form["LED"]                             # Retrieves the LED that was selected
+            control = request.form["Control"]                     # Retrieves the control (on/off) that was selected
             if LED == "LED1":
+                # Checks if the right LED was selected
                 if control == "On":
+                    # checks if either on or off was selected and turns the LED on or off
+                    # The LED status is updated on the webpage
                     ledstatus1 = "LED on"
                     print("LED 1 status: ", control)
                     led1.turn_led_on()
@@ -75,7 +95,10 @@ def ledcontrol():
                     print("LED 1 status: ", control)
                     led1.turn_led_off()
             elif LED == "LED2":
+                # Checks if the right LED was selected
                 if control == "On":
+                    # checks if either on or off was selected and turns the LED on or off
+                    # The LED status is updated on the webpage
                     ledstatus2 = "LED on"
                     print("LED 2 status: ", control)
                     led2.turn_led_on()
@@ -90,6 +113,10 @@ def ledcontrol():
 
 @app.route('/oleddisplay', methods=["GET", "POST"])
 def oled_display():
+    """
+    This controls the OLED display
+    :return:
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
@@ -99,12 +126,15 @@ def oled_display():
     distance = DistanceSensor()
     dist = distance.get_distance()
     if request.method == "GET":
+        # This retrieves the sensor readings and displays them on the webpage
         return render_template("OLED_Display.html",LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
-        text_to_display = request.form["text_to_display"]
-        oled = Oled()
-        oled.display_text(text_to_display)
-        message = "Message Updated"
+        # This retrieves the input from the webpage and will present it on the OLED display
+        text_to_display = request.form["text_to_display"]  # This retrieves the input and assigns it to this variable
+        oled = Oled()                                      # The object for the Oled() class is created
+        oled.display_text(text_to_display)                 # The method display_text() takes in the input from the webpage
+                                                           # and displays on the OLED display
+        message = "Message Updated"                        # This string is used to inform the user that new text has been sent to the display
         return render_template("OLED_Display.html", message=message, LDR=LDR_value, temp=temp_val, humidity=humid_val)
     else:
         return "Unknown error"
@@ -114,19 +144,12 @@ def get_values():
     results = StoreReadings()
     return results.get_item()
 
-
-def pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd):
-    results = StoreReadings()
-    for i in range(0, 6):
-        distance = DistanceSensor()
-        height = distance.get_distance()
-        results.add_item(run_id, height, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
-        time.sleep(2)
-    results.get_recent_record()
-
-
 @app.route('/get_data', methods=['GET'])
 def get_data():
+    """
+    This returns the entire database and structures it in a table format
+    :return:
+    """
     data = get_values()
     print(f"This is my data: \n {tabulate(data, tablefmt='grid')}")
     return f"This is my data: \n {tabulate(data, tablefmt='grid')}"
@@ -134,6 +157,10 @@ def get_data():
 
 @app.route('/pid', methods=["GET", "POST"])
 def pid():
+    """
+    This route triggers the PID and Schmitt Trigger algorithms
+    :return:
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
@@ -145,14 +172,13 @@ def pid():
     proportional_alg_selected = None
     integral_alg_selected = None
     derivative_alg_selected = None
-    labels = None
-    value1 = value2 = value3 = value4 = None
-    scaled_fan_speed = None
     if request.method == "GET":
+        # This retrieves the sensor readings and displays them on the webpage
         return render_template("PID_Controller.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
+        # This gets all the input parameters from the webpage and runs the appropriate algorithm based on the parameters specified
         print(request.form)
-        parameter_list = request.form                         # Holds the key value pairs in a dictionary thats sent from the web form
+        parameter_list = request.form                         # Holds the key value pairs in a dictionary that's sent from the web form
         for key in parameter_list:                            # Goes through the dictionary and checks if the required keys for the PID constants are present
             if key == "P":
                 proportional_alg_selected = request.form["P"]
@@ -173,37 +199,43 @@ def pid():
         Kp = Ki = Kd = 0
         threshold = upper_threshold = lower_threshold = 0
         if control_loop == "PID":
-            Kp = int(request.form["Kp"])
-            Ki = int(request.form["Ki"])
-            Kd = int(request.form["Kd"])
-            duration = int(request.form["duration"])
+            # Extracts all the parameters required for the PID algorithms
+            Kp = int(request.form["Kp"])              # Proportional constant
+            Ki = int(request.form["Ki"])              # Integral constant
+            Kd = int(request.form["Kd"])              # Derivative constant
+            duration = int(request.form["duration"])  # The duration for how long the algorithm runs for
             if proportional_alg_selected == "on" and (derivative_alg_selected != "on") and (integral_alg_selected != "on"):
+                # Runs the proportional algorithm if only the proportional checkbox was selected
+                # The required parameters for the algorithm are passed into the algorithm
                 selected_algorithm = ProportionalAlgorithm(hover_foam, target_height, Kp)
                 selected_algorithm.get_config()
                 selected_algorithm.run_proportional_algorithm(run_id,duration)
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and (derivative_alg_selected != "on"):
+                # Runs the proportional integral algorithm if only the proportional and integral checkbox was selected
                 selected_algorithm = ProportionalIntegralAlgorithm(hover_foam, target_height, Kp, Ki)
                 selected_algorithm.get_config()
                 selected_algorithm.run_proportional_integral_algorithm(run_id, duration)
             elif proportional_alg_selected == "on" and integral_alg_selected == "on" and derivative_alg_selected == "on":
+                # Runs the full PID algorithm if all the checkboxes were selected
                 selected_algorithm = PIDAlgorithm(hover_foam, target_height, Kp, Ki, Kd)
                 selected_algorithm.get_config()
                 selected_algorithm.run_pid_algorithm(run_id, duration)
             else:
                 print("Invalid combination of algorithms")
-            # pid_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
 
         elif control_loop == "Schmitt Trigger":
+            # Extracts all the parameters required for the Schmitt Trigger
             threshold = int(request.form["threshold"])
             duration = int(request.form["duration"])
+            # The upper and lower thresholds are calculated and passed into the schmitt trigger algorithm
             upper_threshold = target_height + threshold
             lower_threshold = target_height - threshold
-            # schmitt_trigger_alg(run_id, target_height, threshold, upper_threshold, lower_threshold, floats, Kp, Ki, Kd)
-            algorthim = Schmitttrigger(target_height, upper_threshold, lower_threshold)
-            algorthim.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, hover_foam, duration)
+            # The object for the Schmitt Trigger class is created and the
+            algorithm = Schmitttrigger(target_height, upper_threshold, lower_threshold)
+            algorithm.schmitt_trigger_alg(target_height, upper_threshold, lower_threshold, threshold, run_id, hover_foam, duration)
 
-        data = get_values()
-        # print(f"{data}, {type(data)}")
+        data = get_values()                    # Retrieves all the values from the database with most recent runID
+        # The code below assigns each variable to the appropriate list of values from the tuple
         labels = [row[1] for row in data]      # Time
         value1 = [row[0] for row in data]      # Actual measured height
         value2 = [row[2] for row in data]      # Target Height
@@ -216,9 +248,11 @@ def pid():
         value9 = [row[9] for row in data]      # Proportional term
         value10 = [row[10] for row in data]    # Integral term
         value11 = [row[11] for row in data]    # Derivative term
-        # graph_title = "Hello World! " + control_loop + "threshold " + "target : " + target_height
+
+        # Generates a meaningful title to display above the graph using the information about the control loop that was run
         graph_title = f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, Ki: {Ki}, Kd: {Kd}, Time: {run_id}, Float: {hover_foam}"
 
+        # Calculating the time increments using the list of epoch timestamps from the first column of the table
         x_axis_increments = calc_x_axis_time_increments(labels)
 
         scaled_fan_speed = []
@@ -230,15 +264,18 @@ def pid():
 
         scaled_p_constant = []
         for i in value6:
+            # This scales down each value of the Kp by a 1000 and adds to a list so that it can be plotted as a graph
             p_constant_scaled = i / 1000
             scaled_p_constant.append(p_constant_scaled)
         scaled_p_term = []
         for i in value9:
+            # This scales down each value of the p term by a 1000 and adds to a list so that it can be plotted as a graph
             p_term_scaled = i / 1000
             scaled_p_term.append(p_term_scaled)
 
         scaled_i_term = []
         for i in value10:
+            # This scales down each value of the i term by a 1000 and adds to a list so that it can be plotted as a graph
             i_term_scaled = i / 100
             scaled_i_term.append(i_term_scaled)
 
@@ -246,22 +283,26 @@ def pid():
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
-    get_runid = StoreReadings()
-    runid_values = get_runid.get_run_id()
+    get_runid = StoreReadings()                  # An object of the StoreReadings() class is created
+    runid_values = get_runid.get_run_id()        # Retrieves all the runID values from the database
     formatted_creation_date = []
     for plot_creation_time in runid_values:
+        # Goes through all the runIDs and converts them to a YYYY-MM-DD_HH:MM:SS format which is easier to read and remember
         plot_creation_time = plot_creation_time[0]
         date_time = time.strftime('%Y-%m-%d_%H:%M:%S', time.gmtime(plot_creation_time))
         formatted_creation_date.append(f"{date_time} {plot_creation_time}")
     if request.method == "GET":
         return render_template("plot_graph.html", runid_values=formatted_creation_date)
     elif request.method == "POST":
+        # The selected timestamp from the webpage is used to retrieve matching data from the database and is plotted
         graph = request.form["plot_graph"]
         if graph == "Plot Graph":
             time_stamp = request.form["runid"]
             print(time_stamp.split(" ")[1])
             runid = time_stamp.split(" ")[1]
 
+            # The code here is reused from when plotting the graph after the algorithm has run
+            # The same class is created by a different object
             graph_data = StoreReadings()
             graph_dt = graph_data.get_graph_data(runid)
             epoch_time_graph = [row[1] for row in graph_dt]
@@ -279,6 +320,8 @@ def plot_graph():
 
             x_axis_increments = calc_x_axis_time_increments(epoch_time_graph)
 
+            # In order to generate a meaningful graph title from the stored data the threshold is calculated and checked if its negative
+            # If negative the PID was used otherwise the Schmitt algorithm was used
             if upper_thresh_graph[0]-target_height_graph[0] < 0:
                 algorithm = "PID"
                 threshold = 0
@@ -289,6 +332,7 @@ def plot_graph():
             graph_title = (f" Control Loop: {algorithm}, Target: {target_height_graph[0]}, Threshold: {threshold}, "
                            f"Kp: {p_constant_graph[0]}, Ki: {i_constant_graph[0]}, Kd: {d_constant_graph[0]}, Time: {epoch_time_graph[0]}")
 
+        # The fan speed, and all the PID terms and constants are scaled down so they can be plotted on the graph
             scaled_fan_speed = []
             for i in fan_speed_graph:
                 duty_cycle_scaled = i / 1000
@@ -316,6 +360,10 @@ def plot_graph():
 
 @app.route('/fancontrol', methods=["GET"])
 def fan_control():
+    """
+    This route retrieves all the sensor readings and displays them on the webpage
+    :return:
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
@@ -329,6 +377,10 @@ def fan_control():
 
 @app.route('/fan_control_on', methods=["POST"])
 def fan_control_on():
+    """
+    This route turns the fan on when the on button is clicked in the webpage
+    :return:
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
@@ -337,7 +389,7 @@ def fan_control_on():
     humid_val = temp_humidity.get_humidity()
     print(request.form)
     # fancontrol = request.form["fan_control"]
-    fan_status = "On"
+    fan_status = "On"            # This variable is assigned to a string that prints the status of the fan on the webpage
     pca_fan = PwmFan()
     pca_fan.turn_fan_on()
     return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
@@ -345,13 +397,17 @@ def fan_control_on():
 
 @app.route('/fan_control_off', methods=["POST"])
 def fan_control_off():
+    """
+    This route turns on the fan off when the off button is clicked in the webpage
+    :return:
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
-    fan_status = "Off"
+    fan_status = "Off"          # This variable is assigned to a string that prints the status of the fan on the webpage
     pca_fan = PwmFan()
     pca_fan.turn_fan_off()
     return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
@@ -359,6 +415,10 @@ def fan_control_off():
 
 @app.route('/fan_control_speed', methods=["POST"])
 def fan_control_speed():
+    """
+    This route sets the percentage speed of the fan depending on the value entered
+    :return:
+    """
     ldr = Ldr()
     LDR_value = ldr.get_light_level()
     temp_humidity = TempHumidity()
@@ -367,11 +427,11 @@ def fan_control_speed():
     humid_val = temp_humidity.get_humidity()
     fan_speed = int(request.form["fanspeed"])
     pca_fan = PwmFan()
-    pca_fan.turn_fan_off()
-    fan_status = "On"
+    pca_fan.turn_fan_off()     # Turns the fan off before setting it to the new speed
+    fan_status = "On"          # This variable is assigned to a string that prints the status of the fan on the webpage
     pca_fan.set_fan_speed(fan_speed)
     return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
 
-
+# The code below starts the web server and the IP address can be visited to access the webpages
 if __name__ == "__main__":
     app.run(debug=True, host="192.168.1.71")

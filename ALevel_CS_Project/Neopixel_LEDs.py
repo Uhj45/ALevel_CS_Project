@@ -7,11 +7,12 @@ import time
 class Neopixel:
     """
     Class to control the Neopixel LEDs
+    Allow user to change the brightness and the colour of the leds
     """
     def __init__(self, brightness=0, g=0, r=0, b=0,):
         """
         Initialise the GPIO pins and Neopixel LED
-        Allow user to change the brightness and the colour of the leds
+
         :param brightness: float value between 0.0 and 1.0 where 1.0 is full brightness
         :param g: int values between 0 and 255
         :param r: int values between 0 and 255
@@ -23,15 +24,19 @@ class Neopixel:
         self.b = b
 
     def get_colour(self):
+        """
+        Returns the current GRB values of the LEDs
+        :return: int
+        """
         return self.g, self.r, self.b
 
     def set_colour(self, g, r, b):
         """
         These parameters will update the instance variables in the init function
-        :param g:
-        :param r:
-        :param b:
-        :return:
+        :param g: int
+        :param r: int
+        :param b: int
+        :return: None
         """
         self.g = g
         self.r = r
@@ -40,8 +45,8 @@ class Neopixel:
     def set_predefined_colour(self, colour):
         """
         Allow the user to set to a predefined colour
-        Using a dictionary to store the list of colours and their rgb values
-        This will then get the rgb values and assign them to the instance variable
+        Using a dictionary to store the list of colours and their GRB values
+        This will then get the GRB values and assign them to the instance variables
         :return:
         """
         colours = {
@@ -55,15 +60,11 @@ class Neopixel:
             'brown': (102, 153, 51),
             'mint': (255, 102, 204),
         }
-        self.g, self.r, self.b = colours[colour]
-
-        # print(colours)
-        # print(colour)
-        # print(self.g, self.r, self.b)
-
+        self.g, self.r, self.b = colours[colour]      # This retrieves the GRB values from the colours dictionary that was passed
+                                                      # into the function
     def turn_led_on(self):
         """
-        Turns the LED on
+        Turns the LED on using the GRB values that have been passed in
         :return:
         """
         self.GRBLED.fill((self.g, self.r, self.b))
@@ -74,14 +75,13 @@ class Neopixel:
         Turns the LED off
         :return:
         """
-        self.GRBLED.fill((0, 0, 0))
-        self.GRBLED.show()
+        self.GRBLED.fill((0, 0, 0))                   # Sets the GRB value to 0 in order to turn the LEDs off
+        self.GRBLED.show()                            # Sends the RGB values to the Neopixel LED
 
     def change_colour(self):
         """
         Allows the user to change the colour of the LED
-        :param: flash_iteration asks the user how many times they want to flash the LED
-        :return:
+        :return: None
         """
         self.GRBLED.fill((self.g, self.r, self.b))
         self.GRBLED.show()
@@ -89,6 +89,7 @@ class Neopixel:
     def flash_led(self, flash_iteration):
         """
         This will flash the LED for any colour
+        :param: flash_iteration asks the user how many times they want to flash the LED
         :return:
         """
         for i in range(0, flash_iteration):
@@ -169,7 +170,8 @@ class NeopixelLeds(Neopixel):
         self.b = b
         led_pin = phyiscal_led
         GPIO.setmode(GPIO.BCM)
-        order = neopixel.GRB
+        order = neopixel.GRB  # Sets the order in which data for each LED colour (RGB)
+                              # is sent to the RPi which in this case is GRB
 
         # This if elif statement should be replaced by a dictionary to extend support for more LEDs.
         # The keys for the dictionary would be the LED names and the values would be the GPIO pins
