@@ -134,6 +134,11 @@ class Algorithms:
         self.results.add_item(runid,measured_height,self.target_height,self.threshold,self.upper_threshold,self.lower_threshold,self.control,self.hover_foam,self.Kp,self.p_term,self.Ki,self.i_term,self.Kd,self.d_term)
 
     def calc_average_height(self):
+        """
+        function measures the height of the float three times and appends each measurement to a list
+        The average is calculated and then returned
+        :return: the calculated average height
+        """
         heights_list = []
         for i in range(0, 3):
             height = self.distance_readings.get_distance()
@@ -142,6 +147,12 @@ class Algorithms:
         return average_height
 
     def light_leds(self, measured_height, target_height):
+        """
+        Function lights the left LED when the measured height is within ±1 cm of the target height
+        :param measured_height:
+        :param target_height:
+        :return:
+        """
         if (target_height - 1) < measured_height < (target_height + 1):
             self.leds.set_predefined_colour("green")
             self.leds.turn_led_on()
@@ -150,12 +161,24 @@ class Algorithms:
             self.leds.turn_led_on()
 
     def log_values_to_oled_screen(self, measured_height, elapsed_time):
+        """
+        Function takes in the measured height and the elapsed time and displays it on the OLED screen
+        The display updates after each iteration of the control loop
+        :param measured_height:
+        :param elapsed_time:
+        :return:
+        """
         self.oled_display.clear_screen()
         self.oled_display.display_text(f"AH : {measured_height:.2f} ({self.target_height})",0,0,1)
         self.oled_display.display_text(f"Fan: {self.control}",0, 12,1)
         self.oled_display.display_text(f"ET : {int(elapsed_time)}",0,24,1)
 
     def get_hover_foam_value(self):
+        """
+        Function sets the idle fan speed of the float that was selected in the webpage
+        This is used when calculating the proportional term
+        :return: the idle fan speed for the selected float
+        """
         idle_fan_speed = 0
         if self.hover_foam == "hover_foam_1":
             idle_fan_speed = 44000
@@ -185,8 +208,8 @@ class ProportionalAlgorithm(Algorithms):
         """
         self.error = measured_height - self.target_height
         proportional_term = int(self.Kp * self.error)
-        if proportional_term < self.get_hover_foam_value():
-            proportional_term = self.get_hover_foam_value()
+        if proportional_term < self.get_hover_foam_value():   # This checks the proportional term is not smaller than the idle fan speed of the float
+            proportional_term = self.get_hover_foam_value()   # The proportional term is set to the idle fan speed so the float doesn't fall to the bottom
         return proportional_term
         # return abs(proportional_term)
 
@@ -203,11 +226,11 @@ class ProportionalAlgorithm(Algorithms):
             measured_height = self.calc_average_height()
             # print(measured_height)
             self.p_term = self.calculate_proportional_term(measured_height)
-            self.control = self.p_term
-            self.log_values_to_screen(measured_height)
-            self.log_values_to_oled_screen(measured_height, elapsed_time)
+            self.control = self.p_term                                      # Sets the fan speed to the p term
+            self.log_values_to_screen(measured_height)                      # Gets the measured height to print to the terminal window
+            self.log_values_to_oled_screen(measured_height, elapsed_time)   # Gets the measured height and elapsed to print to the OLED screen
             self.light_leds(measured_height, self.target_height)
-            self.add_pid_values(runid, measured_height)
+            self.add_pid_values(runid, measured_height)                     # Gets the measured height and runid and adds it to the database
             if measured_height == self.target_height:
                 print("Fan speed constant")
             else:
@@ -259,7 +282,7 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
             measured_height = self.calc_average_height()
             self.p_term = self.calculate_proportional_term(measured_height)
             self.i_term = self.calculate_integral_term(measured_height)
-            self.control = int(self.p_term + self.i_term)
+            self.control = int(self.p_term + self.i_term)                   # Sets the fan speed
             self.log_values_to_screen(measured_height)
             self.log_values_to_oled_screen(measured_height, elapsed_time)
             self.light_leds(measured_height, self.target_height)
