@@ -52,50 +52,55 @@ class PostTest:
 
     # Test LED 1 and LED 2
     def led_test(self, physical_led):
-        if physical_led == "LED1":
+        if physical_led == "RIGHT_LED":
             led = NeopixelLeds(brightness=0.8, phyiscal_led="LED1")
-            led_label = "LED1"
-        elif physical_led == "LED2":
+            led_label = "Right LED"
+        elif physical_led == "LEFT_LED":
             led = NeopixelLeds(brightness=0.8, phyiscal_led="LED2")
-            led_label = "LED2"
+            led_label = "Left LED"
         self.screen.clear_screen()
 
         self.screen.display_text(led_label, 0, 0, 2)
         time.sleep(1)
         self.screen.clear_screen()
-        led_1_label = f"{led_label}:On"
-        self.screen.display_text(led_1_label, 0, 0, 2)
+        led_1_label = f"On"
+        self.screen.display_text(led_label, 0, 0, 1)
+        self.screen.display_text(led_1_label, 15,15, 2)
         led.set_predefined_colour("pink")
         led.change_colour()
         led.turn_led_on()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"{led_label}:Off"
-        self.screen.display_text(led_1_label, 0, 0, 2)
+        led_1_label = f"Off"
+        self.screen.display_text(led_label, 0, 0, 2)
+        self.screen.display_text(led_1_label, 15,15, 2)
         time.sleep(1)
         led.turn_led_off()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"{led_label}:Green"
-        self.screen.display_text(led_1_label, 0, 0, 2)
+        led_1_label = f"Green"
+        self.screen.display_text(led_label, 0, 0, 2)
+        self.screen.display_text(led_1_label, 15,15, 2)
         time.sleep(1)
         led.set_predefined_colour("green")
         led.turn_led_on()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"{led_label}:Blue"
-        self.screen.display_text(led_1_label, 0, 0, 2)
+        led_1_label = f"Blue"
+        self.screen.display_text(led_label, 0, 0, 2)
+        self.screen.display_text(led_1_label, 15,15, 2)
         time.sleep(1)
         led.set_predefined_colour("blue")
         led.turn_led_on()
         time.sleep(1)
 
         self.screen.clear_screen()
-        led_1_label = f"{led_label}:Red"
-        self.screen.display_text(led_1_label, 0, 0, 2)
+        led_1_label = f"Red"
+        self.screen.display_text(led_label, 0, 0, 2)
+        self.screen.display_text(led_1_label, 15,15, 2)
         time.sleep(1)
         led.set_predefined_colour("red")
         led.turn_led_on()
@@ -103,8 +108,9 @@ class PostTest:
 
         # led_2.turn_led_off()
         self.screen.clear_screen()
-        led_1_label = f"{led_label}:Purple "
-        self.screen.display_text(led_1_label, 0, 0, 2)
+        led_1_label = f"Purple"
+        self.screen.display_text(led_label, 0, 0, 2)
+        self.screen.display_text(led_1_label, 15,15, 2)
         time.sleep(1)
         led.set_colour(0, 153, 204)
         led.change_colour()
