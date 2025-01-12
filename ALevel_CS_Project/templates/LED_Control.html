@@ -5,10 +5,10 @@
 {% block p2 %}
 
     <form action="{{ url_for("ledcontrol") }}" method="POST">
-        <label for="LED">LED1</label>
-        <input type="radio" id="LED" name="LED" value="LED1" checked="checked">
-        <label for="LED">LED2</label>
-        <input type="radio" id="LED" name="LED" value="LED2">
+        <label for="LED">Right LED</label>
+        <input type="radio" id="LED" name="LED" value="RIGHT_LED" checked="checked">
+        <label for="LED">Left LED</label>
+        <input type="radio" id="LED" name="LED" value="LEFT_LED">
         <br>
         <br>
         <label for="On">On</label>

@@ -153,7 +153,7 @@ class NeopixelLeds(Neopixel):
     Inherits all attributes and functions from the Neopixel class.
     When an object is created, the physical_led attribute must be specified
     """
-    def __init__(self,brightness=0, g=0, b=0, r=0, phyiscal_led="LED1"):
+    def __init__(self,brightness=0, g=0, b=0, r=0, phyiscal_led="LEFT_LED"):
         """
         Initialise the GPIO pins and Neopixel LED
         Allow user to change the brightness and the colour of the leds
@@ -175,7 +175,7 @@ class NeopixelLeds(Neopixel):
 
         # This if elif statement should be replaced by a dictionary to extend support for more LEDs.
         # The keys for the dictionary would be the LED names and the values would be the GPIO pins
-        if led_pin == "LED1":
+        if led_pin == "RIGHT_LED":
             self.GRBLED = neopixel.NeoPixel(pin=board.D12, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)
-        elif led_pin == "LED2":
+        elif led_pin == "LEFT_LED":
             self.GRBLED = neopixel.NeoPixel(pin=board.D21, n=1, bpp=3, brightness=self.brightness, auto_write=False, pixel_order=order)

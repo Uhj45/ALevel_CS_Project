@@ -69,46 +69,46 @@ def ledcontrol():
     elif request.method == "POST":
         #
         led_control = request.form["Submit"]
-        led1 = NeopixelLeds(brightness=1, phyiscal_led="LED1")    # Creates an object for the right LED
-        led2 = NeopixelLeds(brightness=1, phyiscal_led="LED2")    # Creates an object for the left LED
-        ledstatus1 = "Unknown"
-        ledstatus2 = "Unknown"
+        right_led = NeopixelLeds(brightness=1, phyiscal_led="RIGHT_LED")    # Creates an object for the right LED
+        left_led = NeopixelLeds(brightness=1, phyiscal_led="LEFT_LED")    # Creates an object for the left LED
+        right_led_status = "Unknown"
+        left_led_status = "Unknown"
         green = int(request.form["green"])                        # The RGB values are retrieved
         red = int(request.form["red"])
         blue = int(request.form["blue"])
         print(f"{green}, {red}, {blue}")
-        led1.set_colour(green, red, blue)                         # Sets the colour for the right LED
-        led2.set_colour(green, red, blue)                         # Sets the colour for the left LED
+        right_led.set_colour(green, red, blue)                         # Sets the colour for the right LED
+        left_led.set_colour(green, red, blue)                         # Sets the colour for the left LED
         if led_control == "Submit":                               # Retrieves the rest of the
             LED = request.form["LED"]                             # Retrieves the LED that was selected
             control = request.form["Control"]                     # Retrieves the control (on/off) that was selected
-            if LED == "LED1":
+            if LED == "RIGHT_LED":
                 # Checks if the right LED was selected
                 if control == "On":
                     # checks if either on or off was selected and turns the LED on or off
                     # The LED status is updated on the webpage
-                    ledstatus1 = "LED on"
-                    print("LED 1 status: ", control)
-                    led1.turn_led_on()
+                    right_led_status = "LED on"
+                    print("Right LED status: ", control)
+                    right_led.turn_led_on()
                 elif control == "Off":
-                    ledstatus1 = "LED off"
-                    print("LED 1 status: ", control)
-                    led1.turn_led_off()
-            elif LED == "LED2":
+                    right_led_status = "LED off"
+                    print("Right LED status: ", control)
+                    right_led.turn_led_off()
+            elif LED == "LEFT_LED":
                 # Checks if the right LED was selected
                 if control == "On":
                     # checks if either on or off was selected and turns the LED on or off
                     # The LED status is updated on the webpage
-                    ledstatus2 = "LED on"
-                    print("LED 2 status: ", control)
-                    led2.turn_led_on()
+                    left_led_status = "LED on"
+                    print("Left LED status: ", control)
+                    left_led.turn_led_on()
                 elif control == "Off":
-                    ledstatus2 = "LED off"
-                    print("LED 2 status: ", control)
-                    led2.turn_led_off()
+                    left_led_status = "LED off"
+                    print("Left LED status: ", control)
+                    left_led.turn_led_off()
         else:
             print("Not in use")
-        return render_template("LED_Control.html", ledstatus1=ledstatus1, ledstatus2=ledstatus2, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("LED_Control.html", ledstatus1=right_led_status, ledstatus2=left_led_status, LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/oleddisplay', methods=["GET", "POST"])

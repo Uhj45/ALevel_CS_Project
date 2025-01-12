@@ -22,9 +22,11 @@ class Schmitttrigger:
         self.upper_threshold = upper_threshold
         self.fan = PwmFan()
         self.distance_readings = DistanceSensor()
-        self.LED1 = NeopixelLeds(brightness=0.8)
-        self.LED2 = NeopixelLeds(brightness=0.8)
+        self.RIGHT_LED = NeopixelLeds(brightness=0.8,phyiscal_led="RIGHT_LED")
+        self.LEFT_LED = NeopixelLeds(brightness=0.8, phyiscal_led="LEFT_LED")
         self.results = StoreReadings()
+        self.fan.turn_fan_off()
+        time.sleep(2)
 
     def calc_average_height(self):
         """
@@ -79,19 +81,19 @@ class Schmitttrigger:
             print(f"Distance ({elapsed_time}): {distance}")
             if distance > float(upper_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
-                self.LED1.set_predefined_colour("red")
-                self.LED1.turn_led_on()
+                self.RIGHT_LED.set_predefined_colour("red")
+                self.RIGHT_LED.turn_led_on()
                 self.fan.decrement_fan_speed(2)
             elif distance < float(lower_threshold):
                 # Turn LED1 on and decrease fan speed and add height value to table
-                self.LED1.set_predefined_colour("red")
-                self.LED1.turn_led_on()
+                self.RIGHT_LED.set_predefined_colour("red")
+                self.RIGHT_LED.turn_led_on()
                 self.fan.increment_fan_speed(2)
             elif float(lower_threshold) < distance < float(upper_threshold) or distance == float(target_height):
                 # Turn LED2 On and Add height value to table
-                self.LED1.turn_led_off()
-                self.LED2.set_predefined_colour("green")
-                self.LED2.turn_led_on()
+                self.RIGHT_LED.turn_led_off()
+                self.LEFT_LED.set_predefined_colour("green")
+                self.LEFT_LED.turn_led_on()
 
             else:
                 self.fan.turn_fan_off()
@@ -108,7 +110,7 @@ class Algorithms:
         self.target_height = target_height
         self.fan = PwmFan()
         self.distance_readings = DistanceSensor()
-        self.leds = NeopixelLeds(brightness=0.8, phyiscal_led="LED2")
+        self.left_led = NeopixelLeds(brightness=0.8, phyiscal_led="LEFT_LED")
         self.oled_display = Oled()
         self.results = StoreReadings()
         self.Kp = 0
@@ -154,11 +156,11 @@ class Algorithms:
         :return:
         """
         if (target_height - 1) < measured_height < (target_height + 1):
-            self.leds.set_predefined_colour("green")
-            self.leds.turn_led_on()
+            self.left_led.set_predefined_colour("green")
+            self.left_led.turn_led_on()
         else:
-            self.leds.set_predefined_colour("red")
-            self.leds.turn_led_on()
+            self.left_led.set_predefined_colour("red")
+            self.left_led.turn_led_on()
 
     def log_values_to_oled_screen(self, measured_height, elapsed_time):
         """
@@ -222,6 +224,7 @@ class ProportionalAlgorithm(Algorithms):
         start_time = time.time()
         print(start_time)
         elapsed_time = 0
+        self.left_led.turn_led_off()
         while elapsed_time < duration:
             measured_height = self.calc_average_height()
             # print(measured_height)
@@ -236,7 +239,6 @@ class ProportionalAlgorithm(Algorithms):
             else:
                 self.fan.set_raw_fan_speed(self.control)
             elapsed_time = time.time() - start_time
-            self.leds.turn_led_off()
 
     def get_config(self):
         print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}")
@@ -277,7 +279,7 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
         start_time = time.time()
         print(start_time)
         elapsed_time = 0
-
+        self.left_led.turn_led_off()
         while elapsed_time < duration:
             measured_height = self.calc_average_height()
             self.p_term = self.calculate_proportional_term(measured_height)
@@ -292,7 +294,6 @@ class ProportionalIntegralAlgorithm(ProportionalAlgorithm):
             else:
                 self.fan.set_raw_fan_speed(self.control)
             elapsed_time = time.time() - start_time
-            self.leds.turn_led_off()
 
     def get_config(self):
         print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}")
@@ -332,6 +333,7 @@ class PIDAlgorithm(ProportionalIntegralAlgorithm):
         start_time = time.time()
         print(start_time)
         elapsed_time = 0
+        self.left_led.turn_led_off()
         while elapsed_time < duration:
             measured_height = self.calc_average_height()
             self.p_term = self.calculate_proportional_term(measured_height)
@@ -347,7 +349,7 @@ class PIDAlgorithm(ProportionalIntegralAlgorithm):
             else:
                 self.fan.set_raw_fan_speed(self.control)
             elapsed_time = time.time() - start_time
-            self.leds.turn_led_off()
+
     def get_config(self):
         print(f"Float: {self.hover_foam}, Target Height: {self.target_height}, Kp: {self.Kp}, Ki: {self.Ki}, Kd: {self.Kd}")
 
