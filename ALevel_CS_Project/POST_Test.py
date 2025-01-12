@@ -161,26 +161,27 @@ class PostTest:
         time.sleep(3)
 
         self.screen.display_test("Fan Test", "Speed: 10")
-        fan.turn_fan_on()
+        fan.set_fan_speed(10)
         time.sleep(3)
 
         self.screen.display_test("Fan Test", "Speed: 0")
         fan.turn_fan_off()
         time.sleep(3)
 
-        self.screen.display_test("Fan Test", "Speed: 50")
+        self.screen.display_test("Fan Test", "Incr: 50")
         fan.increment_fan_speed(50)
         time.sleep(3)
 
         self.screen.clear_screen()
         fan.turn_fan_off()
 
-    def finish_post(self):
+    def start_finish_post(self, message):
         self.screen.display_text("POST",0, 0, 2)
-        self.screen.display_text("Finished", 0, 16, 2)
+        self.screen.display_text(message, 0, 16, 2)
 
 
 test = PostTest()
+test.start_finish_post("Starting")
 test.test_temperature_sensor()
 test.test_humidity_sensor()
 test.led_test("LED1")
@@ -188,7 +189,7 @@ test.led_test("LED2")
 test.test_ldr_sensor()
 test.test_distance()
 test.test_fan()
-test.finish_post()
+test.start_finish_post("Finished")
 
 
 
