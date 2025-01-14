@@ -103,7 +103,7 @@ class Schmitttrigger(Algorithms):
     """
     This class contains the schmitt trigger algorithm to hover the foam at a certain height
     """
-    def __init__(self, hover_foam, target_height, lower_threshold, upper_threshold):
+    def __init__(self, target_height, lower_threshold, upper_threshold, hover_foam=0,):
         super().__init__(hover_foam,target_height)
         """
         :param target_height: This is given by the user through the webpage
