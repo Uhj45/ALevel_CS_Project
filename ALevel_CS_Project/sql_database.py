@@ -136,7 +136,8 @@ class StoreReadings(BaseDatabase):
         :return:
         """
         epoch_time = int(time.time())    # Gets the epoch time
-        sensor_readings = [(f'{runid}',f'{epoch_time}',f'{height}',f'{target_height}',f'{threshold}',f'{upper_threshold}',f'{lower_threshold}',f'{fan_speed}',f'{floats}',f'{kp}',f'{p_term}',f'{ki}',f'{i_term}',f'{kd}',f'{d_term}')]
+        sensor_readings = [(f'{runid}',f'{epoch_time}',f'{height}',f'{target_height}',f'{threshold}',f'{upper_threshold}',
+                            f'{lower_threshold}',f'{fan_speed}',f'{floats}',f'{kp}',f'{p_term}',f'{ki}',f'{i_term}',f'{kd}',f'{d_term}')]
         # print(sensor_readings)
         self.cursor.executemany(f"INSERT INTO {self.table_name} VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", sensor_readings)   #
         self.cursor.execute(f"SELECT * FROM {self.table_name}")
@@ -166,7 +167,10 @@ class StoreReadings(BaseDatabase):
         :return:
         """
         # Query's the table to get all values from the Height column with the most recent runid value ready to be fetched
-        self.cursor.execute(f"SELECT Height,Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed, Kp, Ki, Kd, P_Term, I_Term, D_Term FROM {self.table_name} WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
+        self.cursor.execute(f"SELECT Height,Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed, Kp, Ki, "
+                            f"Kd, P_Term, I_Term, D_Term "
+                            f"FROM {self.table_name} "
+                            f"WHERE runid = (SELECT MAX(runid) FROM {self.table_name})")
         # returns all values that were specified in the query and prints them onto a blank webpage
         return self.cursor.fetchall()    # Fetches all the rows of the query and retuns and list
 
@@ -192,7 +196,8 @@ class StoreReadings(BaseDatabase):
         """
         print(f"Value: {date}")
         # This will get all the graph data based on the runid that has been selected
-        self.cursor.execute(f"SELECT Height, Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed, Kp, Ki, Kd, P_Term, I_Term, D_Term FROM {self.table_name} WHERE runid = {date}")
+        self.cursor.execute(f"SELECT Height, Time, Target Height, Upper_Threshold, Lower_Threshold, Fan_Speed, Kp, "
+                            f"Ki, Kd, P_Term, I_Term, D_Term FROM {self.table_name} WHERE runid = {date}")
         return self.cursor.fetchall()
 
 
