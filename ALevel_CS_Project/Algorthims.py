@@ -7,100 +7,6 @@ from sql_database import StoreReadings
 import time
 
 
-class Schmitttrigger:
-    """
-    This class contains the schmitt trigger algorithm to hover the foam at a certain height
-    """
-    def __init__(self, target_height, lower_threshold, upper_threshold):
-        """
-        :param target_height: This is given by the user through the webpage
-        :param lower_threshold: This is calculated using the target height and the threshold given by the user
-        :param upper_threshold: This is calculated using the target height and the threshold given by the user
-        """
-        self.target_height = target_height
-        self.lower_threshold = lower_threshold
-        self.upper_threshold = upper_threshold
-        self.fan = PwmFan()
-        self.distance_readings = DistanceSensor()
-        self.RIGHT_LED = NeopixelLeds(brightness=0.8,phyiscal_led="RIGHT_LED")
-        self.LEFT_LED = NeopixelLeds(brightness=0.8, phyiscal_led="LEFT_LED")
-        self.results = StoreReadings()
-        self.fan.turn_fan_off()
-        time.sleep(2)
-
-    def calc_average_height(self):
-        """
-        Measures the height of the float multiple times and then calculating an average height
-        :return:
-        """
-        heights_list = []
-        for i in range(0, 5):
-            height = 23 - self.distance_readings.get_distance()
-            heights_list.append(height)
-        average_height = sum(heights_list)/len(heights_list)
-        return average_height
-
-    def check_foam_stable(self, previous_height):
-        """
-        This checks if the previous average height is less than the current average height
-        hence confirming if the float is still moving
-        :param previous_height:
-        :return:
-        """
-        current_av_height = 0
-        for j in range(0, 3):
-            current_av_height = self.calc_average_height()
-            print(f"Current height: {current_av_height}, Previous height: {previous_height}")
-            if current_av_height > previous_height:
-                print("Keep fan speed the same")
-            previous_height = current_av_height
-        distance = current_av_height
-        return distance
-
-    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, hover_foam, duration):
-        """
-        This will lift the foam to the target height. It will use the LEDs to indicate whether the float is within the thresholds
-        :param target_height: int that set by the user
-        :param upper_threshold: int calculated using the threshold and the target height
-        :param lower_threshold: int calculated using the threshold and the target height
-        :param threshold: int that is set by the userand it's used to calculate the upper and lower thresholds
-        :param runid:
-        :param hover_foam:
-        :param duration: int that is set by the user and sets the amount of time the algorithm runs for
-        :return:
-        """
-        previous_height = 0
-        self.fan.turn_fan_on()
-        self.fan.set_fan_speed(60)
-        start_time = time.time()
-        print(start_time)
-        elapsed_time = 0
-        while elapsed_time < duration:
-            distance = self.check_foam_stable(previous_height)
-            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), hover_foam, kp=0, ki=0, kd=0, p_term=0,d_term=0,i_term=0)
-            print(f"Distance ({elapsed_time}): {distance}")
-            if distance > float(upper_threshold):
-                # Turn LED1 on and increase fan speed and add height value to table
-                self.RIGHT_LED.set_predefined_colour("red")
-                self.RIGHT_LED.turn_led_on()
-                self.fan.decrement_fan_speed(2)
-            elif distance < float(lower_threshold):
-                # Turn LED1 on and decrease fan speed and add height value to table
-                self.RIGHT_LED.set_predefined_colour("red")
-                self.RIGHT_LED.turn_led_on()
-                self.fan.increment_fan_speed(2)
-            elif float(lower_threshold) < distance < float(upper_threshold) or distance == float(target_height):
-                # Turn LED2 On and Add height value to table
-                self.RIGHT_LED.turn_led_off()
-                self.LEFT_LED.set_predefined_colour("green")
-                self.LEFT_LED.turn_led_on()
-
-            else:
-                self.fan.turn_fan_off()
-
-            time.sleep(0.5)
-            elapsed_time = time.time() - start_time
-
 class Algorithms:
     """
     This is the base class for all the algorithms which will inherit these attributes
@@ -189,6 +95,91 @@ class Algorithms:
         elif self.hover_foam == "hover_foam_3":
             idle_fan_speed = 59000
         return idle_fan_speed
+
+
+class Schmitttrigger(Algorithms):
+    """
+    This class contains the schmitt trigger algorithm to hover the foam at a certain height
+    """
+    def __init__(self, hover_foam, target_height, lower_threshold, upper_threshold):
+        super().__init__(hover_foam,target_height)
+        """
+        :param target_height: This is given by the user through the webpage
+        :param lower_threshold: This is calculated using the target height and the threshold given by the user
+        :param upper_threshold: This is calculated using the target height and the threshold given by the user
+        """
+        self.target_height = target_height
+        self.lower_threshold = lower_threshold
+        self.upper_threshold = upper_threshold
+        self.fan = PwmFan()
+        self.distance_readings = DistanceSensor()
+        self.RIGHT_LED = NeopixelLeds(brightness=0.8,phyiscal_led="RIGHT_LED")
+        self.LEFT_LED = NeopixelLeds(brightness=0.8, phyiscal_led="LEFT_LED")
+        self.results = StoreReadings()
+        self.fan.turn_fan_off()
+        time.sleep(2)
+
+    def check_foam_stable(self, previous_height):
+        """
+        This checks if the previous average height is less than the current average height
+        hence confirming if the float is still moving
+        :param previous_height:
+        :return:
+        """
+        current_av_height = 0
+        for j in range(0, 3):
+            current_av_height = self.calc_average_height()
+            print(f"Current height: {current_av_height}, Previous height: {previous_height}")
+            if current_av_height > previous_height:
+                print("Keep fan speed the same")
+            previous_height = current_av_height
+        distance = current_av_height
+        return distance
+
+    def schmitt_trigger_alg(self, target_height, upper_threshold, lower_threshold, threshold, runid, hover_foam, duration):
+        """
+        This will lift the foam to the target height. It will use the LEDs to indicate whether the float is within the thresholds
+        :param target_height: int that set by the user
+        :param upper_threshold: int calculated using the threshold and the target height
+        :param lower_threshold: int calculated using the threshold and the target height
+        :param threshold: int that is set by the userand it's used to calculate the upper and lower thresholds
+        :param runid:
+        :param hover_foam:
+        :param duration: int that is set by the user and sets the amount of time the algorithm runs for
+        :return:
+        """
+        previous_height = 0
+        self.fan.turn_fan_on()
+        self.fan.set_fan_speed(60)
+        start_time = time.time()
+        print(start_time)
+        elapsed_time = 0
+        while elapsed_time < duration:
+            distance = self.check_foam_stable(previous_height)
+            self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold, self.fan.get_fan_speed(), hover_foam, kp=0, ki=0, kd=0, p_term=0,d_term=0,i_term=0)
+            print(f"Distance ({elapsed_time}): {distance}")
+            if distance > float(upper_threshold):
+                # Turn LED1 on and increase fan speed and add height value to table
+                self.RIGHT_LED.set_predefined_colour("red")
+                self.RIGHT_LED.turn_led_on()
+                self.fan.decrement_fan_speed(2)
+            elif distance < float(lower_threshold):
+                # Turn LED1 on and decrease fan speed and add height value to table
+                self.RIGHT_LED.set_predefined_colour("red")
+                self.RIGHT_LED.turn_led_on()
+                self.fan.increment_fan_speed(2)
+            elif float(lower_threshold) < distance < float(upper_threshold) or distance == float(target_height):
+                # Turn LED2 On and Add height value to table
+                self.RIGHT_LED.turn_led_off()
+                self.LEFT_LED.set_predefined_colour("green")
+                self.LEFT_LED.turn_led_on()
+
+            else:
+                self.fan.turn_fan_off()
+
+            time.sleep(0.5)
+            elapsed_time = time.time() - start_time
+
 
 class ProportionalAlgorithm(Algorithms):
     """
