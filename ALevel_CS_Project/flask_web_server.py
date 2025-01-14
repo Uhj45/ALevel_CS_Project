@@ -108,7 +108,8 @@ def ledcontrol():
                     left_led.turn_led_off()
         else:
             print("Not in use")
-        return render_template("LED_Control.html", ledstatus1=right_led_status, ledstatus2=left_led_status, LDR=LDR_value, temp=temp_val, humidity=humid_val)
+        return render_template("LED_Control.html", ledstatus1=right_led_status, ledstatus2=left_led_status,
+                               LDR=LDR_value, temp=temp_val, humidity=humid_val)
 
 
 @app.route('/oleddisplay', methods=["GET", "POST"])
@@ -250,7 +251,8 @@ def pid():
         value11 = [row[11] for row in data]    # Derivative term
 
         # Generates a meaningful title to display above the graph using the information about the control loop that was run
-        graph_title = f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, Ki: {Ki}, Kd: {Kd}, Time: {run_id}, Float: {hover_foam}"
+        graph_title = (f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, "
+                       f"Ki: {Ki}, Kd: {Kd}, Time: {run_id}, Float: {hover_foam}")
 
         # Calculating the time increments using the list of epoch timestamps from the first column of the table
         x_axis_increments = calc_x_axis_time_increments(labels)
@@ -279,7 +281,10 @@ def pid():
             i_term_scaled = i / 100
             scaled_i_term.append(i_term_scaled)
 
-        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,labels=x_axis_increments,value1=value1,value2=value2,value3=value3, value4=value4,value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,value9=scaled_p_term,value10=scaled_i_term,value11=value11,graph_title=graph_title)
+        return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,
+                               labels=x_axis_increments,value1=value1,value2=value2,value3=value3, value4=value4,
+                               value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,
+                               value9=scaled_p_term,value10=scaled_i_term,value11=value11,graph_title=graph_title)
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
@@ -355,7 +360,13 @@ def plot_graph():
                 scaled_i_term.append(i_term_scaled)
 
             print(f"Date: {formatted_creation_date}")
-            return render_template("plot_graph.html", runid_values=formatted_creation_date, Time_graph=x_axis_increments, actual_height_graph=actual_height_graph, target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph, lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed, p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph, d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term, i_term_graph=scaled_i_term, d_term_graph=d_term_graph, graph_title=graph_title)
+            return render_template("plot_graph.html", runid_values=formatted_creation_date,
+                                   Time_graph=x_axis_increments, actual_height_graph=actual_height_graph,
+                                   target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph,
+                                   lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed,
+                                   p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph,
+                                   d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term,
+                                   i_term_graph=scaled_i_term, d_term_graph=d_term_graph, graph_title=graph_title)
 
 
 @app.route('/fancontrol', methods=["GET"])
@@ -392,7 +403,8 @@ def fan_control_on():
     fan_status = "On"            # This variable is assigned to a string that prints the status of the fan on the webpage
     pca_fan = PwmFan()
     pca_fan.turn_fan_on()
-    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
+    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value,
+                           temp=temp_val, humidity=humid_val, fan_speed=100)
 
 
 @app.route('/fan_control_off', methods=["POST"])
@@ -410,7 +422,8 @@ def fan_control_off():
     fan_status = "Off"          # This variable is assigned to a string that prints the status of the fan on the webpage
     pca_fan = PwmFan()
     pca_fan.turn_fan_off()
-    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=100)
+    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value,
+                           temp=temp_val, humidity=humid_val, fan_speed=100)
 
 
 @app.route('/fan_control_speed', methods=["POST"])
@@ -430,7 +443,8 @@ def fan_control_speed():
     pca_fan.turn_fan_off()     # Turns the fan off before setting it to the new speed
     fan_status = "On"          # This variable is assigned to a string that prints the status of the fan on the webpage
     pca_fan.set_fan_speed(fan_speed)
-    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value, temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
+    return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value,
+                           temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
 
 # The code below starts the web server and the IP address can be visited to access the webpages
 if __name__ == "__main__":
