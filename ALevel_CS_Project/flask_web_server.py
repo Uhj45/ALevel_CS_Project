@@ -177,8 +177,8 @@ def pid():
     elif request.method == "POST":
         # This gets all the input parameters from the webpage and runs the appropriate algorithm based on the parameters specified
         print(request.form)
-        parameter_list = request.form                         # Holds the key value pairs in a dictionary that's sent from the web form
-        for key in parameter_list:                            # Goes through the dictionary and checks if the required keys for the PID constants are present
+        parameter_list = request.form     # Holds the key value pairs in a dictionary that's sent from the web form
+        for key in parameter_list:        # Goes through the dictionary and checks if the required keys for the PID constants are present
             if key == "P":
                 proportional_alg_selected = request.form["P"]
                 print(f"P: {proportional_alg_selected}")
