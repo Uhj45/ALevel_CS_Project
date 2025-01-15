@@ -144,7 +144,7 @@ class Schmitttrigger(Algorithms):
         :param target_height: int that set by the user
         :param upper_threshold: int calculated using the threshold and the target height
         :param lower_threshold: int calculated using the threshold and the target height
-        :param threshold: int that is set by the userand it's used to calculate the upper and lower thresholds
+        :param threshold: int that is set by the user, and it's used to calculate the upper and lower thresholds
         :param runid:
         :param hover_foam:
         :param duration: int that is set by the user and sets the amount of time the algorithm runs for
