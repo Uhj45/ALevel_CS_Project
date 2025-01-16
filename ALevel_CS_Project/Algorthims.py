@@ -131,9 +131,9 @@ class Schmitttrigger(Algorithms):
         current_av_height = 0
         for j in range(0, 3):
             current_av_height = self.calc_average_height()
-            print(f"Current height: {current_av_height}, Previous height: {previous_height}")
+            print(f"Current height: {current_av_height:.2f}, Previous height: {previous_height:.2f}", end=" ")
             if current_av_height > previous_height:
-                print("Keep fan speed the same")
+                print("Keep fan speed the same", end=" ")
             previous_height = current_av_height
         distance = current_av_height
         return distance
@@ -158,20 +158,25 @@ class Schmitttrigger(Algorithms):
         elapsed_time = 0
         while elapsed_time < duration:
             distance = self.check_foam_stable(previous_height)
+            previous_height = distance
             self.results.add_item(runid, distance, target_height, threshold, upper_threshold, lower_threshold,
                                   self.fan.get_fan_speed(), hover_foam, kp=0, ki=0, kd=0, p_term=0,d_term=0,i_term=0)
-            print(f"Distance ({elapsed_time}): {distance}")
-            if distance > float(upper_threshold):
+            print(f"Elapsed Time: ({int(elapsed_time)}), Distance: {distance:.2f}")
+            if distance > float(upper_threshold) and distance > float(lower_threshold):
                 # Turn LED1 on and increase fan speed and add height value to table
-                self.RIGHT_LED.set_predefined_colour("red")
-                self.RIGHT_LED.turn_led_on()
-                self.fan.decrement_fan_speed(2)
-            elif distance < float(lower_threshold):
-                # Turn LED1 on and decrease fan speed and add height value to table
+                self.LEFT_LED.turn_led_off()
                 self.RIGHT_LED.set_predefined_colour("red")
                 self.RIGHT_LED.turn_led_on()
                 self.fan.increment_fan_speed(2)
-            elif float(lower_threshold) < distance < float(upper_threshold) or distance == float(target_height):
+                print("Float is below upper threshold")
+            elif distance < float(lower_threshold) and distance < float(upper_threshold):
+                # Turn LED1 on and decrease fan speed and add height value to table
+                self.LEFT_LED.turn_led_off()
+                self.RIGHT_LED.set_predefined_colour("red")
+                self.RIGHT_LED.turn_led_on()
+                self.fan.decrement_fan_speed(1)
+                print("Float is above lower threshold")
+            elif float(upper_threshold) > distance > float(lower_threshold) or distance == float(target_height):
                 # Turn LED2 On and Add height value to table
                 self.RIGHT_LED.turn_led_off()
                 self.LEFT_LED.set_predefined_colour("green")
