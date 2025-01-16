@@ -164,7 +164,8 @@ class PwmFan:
         :param decrement: int that increases the fan speed by a certain amount
         :return:
         """
-        if self.check_fan_speed(self.percentage_fan_speed - decrement):  # Checks the decreased fan speed is still between 0 and 100%
-            self.percentage_fan_speed = self.percentage_fan_speed - decrement
+        speed_to_check = self.percentage_fan_speed - decrement
+        if self.check_fan_speed(speed_to_check):  # Checks the decreased fan speed is still between 0 and 100%
+            self.percentage_fan_speed = speed_to_check
             self.set_fan_speed(self.percentage_fan_speed)                # sets the new fan speed
             print(f"Fan speed was decremented by {decrement}", f"Fan speed is at {self.percentage_fan_speed}")
