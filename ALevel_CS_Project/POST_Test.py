@@ -199,6 +199,7 @@ class PostTest:
 
 test = PostTest()
 test.start_finish_post("Starting")
+time.sleep(1)
 test.test_temperature_sensor()
 test.test_humidity_sensor()
 test.led_test("LEFT_LED")
