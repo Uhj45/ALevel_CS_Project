@@ -53,10 +53,10 @@ class PostTest:
     # Test LED 1 and LED 2
     def led_test(self, physical_led):
         if physical_led == "RIGHT_LED":
-            led = NeopixelLeds(brightness=0.8, phyiscal_led="LED1")
+            led = NeopixelLeds(brightness=0.8, phyiscal_led="RIGHT_LED")
             led_label = "Right LED"
         elif physical_led == "LEFT_LED":
-            led = NeopixelLeds(brightness=0.8, phyiscal_led="LED2")
+            led = NeopixelLeds(brightness=0.8, phyiscal_led="LEFT_LED")
             led_label = "Left LED"
         self.screen.clear_screen()
 
