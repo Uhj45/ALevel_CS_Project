@@ -279,8 +279,15 @@ def pid():
             i_term_scaled = i / 100
             scaled_i_term.append(i_term_scaled)
 
+        inverted_height_measurements = []
+        for i in value1:
+            # As the distance sensor is mounted at the top, all the measurements are referenced from the top of the tube
+            # so all the values are inverted. This for loop corrects this.
+            new_reading = value1[0] - i
+            inverted_height_measurements.append(new_reading)
+
         return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,
-                               labels=x_axis_increments,value1=value1,value2=value2,value3=value3, value4=value4,
+                               labels=x_axis_increments,value1=inverted_height_measurements,value2=value2,value3=value3, value4=value4,
                                value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,
                                value9=scaled_p_term,value10=scaled_i_term,value11=value11,graph_title=graph_title)
 
@@ -357,9 +364,16 @@ def plot_graph():
                 i_term_scaled = i / 100
                 scaled_i_term.append(i_term_scaled)
 
+            inverted_height_measurements = []
+            for i in actual_height_graph:
+                # As the distance sensor is mounted at the top, all the measurements are referenced from the top of the tube
+                # so all the values are inverted. This for loop corrects this.
+                new_reading = actual_height_graph[0] - i
+                inverted_height_measurements.append(new_reading)
+
             print(f"Date: {formatted_creation_date}")
             return render_template("plot_graph.html", runid_values=formatted_creation_date,
-                                   Time_graph=x_axis_increments, actual_height_graph=actual_height_graph,
+                                   Time_graph=x_axis_increments, actual_height_graph=inverted_height_measurements,
                                    target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph,
                                    lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed,
                                    p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph,
