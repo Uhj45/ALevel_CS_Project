@@ -16,7 +16,7 @@
 
     <div class="plot_graph">
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-        <canvas id="lineChart" width="700" height="500"></canvas>
+        <canvas id="lineChart" width="1200" height="500"></canvas>
         <script>
             var ctx = document.getElementById("lineChart").getContext("2d")
             var graph_title = "{{ graph_title | escape }}"
@@ -28,80 +28,101 @@
                         {
                             label: "Actual Height",
                             data: {{ actual_height_graph | safe }},
-                            fill: false,
                             borderColor: "rgb(255, 192, 75)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(255, 192, 75)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yLeft'
                         },
                         {
                             label: "Target Height",
                             data: {{ target_height_graph | safe }},
-                            fill: false,
                             borderColor: "rgb(0, 204, 0)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(0, 204, 0)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yLeft'
                         },
                         {
                             label: "Upper Threshold",
                             data: {{ upper_thresh_graph | safe }},
-                            fill: false,
                             borderColor: "rgb(28, 3, 250)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(28, 3, 250)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yLeft'
                         },
                         {
                             label: "Lower Threshold",
                             data: {{ lower_thresh_graph | safe }},
-                            fill: false,
                             borderColor: "rgb(255, 64, 56)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(255, 64, 56)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yLeft'
                         },
                         {
                             label: "Fan Speed",
                             data: {{ fan_speed_graph | safe }},
-                            fill: false,
                             borderColor: "rgb(255, 134, 56)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(255, 134, 56)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yRight'
                         },
                         {
-                            label: "Proportional constant",
+                            label: "Kp",
                             data: {{ p_constant_graph | safe }},
-                            fill: true,
                             borderColor: "rgb(126,184,255)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(126,184,255)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yRight'
                         },
                         {
-                            label: "Integral constant",
+                            label: "Ki",
                             data: {{ i_constant_graph | safe }},
-                            fill: true,
                             borderColor: "rgb(122,0,204)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(122,0,204)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yRight'
                         },
                         {
-                            label: "Derivative constant",
+                            label: "Kd",
                             data: {{ d_constant_graph | safe }},
-                            fill: true,
                             borderColor: "rgb(248,106,237)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(248,106,237)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yRight'
                         },
                         {
                             label: "P term",
                             data: {{ p_term_graph | safe }},
-                            fill: true,
                             borderColor: "rgb(213,244,121)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(213,244,121)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yRight'
                         },
                         {
                             label: "I term",
                             data: {{ i_term_graph | safe }},
-                            fill: true,
                             borderColor: "rgb(140,153,228)",
-                            lineTension: 0.1
-
+                            backgroundColor: "rgb(140,153,228)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yRight'
                         },
                         {
                             label: "D term",
                             data: {{ d_term_graph | safe }},
-                            fill: true,
                             borderColor: "rgb(115,117,205)",
-                            lineTension: 0.1
+                            backgroundColor: "rgb(115,117,205)",
+                            fill: false,
+                            lineTension: 0.1,
+                            yAxisID: 'yRight'
                         }
                     ]
                 },
@@ -111,25 +132,47 @@
                         display: true,
                         text: graph_title
                     },
-
+                    tooltips:{
+                         mode: 'index',
+                         intersect: false,
+                         caretPadding: 100
+                    },
+                    hover:{
+                         mode: 'index',
+                         intersect: false
+                    },
+                    legend:{
+                         position: 'right',
+                         intersect: 'middle',
+                    },
                     scales: {
                         xAxes: [{
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Time',
+                                labelString: 'Time(sec)',
                                 fontColor: 'black'
                             }
                         }],
                         yAxes: [{
+                            id: 'yLeft',
+                            position: 'left',
                             scaleLabel: {
                                 display: true,
-                                labelString: 'Height',
+                                labelString: 'Float Height(cm)',
                                 fontColor: 'black'
                             }
-                        }]
-
-                    }
-                }
+                           },
+                            {
+                            id: 'yRight',
+                            position: 'right',
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Control Variables',
+                                fontColor: 'black'
+                            }
+                           }]
+                        },
+                },
             })
         </script>
     </div>

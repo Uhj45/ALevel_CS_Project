@@ -235,18 +235,18 @@ def pid():
 
         data = get_values()                    # Retrieves all the values from the database with most recent runID
         # The code below assigns each variable to the appropriate list of values from the tuple
-        labels = [row[1] for row in data]      # Time
-        value1 = [row[0] for row in data]      # Actual measured height
-        value2 = [row[2] for row in data]      # Target Height
-        value3 = [row[3] for row in data]      # Upper Threshold
-        value4 = [row[4] for row in data]      # Lower Threshold
-        value5 = [row[5] for row in data]      # Fan speed
-        value6 = [row[6] for row in data]      # Proportional constant
-        value7 = [row[7] for row in data]      # Integral constant
-        value8 = [row[8] for row in data]      # Derivative constant
-        value9 = [row[9] for row in data]      # Proportional term
-        value10 = [row[10] for row in data]    # Integral term
-        value11 = [row[11] for row in data]    # Derivative term
+        labels = [row[1] for row in data]           # Time
+        value1 = [row[0] * -1 for row in data]      # Actual measured height
+        value2 = [row[2] * -1 for row in data]      # Target Height
+        value3 = [row[3] * -1 for row in data]      # Upper Threshold
+        value4 = [row[4] * -1 for row in data]      # Lower Threshold
+        value5 = [row[5] for row in data]           # Fan speed
+        value6 = [row[6] for row in data]           # Proportional constant
+        value7 = [row[7] for row in data]           # Integral constant
+        value8 = [row[8] for row in data]           # Derivative constant
+        value9 = [row[9] for row in data]           # Proportional term
+        value10 = [row[10] for row in data]         # Integral term
+        value11 = [row[11] for row in data]         # Derivative term
 
         # Generates a meaningful title to display above the graph using the information about the control loop that was run
         graph_title = (f"Control Algorithm: {control_loop}, Target: {target_height}, Threshold: {threshold}, Kp: {Kp}, "
@@ -309,10 +309,10 @@ def plot_graph():
             graph_data = StoreReadings()
             graph_dt = graph_data.get_graph_data(runid)
             epoch_time_graph = [row[1] for row in graph_dt]
-            actual_height_graph = [row[0] for row in graph_dt]
-            target_height_graph = [row[2] for row in graph_dt]
-            upper_thresh_graph = [row[3] for row in graph_dt]
-            lower_thresh_graph = [row[4] for row in graph_dt]
+            actual_height_graph = [row[0] * -1 for row in graph_dt]
+            target_height_graph = [row[2] * -1 for row in graph_dt]
+            upper_thresh_graph = [row[3] * -1 for row in graph_dt]
+            lower_thresh_graph = [row[4] * -1 for row in graph_dt]
             fan_speed_graph = [row[5] for row in graph_dt]
             p_constant_graph = [row[6] for row in graph_dt]
             i_constant_graph = [row[7] for row in graph_dt]
