@@ -357,7 +357,7 @@ def plot_graph():
                 i_term_scaled = i / 100
                 scaled_i_term.append(i_term_scaled)
 
-            print(f"Date: {formatted_creation_date}")
+            print(tabulate(graph_dt))
             return render_template("plot_graph.html", runid_values=formatted_creation_date,
                                    Time_graph=x_axis_increments, actual_height_graph=actual_height_graph,
                                    target_height_graph=target_height_graph, upper_thresh_graph=upper_thresh_graph,
