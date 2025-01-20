@@ -279,6 +279,7 @@ def pid():
             i_term_scaled = i / 100
             scaled_i_term.append(i_term_scaled)
 
+        print(tabulate(data))
         return render_template("PID_Controller.html",LDR=LDR_value,temp=temp_val,humidity=humid_val,
                                labels=x_axis_increments,value1=value1,value2=value2,value3=value3, value4=value4,
                                value5=scaled_fan_speed,value6=scaled_p_constant,value7=value7,value8=value8,
