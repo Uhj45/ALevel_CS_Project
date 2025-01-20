@@ -185,7 +185,7 @@ class Schmitttrigger(Algorithms):
             else:
                 self.fan.turn_fan_off()
 
-            time.sleep(0.5)
+            # time.sleep(0.5)
             elapsed_time = time.time() - start_time
 
 
