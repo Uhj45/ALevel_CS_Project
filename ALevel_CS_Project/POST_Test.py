@@ -65,7 +65,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"On"
         self.screen.display_text(led_label, 0, 0, 1)
-        self.screen.display_text(led_state_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,24, 2)
         led.set_predefined_colour("pink")
         led.change_colour()
         led.turn_led_on()
@@ -74,7 +74,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Off"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,24, 2)
         time.sleep(1)
         led.turn_led_off()
         time.sleep(1)
@@ -82,7 +82,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Green"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,24, 2)
         time.sleep(1)
         led.set_predefined_colour("green")
         led.turn_led_on()
@@ -91,7 +91,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Blue"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,24, 2)
         time.sleep(1)
         led.set_predefined_colour("blue")
         led.turn_led_on()
@@ -100,7 +100,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Red"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,24, 2)
         time.sleep(1)
         led.set_predefined_colour("red")
         led.turn_led_on()
@@ -110,7 +110,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Purple"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,15, 2)
+        self.screen.display_text(led_state_label, 15,24, 2)
         time.sleep(1)
         led.set_colour(0, 153, 204)
         led.change_colour()
@@ -178,9 +178,11 @@ class PostTest:
     def new_fan_test(self):
         fan = PwmFan()
         fan_test_data = [
-            {"test": "Test: 100%", "speed": 100},
-            {"test": "Test: 0%", "speed": 0},
-            {"test": "Test: 50%", "speed": 50}
+            {"test": "Test: 0%", "speed": 0, "time": 2},
+            {"test": "Test: 100%", "speed": 100, "time": 4},
+            {"test": "Test: 0%", "speed": 0, "time": 2},
+            {"test": "Test: 70%", "speed": 70, "time": 15},
+            {"test": "Test: 0%", "speed": 0, "time": 3},
         ]
 
         for test_data in fan_test_data:
@@ -189,7 +191,7 @@ class PostTest:
             speed = test_data["speed"]
             self.screen.display_test(test_message, f"Speed: {speed}")
             fan.set_fan_speed(speed)
-            time.sleep(3)
+            time.sleep(test_data["time"])
 
     def start_finish_post(self, message):
         self.screen.clear_screen()
