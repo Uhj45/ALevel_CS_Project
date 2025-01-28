@@ -14,6 +14,28 @@ from Algorthims import Schmitttrigger, ProportionalAlgorithm, ProportionalIntegr
 
 app = Flask(__name__)            # Initialises the Flask class and sets up the web application
 
+
+def fetch_readings():
+    """
+    Fetches readings from all the sensors and stores them in a dictionary
+    """
+    sensor_readings = {}
+    ldr = Ldr()
+    LDR_value = ldr.get_light_level()
+    temp_humidity = TempHumidity()
+    temp_humidity.read_sensors()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
+    distance = DistanceSensor()
+    dist = distance.get_distance()
+
+    sensor_readings["ldr"]         = {"ldr": LDR_value}
+    sensor_readings["temperature"] = {"temperature": temp_val}
+    sensor_readings["humidity"]    = {"humidity": humid_val}
+    sensor_readings["distance"]    = {"distance": dist}
+
+    return sensor_readings
+
 def calc_x_axis_time_increments(list_of_epoch_times):
     """
     Each measurement is recorded with a timestamps in the database as an epoch which is a 16-digit number
@@ -444,6 +466,100 @@ def fan_control_speed():
     pca_fan.set_fan_speed(fan_speed)
     return render_template("Fan_Control.html", fan_status=fan_status, LDR=LDR_value,
                            temp=temp_val, humidity=humid_val, fan_speed=fan_speed)
+
+@app.route('/api/v1/ldr', methods=["GET"])
+def ldr_api():
+    """
+    This route returns the latest ldr value as JSON string
+    http://IP_address:port_number/api/v1/ldr
+    :return: {"ldr": 2011}
+    """
+    return fetch_readings()["ldr"]
+
+@app.route('/api/v1/temperature', methods=["GET"])
+def temperature_api():
+    """
+    This route returns the latest temperature value as JSON string
+    http://IP_address:port_number/api/v1/temperature
+    :return:{"temperature": 24.9}
+    """
+    return fetch_readings()["temperature"]
+
+@app.route('/api/v1/humidity', methods=["GET"])
+def humidity_api():
+    """
+    This route returns the latest humidity value as JSON string
+    http://IP_address:port_number/api/v1/humidity
+    :return: {"humidity": 50}
+    """
+    return fetch_readings()["humidity"]
+
+@app.route('/api/v1/distance', methods=["GET"])
+def distance_api():
+    """
+    This route returns the latest distance value as JSON string
+    http://IP_address:port_number/api/v1/distance
+    :return: {"distance": 20.85}
+    """
+    return fetch_readings()["distance"]
+
+@app.route('/api/v1/fanspeed/set_state', methods=["GET"])
+def set_fan_speed_state_api():
+    """
+    This route returns the latest fan speed value as JSON string
+    http://IP_address:port_number/api/v1/fanspeed/set_state?state=on
+    :return: {"state": "on"}
+    """
+    state = request.args.get('state')
+    pca_fan = PwmFan()
+    if state.lower() == "on":
+        pca_fan.set_fan_speed(100)
+    elif state.lower() == "off":
+        pca_fan.set_fan_speed(0)
+    else:
+        state = "ERROR, invalid state requested"
+
+    return {"state": state}
+
+@app.route('/api/v1/setfanspeed/', methods=["GET"])
+def fan_speed_api():
+    """
+    This route returns the latest fan speed value as JSON string
+    http://IP_address:port_number/api/v1/setfanspeed?raw_value=true&speed=65
+    :return: {"fan_speed": "65", "raw_speed": "true"}
+    """
+    raw_speed = request.args.get('raw_value')
+    value = request.args.get('speed')
+
+    pca_fan = PwmFan()
+    if raw_speed == 'true':
+        pca_fan.set_raw_fan_speed(int(value))
+    else:
+        pca_fan.set_fan_speed(int(value))
+
+    return {"raw_speed":raw_speed, "fan_speed": value}
+
+
+@app.route('/api/v1/status', methods=["GET"])
+def status_api():
+    """
+    http://IP_address:port_number/api/v1/status
+    :return: Returns all sensor readings as a list {
+        "distance": {
+        "distance": 22.31
+      },
+      "humidity": {
+        "humidity": 33.3
+      },
+      "ldr": {
+        "ldr": 1996
+      },
+      "temperature": {
+        "temperature": 25.0
+      }
+    }
+    """
+    return fetch_readings()
 
 # The code below starts the web server and the IP address can be visited to access the webpages
 if __name__ == "__main__":
