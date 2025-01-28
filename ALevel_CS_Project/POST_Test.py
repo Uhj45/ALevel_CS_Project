@@ -64,8 +64,8 @@ class PostTest:
         time.sleep(1)
         self.screen.clear_screen()
         led_state_label = f"On"
-        self.screen.display_text(led_label, 0, 0, 1)
-        self.screen.display_text(led_state_label, 15,24, 2)
+        self.screen.display_text(led_label, 0, 0, 2)
+        self.screen.display_text(led_state_label, 0,16, 2)
         led.set_predefined_colour("pink")
         led.change_colour()
         led.turn_led_on()
@@ -74,7 +74,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Off"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,24, 2)
+        self.screen.display_text(led_state_label, 0,16, 2)
         time.sleep(1)
         led.turn_led_off()
         time.sleep(1)
@@ -82,7 +82,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Green"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,24, 2)
+        self.screen.display_text(led_state_label, 0,16, 2)
         time.sleep(1)
         led.set_predefined_colour("green")
         led.turn_led_on()
@@ -91,7 +91,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Blue"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,24, 2)
+        self.screen.display_text(led_state_label, 0,16, 2)
         time.sleep(1)
         led.set_predefined_colour("blue")
         led.turn_led_on()
@@ -100,7 +100,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Red"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,24, 2)
+        self.screen.display_text(led_state_label, 0,16, 2)
         time.sleep(1)
         led.set_predefined_colour("red")
         led.turn_led_on()
@@ -110,7 +110,7 @@ class PostTest:
         self.screen.clear_screen()
         led_state_label = f"Purple"
         self.screen.display_text(led_label, 0, 0, 2)
-        self.screen.display_text(led_state_label, 15,24, 2)
+        self.screen.display_text(led_state_label, 0,16, 2)
         time.sleep(1)
         led.set_colour(0, 153, 204)
         led.change_colour()
@@ -201,6 +201,7 @@ class PostTest:
 
 test = PostTest()
 test.start_finish_post("Starting")
+time.sleep(2)
 test.test_temperature_sensor()
 test.test_humidity_sensor()
 test.led_test("LEFT_LED")
