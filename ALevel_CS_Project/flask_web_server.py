@@ -309,6 +309,17 @@ def pid():
 
 @app.route('/plot_graphs', methods=["GET", "POST"])
 def plot_graph():
+    ldr = Ldr()
+    LDR_value = ldr.get_light_level()
+    temp_humidity = TempHumidity()
+    temp_humidity.read_sensors()
+    temp_val = temp_humidity.get_temperature()
+    humid_val = temp_humidity.get_humidity()
+    distance = DistanceSensor()
+    dist = distance.get_distance()
+
+    # return render_template("base2.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
+
     get_runid = StoreReadings()                  # An object of the StoreReadings() class is created
     runid_values = get_runid.get_run_id()        # Retrieves all the runID values from the database
     formatted_creation_date = []
@@ -318,7 +329,7 @@ def plot_graph():
         date_time = time.strftime('%Y-%m-%d_%H:%M:%S', time.gmtime(plot_creation_time))
         formatted_creation_date.append(f"{date_time} {plot_creation_time}")
     if request.method == "GET":
-        return render_template("plot_graph.html", runid_values=formatted_creation_date)
+        return render_template("plot_graph.html", runid_values=formatted_creation_date, LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
     elif request.method == "POST":
         # The selected timestamp from the webpage is used to retrieve matching data from the database and is plotted
         graph = request.form["plot_graph"]
@@ -387,7 +398,8 @@ def plot_graph():
                                    lower_thresh_graph=lower_thresh_graph, fan_speed_graph=scaled_fan_speed,
                                    p_constant_graph=scaled_p_constant, i_constant_graph=i_constant_graph,
                                    d_constant_graph=d_constant_graph, p_term_graph=scaled_p_term,
-                                   i_term_graph=scaled_i_term, d_term_graph=d_term_graph, graph_title=graph_title)
+                                   i_term_graph=scaled_i_term, d_term_graph=d_term_graph, graph_title=graph_title,
+                                   LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
 
 
 @app.route('/fancontrol', methods=["GET"])
@@ -402,9 +414,11 @@ def fan_control():
     temp_humidity.read_sensors()
     temp_val = temp_humidity.get_temperature()
     humid_val = temp_humidity.get_humidity()
+    distance = DistanceSensor()
+    dist = distance.get_distance()
     print("Creating fan object")
 
-    return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val)
+    return render_template("Fan_Control.html", LDR=LDR_value, temp=temp_val, humidity=humid_val, dist=dist)
 
 
 @app.route('/fan_control_on', methods=["POST"])
