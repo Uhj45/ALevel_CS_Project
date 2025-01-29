@@ -89,13 +89,36 @@ class Algorithms:
         This is used when calculating the proportional term
         :return: the idle fan speed for the selected float
         """
+        stalling_speed = {
+               "hover_foam_1":{
+                     5: 48000,
+                    10: 46000,
+                    15: 45000,
+                    18: 44000,  # for heights greater than 18
+                },
+               "hover_foam_2":{
+                     5: 48500,
+                    10: 48000,
+                    15: 47000,
+                    18: 46000,  # for heights greater than 18
+                },
+               "hover_foam_3":{
+                     5: 59500,
+                    10: 59000,
+                    15: 58000,
+                    18: 57000,  # for heights greater than 18
+                }
+        }
+
         idle_fan_speed = 0
-        if self.hover_foam == "hover_foam_1":
-            idle_fan_speed = 44000
-        elif self.hover_foam == "hover_foam_2":
-            idle_fan_speed = 48000
-        elif self.hover_foam == "hover_foam_3":
-            idle_fan_speed = 59000
+        # This checks what target height is being used and sets the idle fan speed to the correct stalling speed
+        if self.target_height <= 12:
+             idle_fan_speed = stalling_speed[self.hover_foam][10]
+        elif 10 < self.target_height <= 17:
+             idle_fan_speed = stalling_speed[self.hover_foam][15]
+        elif self.target_height > 17:
+             idle_fan_speed = stalling_speed[self.hover_foam][18]
+
         return idle_fan_speed
 
 
