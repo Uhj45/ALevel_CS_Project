@@ -1,0 +1,180 @@
+{% extends "base2.html" %}
+{% block title %}Plot Graphs{% endblock %}
+{% block p1 %}Plot Graphs{% endblock %}
+{% block p2 %}
+    <form action="{{ url_for("plot_graph") }}" method="POST" >
+        <label for="runid">Select a RunID to plot a graph</label>
+        <select id="runid" name="runid">
+            {% for value in runid_values %}
+                <option value="{{ value }}">{{ value }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <br>
+        <input type="submit" value="Plot Graph" name="plot_graph">
+    </form>
+
+    <div class="plot_graph">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+        <canvas id="lineChart" width="1200" height="500"></canvas>
+        <script>
+            var ctx = document.getElementById("lineChart").getContext("2d")
+            var graph_title = "{{ graph_title | escape }}"
+            var lineChart = new Chart(ctx, {
+                type:"line",
+                data: {
+                    labels: {{ Time_graph | safe }},
+                    datasets: [
+                        {
+                            label: "Actual Height",
+                            data: {{ actual_height_graph | safe }},
+                            borderColor: "rgb(255, 192, 75)",
+                            backgroundColor: "rgb(255, 192, 75)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yLeft'
+                        },
+                        {
+                            label: "Target Height",
+                            data: {{ target_height_graph | safe }},
+                            borderColor: "rgb(0, 204, 0)",
+                            backgroundColor: "rgb(0, 204, 0)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yLeft'
+                        },
+                        {
+                            label: "Upper Threshold",
+                            data: {{ upper_thresh_graph | safe }},
+                            borderColor: "rgb(28, 3, 250)",
+                            backgroundColor: "rgb(28, 3, 250)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yLeft'
+                        },
+                        {
+                            label: "Lower Threshold",
+                            data: {{ lower_thresh_graph | safe }},
+                            borderColor: "rgb(255, 64, 56)",
+                            backgroundColor: "rgb(255, 64, 56)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yLeft'
+                        },
+                        {
+                            label: "Fan Speed",
+                            data: {{ fan_speed_graph | safe }},
+                            borderColor: "rgb(255, 134, 56)",
+                            backgroundColor: "rgb(255, 134, 56)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yRight'
+                        },
+                        {
+                            label: "Kp",
+                            data: {{ p_constant_graph | safe }},
+                            borderColor: "rgb(126,184,255)",
+                            backgroundColor: "rgb(126,184,255)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yRight'
+                        },
+                        {
+                            label: "Ki",
+                            data: {{ i_constant_graph | safe }},
+                            borderColor: "rgb(122,0,204)",
+                            backgroundColor: "rgb(122,0,204)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yRight'
+                        },
+                        {
+                            label: "Kd",
+                            data: {{ d_constant_graph | safe }},
+                            borderColor: "rgb(248,106,237)",
+                            backgroundColor: "rgb(248,106,237)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yRight'
+                        },
+                        {
+                            label: "P term",
+                            data: {{ p_term_graph | safe }},
+                            borderColor: "rgb(213,244,121)",
+                            backgroundColor: "rgb(213,244,121)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yRight'
+                        },
+                        {
+                            label: "I term",
+                            data: {{ i_term_graph | safe }},
+                            borderColor: "rgb(140,153,228)",
+                            backgroundColor: "rgb(140,153,228)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yRight'
+                        },
+                        {
+                            label: "D term",
+                            data: {{ d_term_graph | safe }},
+                            borderColor: "rgb(115,117,205)",
+                            backgroundColor: "rgb(115,117,205)",
+                            fill: false,
+                            lineTension: 0.3,
+                            yAxisID: 'yRight'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: false,
+                    title: {
+                        display: true,
+                        text: graph_title
+                    },
+                    tooltips:{
+                         mode: 'index',
+                         intersect: false,
+                         caretPadding: 20,
+                        backgroundColor: "rgba(10,50, 0.3)"
+                    },
+                    hover:{
+                         mode: 'index',
+                         intersect: false
+                    },
+                    legend:{
+                         position: 'right',
+                         intersect: 'middle',
+                    },
+                    scales: {
+                        xAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Time(sec)',
+                                fontColor: 'black'
+                            }
+                        }],
+                        yAxes: [{
+                            id: 'yLeft',
+                            position: 'left',
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Float Height(cm)',
+                                fontColor: 'black'
+                            }
+                           },
+                            {
+                            id: 'yRight',
+                            position: 'right',
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'Control Variables',
+                                fontColor: 'black'
+                            }
+                           }]
+                        },
+                },
+            })
+        </script>
+    </div>
+{% endblock %}

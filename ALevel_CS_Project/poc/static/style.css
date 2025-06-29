@@ -1,0 +1,139 @@
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: whitesmoke;
+}
+
+.header {
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.sidebar {
+  height: 100%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: darkgrey;
+  overflow-x: hidden;
+}
+.sidebar a {
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+}
+.sidebar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+.sidenav a {
+  color: white;
+  padding: 16px;
+  text-decoration: none;
+  display: block;
+}
+.sidenav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+div {
+  border: thin solid white;
+  padding: 10px;
+}
+
+.container {
+  display: flex;
+  gap: 10px;
+}
+
+.content1 {
+  margin-left: 200px;
+  flex-grow: 1;
+}
+
+.content2 {
+  flex-grow: 1;
+  text-align: center;
+  margin-left: 25px;
+}
+
+.content3 {
+  flex-grow: 1;
+  margin-left: 25px;
+}
+
+.content4 {
+  flex-grow: 1;
+  width: 98%;
+  height: 500px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  text-align: left;
+  border-radius: 10px;
+}
+
+.container2 {
+  display: flex;
+  gap: 10px;
+}
+.tile_pid {
+  background-color: grey;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none; /* Remove default link underline */
+  display: block; /* Make the tile block-level for better styling */
+  width: 25%;
+  height: 400px;
+}
+
+.tile_graph {
+  background-color: blue;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+  text-decoration: none; /* Remove default link underline */
+  display: block; /* Make the tile block-level for better styling */
+  width: 50%;
+  height: 400px;
+}
+.tiles-container {
+  margin-left: 230px;
+  padding-left: 230;
+  padding-right: 50;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-gap: 20px;
+  justify-content: center; /* Center tiles horizontally */
+}
+.tile {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  text-align: center;
+  border-radius: 10px;
+  text-decoration: none; /* Remove default link underline */
+  display: block; /* Make the tile block-level for better styling */
+  width: 200px;
+  height: 100px;
+}
+
+.tile-main-box {
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 50px;
+  text-align: center;
+  border-radius: 30px;
+  text-decoration: none; /* Remove default link underline */
+  display: block; /* Make the tile block-level for better styling */
+}
+

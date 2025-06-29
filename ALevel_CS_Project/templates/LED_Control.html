@@ -1,0 +1,32 @@
+
+{% extends "base2.html" %}
+{% block title %}LED Control{% endblock %}
+{% block p1 %}LED Control{% endblock %}
+{% block p2 %}
+
+    <form action="{{ url_for("ledcontrol") }}" method="POST">
+        <label for="LED">Right LED</label>
+        <input type="radio" id="LED" name="LED" value="RIGHT_LED" checked="checked">
+        <label for="LED">Left LED</label>
+        <input type="radio" id="LED" name="LED" value="LEFT_LED">
+        <br>
+        <br>
+        <label for="On">On</label>
+        <input type="radio" id="On" name="Control" value="On" checked="checked">
+        <label for="Off">Off</label>
+        <input type="radio" id="Off" name="Control" value="Off">
+
+        <p>Change LED Colour</p>
+        <label for="greenInput">Green</label>
+        <input type="number" id="greenInput" name="green" placeholder="Green" value="128"/>
+        <br>
+        <label for="redInput">Red</label>
+        <input type="number" id="redInput" name="red" placeholder="Red" value="128"/>
+        <br>
+        <label for="blueInput">Blue</label>
+        <input type="number" id="blueInput" name="blue" placeholder="Blue" value="128"/>
+        <br><br>
+        <input type="submit" name="Submit">
+    </form>
+
+{% endblock %}

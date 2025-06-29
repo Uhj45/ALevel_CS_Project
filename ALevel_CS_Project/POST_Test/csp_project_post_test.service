@@ -1,0 +1,12 @@
+[Unit]
+Description=CSP Project Post Test
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/uhjas/csp/POST_Test/post_test.sh 2>&1 /home/uhjas/csp/POST_Test/post_test.log
+WorkingDirectory=/home/uhjas
+User=uhjas
+
+[Install]
+WantedBy=multi-user.target
